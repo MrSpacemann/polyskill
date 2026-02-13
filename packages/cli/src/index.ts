@@ -12,7 +12,7 @@ const program = new Command();
 program
   .name("polyskill")
   .description("CLI for the PolySkill marketplace")
-  .version("0.1.9");
+  .version("0.1.10");
 
 program.addCommand(initCommand);
 program.addCommand(validateCommand);
