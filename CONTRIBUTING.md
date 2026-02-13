@@ -52,6 +52,24 @@ skills/   Example skills
 - Make sure all tests pass
 - Add tests for new functionality
 
+## Publishing to npm (Maintainers)
+
+Both `@polyskill/core` and `@polyskill/cli` are published to npm. Always use `pnpm publish` (not `npm publish`) — it resolves `workspace:*` dependencies to concrete versions automatically.
+
+```bash
+# 1. Bump version in package.json AND src/index.ts (CLI has a hardcoded .version() call)
+# 2. Build and test
+pnpm build && pnpm test
+
+# 3. Publish (from the package directory)
+cd packages/core && pnpm publish --no-git-checks
+cd packages/cli && pnpm publish --no-git-checks
+
+# 4. Commit, tag, push
+```
+
+If you change core, publish core first, then bump the server's dependency in the private repo.
+
 ## Reporting Issues
 
 Open an issue on GitHub with:
