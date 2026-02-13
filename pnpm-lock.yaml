@@ -14,8 +14,8 @@ importers:
         specifier: ^7.0.0
         version: 7.10.1(@types/node@22.19.11)
       '@polyskill/core':
-        specifier: ^0.1.3
-        version: 0.1.3
+        specifier: workspace:*
+        version: link:../core
       chalk:
         specifier: ^5.4.0
         version: 5.6.2
@@ -349,9 +349,6 @@ packages:
 
   '@jridgewell/sourcemap-codec@1.5.5':
     resolution: {integrity: sha512-cYQ9310grqxueWbl+WuIUIaiUaDcj7WOq5fVhEljNVgRfOUhY9fy2zTvfoqWsnebh8Sl70VScFbICvJnLKB0Og==}
-
-  '@polyskill/core@0.1.3':
-    resolution: {integrity: sha512-Vqq/knT+ScIo43tdBtM79T8ANYZXO3z8BKFP6u08mqqQrSRv7RH19b++u70uorUzbvtUj7J70/50iUOSu+wp7A==}
 
   '@rollup/rollup-android-arm-eabi@4.57.1':
     resolution: {integrity: sha512-A6ehUVSiSaaliTxai040ZpZ2zTevHYbvu/lDoeAteHI8QnaosIzm4qwtezfRg1jOYaUmnzLX1AOD6Z+UJjtifg==}
@@ -1063,11 +1060,6 @@ snapshots:
       '@types/node': 22.19.11
 
   '@jridgewell/sourcemap-codec@1.5.5': {}
-
-  '@polyskill/core@0.1.3':
-    dependencies:
-      ajv: 8.17.1
-      ajv-formats: 3.0.1(ajv@8.17.1)
 
   '@rollup/rollup-android-arm-eabi@4.57.1':
     optional: true

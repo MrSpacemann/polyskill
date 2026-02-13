@@ -15,7 +15,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "@polyskill/core": "^0.1.3",
+    "@polyskill/core": "workspace:*",
     "commander": "^13.0.0",
     "chalk": "^5.4.0",
     "@inquirer/prompts": "^7.0.0"
