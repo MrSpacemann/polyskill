@@ -1,0 +1,50 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ToolsFile",
+  "type": "object",
+  "required": ["tools"],
+  "properties": {
+    "tools": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["name", "description", "parameters"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "pattern": "^[a-z][a-z0-9_]*$",
+            "description": "Tool name (lowercase, underscores allowed)"
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+          "parameters": {
+            "type": "object",
+            "required": ["type", "properties"],
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "object"
+              },
+              "properties": {
+                "type": "object"
+              },
+              "required": {
+                "type": "array",
+                "items": { "type": "string" }
+              }
+            },
+            "additionalProperties": false
+          },
+          "returns": {
+            "type": "object"
+          }
+        },
+        "additionalProperties": false
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

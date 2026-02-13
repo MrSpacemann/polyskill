@@ -1,0 +1,18 @@
+{
+  "tools": [
+    {
+      "name": "example_tool",
+      "description": "An example tool — replace with your own",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "input": {
+            "type": "string",
+            "description": "Example input parameter"
+          }
+        },
+        "required": ["input"]
+      }
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "name": "@polyskill/getting-started",
+  "version": "1.0.1",
+  "description": "Learn how to use the PolySkill CLI to search, install, create, and publish skills",
+  "type": "prompt",
+  "license": "MIT",
+  "author": { "name": "polyskill" },
+  "skill": { "instructions": "./instructions.md" },
+  "adapters": ["openai", "anthropic", "grok", "gemini", "kimi"],
+  "keywords": ["getting-started", "tutorial", "cli", "guide"],
+  "category": "research-learning"
+}

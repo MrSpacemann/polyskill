@@ -1,0 +1,47 @@
+{
+  "tools": [
+    {
+      "name": "get_weather",
+      "description": "Get current weather for a location",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "description": "City, e.g. London, UK"
+          },
+          "units": {
+            "type": "string",
+            "enum": ["celsius", "fahrenheit"]
+          }
+        },
+        "required": ["location"]
+      },
+      "returns": {
+        "type": "object",
+        "properties": {
+          "temperature": { "type": "number" },
+          "conditions": { "type": "string" }
+        }
+      }
+    },
+    {
+      "name": "get_forecast",
+      "description": "Get multi-day weather forecast",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "location": {
+            "type": "string",
+            "description": "City, e.g. London, UK"
+          },
+          "days": {
+            "type": "number",
+            "description": "Number of days (1-7)"
+          }
+        },
+        "required": ["location"]
+      }
+    }
+  ]
+}

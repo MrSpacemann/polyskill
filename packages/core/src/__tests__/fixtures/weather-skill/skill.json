@@ -1,0 +1,16 @@
+{
+  "name": "@test/weather-skill",
+  "version": "1.0.0",
+  "description": "Get weather data for any location",
+  "type": "tool",
+  "license": "MIT",
+  "author": {
+    "name": "Test Author"
+  },
+  "skill": {
+    "instructions": "./instructions.md",
+    "tools": "./tools.json"
+  },
+  "adapters": ["openai", "anthropic"],
+  "keywords": ["weather", "api"]
+}

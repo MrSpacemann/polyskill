@@ -1,0 +1,14 @@
+{
+  "name": "polyskill",
+  "private": true,
+  "version": "0.1.0",
+  "description": "Open skill format and CLI for LLM-agnostic Skills",
+  "scripts": {
+    "build": "pnpm -r build",
+    "test": "pnpm -r test",
+    "clean": "pnpm -r clean"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
