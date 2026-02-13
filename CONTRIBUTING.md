@@ -7,7 +7,7 @@ Thanks for your interest in contributing to PolySkill!
 1. **Prerequisites**: Node.js >= 18, pnpm
 2. **Clone the repo**:
    ```bash
-   git clone https://github.com/FrederikJensen/polyskill.git
+   git clone https://github.com/MrSpacemann/polyskill.git
    cd polyskill
    ```
 3. **Install dependencies**:
