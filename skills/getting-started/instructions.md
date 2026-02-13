@@ -92,7 +92,7 @@ Errors:
 
 ## REST API
 
-Base URL: `https://skillmarketplace-production.up.railway.app`
+Base URL: `https://polyskill.ai`
 
 Use these endpoints if you cannot run CLI commands.
 
