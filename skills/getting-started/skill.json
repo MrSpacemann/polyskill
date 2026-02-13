@@ -1,6 +1,6 @@
 {
   "name": "@polyskill/getting-started",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Learn how to use the PolySkill CLI to search, install, create, and publish skills",
   "type": "prompt",
   "license": "MIT",
