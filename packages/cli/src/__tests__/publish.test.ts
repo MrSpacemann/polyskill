@@ -9,8 +9,13 @@ vi.mock("../config.js", () => ({
   REGISTRY_URL: "http://localhost:3000",
 }));
 
+vi.mock("../auth.js", () => ({
+  getToken: vi.fn(),
+}));
+
 import { publishCommand } from "../commands/publish.js";
 import { loadSkill, getAdapter } from "@polyskill/core";
+import { getToken } from "../auth.js";
 import { mockSkill, mockTranspileResult } from "./fixtures.js";
 
 class ExitError extends Error {
@@ -28,6 +33,7 @@ beforeEach(() => {
     throw new ExitError(code as number);
   });
   vi.stubGlobal("fetch", vi.fn());
+  vi.mocked(getToken).mockReturnValue("ghp_testtoken");
 });
 
 function mockFetchResponse(status: number, body: unknown) {
@@ -114,7 +120,10 @@ describe("publish command", () => {
       "http://localhost:3000/api/skills",
       expect.objectContaining({
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer ghp_testtoken",
+        },
       })
     );
 
@@ -160,5 +169,45 @@ describe("publish command", () => {
     expect(console.log).toHaveBeenCalledWith(expect.stringContaining("File not found"));
     expect(process.exit).toHaveBeenCalledWith(1);
     expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("exits with message when no token is available", async () => {
+    vi.mocked(getToken).mockReturnValue(null);
+
+    await expect(
+      publishCommand.parseAsync(["/tmp/test-skill"], { from: "user" })
+    ).rejects.toThrow(ExitError);
+
+    expect(console.log).toHaveBeenCalledWith(expect.stringContaining("Not authenticated"));
+    expect(console.log).toHaveBeenCalledWith(expect.stringContaining("polyskill agent register"));
+    expect(process.exit).toHaveBeenCalledWith(1);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("prints auth failure message on 401 response", async () => {
+    vi.mocked(loadSkill).mockResolvedValue(mockSkill);
+    vi.mocked(getAdapter).mockReturnValue(undefined);
+    mockFetchResponse(401, { error: "Unauthorized", message: "Invalid or expired GitHub token" });
+
+    await expect(
+      publishCommand.parseAsync(["/tmp/test-skill"], { from: "user" })
+    ).rejects.toThrow(ExitError);
+
+    expect(console.log).toHaveBeenCalledWith(expect.stringContaining("Authentication failed"));
+    expect(process.exit).toHaveBeenCalledWith(1);
+  });
+
+  it("prints namespace hint on 403 response", async () => {
+    vi.mocked(loadSkill).mockResolvedValue(mockSkill);
+    vi.mocked(getAdapter).mockReturnValue(undefined);
+    mockFetchResponse(403, { error: "Forbidden", message: "Skill name must start with @alice/" });
+
+    await expect(
+      publishCommand.parseAsync(["/tmp/test-skill"], { from: "user" })
+    ).rejects.toThrow(ExitError);
+
+    expect(console.log).toHaveBeenCalledWith(expect.stringContaining("Skill name must start with @alice/"));
+    expect(console.log).toHaveBeenCalledWith(expect.stringContaining("@<name>/skill-name"));
+    expect(process.exit).toHaveBeenCalledWith(1);
   });
 });

@@ -1,12 +1,13 @@
 /*
  * Publish flow state machine:
  *
- * LOAD_SKILL ──→ BUILD_ADAPTERS ──→ POST_REGISTRY ──→ SUCCESS
- *      │                                   │
- *      ▼                                   ├──→ HTTP_ERR (409 / 400 / 5xx)
- *   LOAD_ERR                               │
- *                                          ▼
- *                                     NETWORK_ERR (DNS / timeout / refused)
+ * CHECK_AUTH ──→ LOAD_SKILL ──→ BUILD_ADAPTERS ──→ POST_REGISTRY ──→ SUCCESS
+ *     │              │                                    │
+ *     ▼              ▼                                    ├──→ 401 (bad token)
+ *  NO_TOKEN       LOAD_ERR                               ├──→ 403 (namespace/ownership)
+ *                                                        ├──→ HTTP_ERR (409 / 400 / 5xx)
+ *                                                        ▼
+ *                                                   NETWORK_ERR
  */
 
 import { Command } from "commander";
@@ -14,6 +15,7 @@ import { resolve } from "node:path";
 import chalk from "chalk";
 import { loadSkill, getAdapter } from "@polyskill/core";
 import { REGISTRY_URL } from "../config.js";
+import { getToken } from "../auth.js";
 
 interface ErrorResponse {
   error?: string;
@@ -28,6 +30,14 @@ export const publishCommand = new Command("publish")
   .action(async (directory: string, options: { registry: string }) => {
     const skillDir = resolve(process.cwd(), directory);
     const registryUrl = options.registry;
+
+    // Check authentication
+    const token = getToken();
+    if (!token) {
+      console.log(chalk.red("\nNot authenticated. Run: polyskill login"));
+      console.log(chalk.dim("Or register an agent: polyskill agent register\n"));
+      process.exit(1);
+    }
 
     console.log(chalk.bold("\nPublishing skill..."));
 
@@ -61,7 +71,10 @@ export const publishCommand = new Command("publish")
     try {
       res = await fetch(`${registryUrl}/api/skills`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
         body: JSON.stringify(body),
         signal: AbortSignal.timeout(30_000),
       });
@@ -75,12 +88,20 @@ export const publishCommand = new Command("publish")
 
     if (!res.ok) {
       const error: ErrorResponse = await res.json().catch(() => ({ message: res.statusText }));
-      console.log(
-        chalk.red(`\nPublish failed: ${error.error || error.message}`)
-      );
-      if (error.details) {
-        for (const detail of error.details) {
-          console.log(chalk.red(`  - ${detail}`));
+      if (res.status === 401) {
+        console.log(chalk.red("\nAuthentication failed. Run: polyskill login"));
+        console.log(chalk.dim("Or register an agent: polyskill agent register\n"));
+      } else if (res.status === 403) {
+        console.log(chalk.red(`\nPublish failed: ${error.message}`));
+        console.log(chalk.dim("Skill names must match your GitHub username or agent name: @<name>/skill-name\n"));
+      } else {
+        console.log(
+          chalk.red(`\nPublish failed: ${error.error || error.message}`)
+        );
+        if (error.details) {
+          for (const detail of error.details) {
+            console.log(chalk.red(`  - ${detail}`));
+          }
         }
       }
       process.exit(1);

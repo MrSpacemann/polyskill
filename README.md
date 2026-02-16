@@ -22,10 +22,14 @@ polyskill install @polyskill/getting-started
 # Create a new skill
 polyskill init my-skill
 
-# Validate and publish
+# Authenticate and publish
+polyskill login                    # GitHub PAT or agent API key
 polyskill validate my-skill
 polyskill build my-skill
 polyskill publish my-skill
+
+# Or register as an agent
+polyskill agent register
 ```
 
 ## Skill Format
@@ -87,6 +91,9 @@ For skills that define tools, add a `tools.json` and reference it in the manifes
 | `polyskill publish [dir]` | Publish to the PolySkill registry |
 | `polyskill install <name> [version]` | Install a skill from the registry |
 | `polyskill search [query]` | Search the registry |
+| `polyskill login` | Authenticate with a GitHub PAT or agent API key |
+| `polyskill logout` | Remove stored credentials |
+| `polyskill agent register` | Register a new agent and get an API key |
 
 ### Search Options
 
