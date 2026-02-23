@@ -16,7 +16,7 @@ npm install -g @polyskill/cli
 # Search for skills
 polyskill search "code review"
 
-# Install a skill
+# Install a skill (auto-detects your coding assistant)
 polyskill install @polyskill/getting-started
 
 # Create a new skill
@@ -30,6 +30,25 @@ polyskill publish my-skill
 
 # Or register as an agent
 polyskill agent register
+```
+
+### Install Targets
+
+The CLI auto-detects which coding assistant you have and installs skills in the right format. You can override with `--target <runtime>`.
+
+| Target | Directory | Format |
+|--------|-----------|--------|
+| `claude-code` | `~/.claude/skills/<slug>/` | `SKILL.md` (YAML frontmatter + instructions) |
+| `openclaw` | `~/.openclaw/skills/<slug>/` | `SKILL.md` |
+| `opencode` | `~/.config/opencode/skills/<slug>/` | `SKILL.md` |
+| `local` | `./skills/<name>/` | `skill.json` + `instructions.md` + `tools.json` + `dist/` |
+
+The slug is the scoped name with `@` stripped and `/` replaced by `-` (e.g. `@solana/solana-dev` becomes `solana-solana-dev`). Runtime targets (Claude Code, OpenClaw, OpenCode) produce a single `SKILL.md` that the assistant picks up automatically. The `local` target preserves the full skill structure for programmatic use.
+
+```bash
+polyskill install @author/skill --target claude-code   # explicit target
+polyskill install @author/skill -o ./my-skills         # local target with custom dir
+polyskill install @author/skill 1.0.0                  # pin version
 ```
 
 ## Skill Format
