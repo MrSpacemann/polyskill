@@ -2,8 +2,9 @@
  * Install flow state machine:
  *
  * FETCH_REGISTRY ──→ RESOLVE_TARGET ──→ WRITE_FILES ──→ SUCCESS
- *        │
- *        ├──→ NOT_FOUND / HTTP_ERR
+ *        │                  │                 │
+ *        ├──→ NOT_FOUND      ├──→ UNKNOWN_TARGET └──→ WRITE_ERR (EACCES, ENOSPC, etc.)
+ *        ├──→ HTTP_ERR       └──→ AMBIGUOUS_TARGET
  *        │
  *        ▼
  *   NETWORK_ERR (DNS / timeout / refused)
@@ -38,7 +39,7 @@ export const installCommand = new Command("install")
       // Fetch from registry
       const encodedName = encodeURIComponent(name);
       const url = version
-        ? `${registryUrl}/api/skills/${encodedName}/${version}`
+        ? `${registryUrl}/api/skills/${encodedName}/${encodeURIComponent(version)}`
         : `${registryUrl}/api/skills/${encodedName}`;
 
       let res: Response;
@@ -64,7 +65,27 @@ export const installCommand = new Command("install")
 
       const skill = (await res.json()) as any;
 
-      // Track download (fire-and-forget for the user, but await for correctness)
+      // Resolve target (--target flag, --output implies local, or auto-detect)
+      const target = resolveTarget(options.target, options.output !== undefined);
+      const outputDir = resolve(process.cwd(), options.output ?? ".");
+
+      if (options.output !== undefined && target.name !== "local") {
+        console.log(
+          chalk.yellow(
+            `  Warning: --output is ignored for the "${target.name}" target (files go to ${target.dir})`
+          )
+        );
+      }
+
+      // Write skill files via target
+      try {
+        await target.write(skill, outputDir);
+      } catch (err: any) {
+        console.log(chalk.red(`\nFailed to write skill files: ${err.message}\n`));
+        process.exit(1);
+      }
+
+      // Track download only after successful write
       try {
         await fetch(`${registryUrl}/api/skills/${encodedName}/download`, {
           method: "POST",
@@ -73,13 +94,6 @@ export const installCommand = new Command("install")
       } catch (_) {
         // Non-critical — don't block the install
       }
-
-      // Resolve target (--target flag, --output implies local, or auto-detect)
-      const target = resolveTarget(options.target, options.output !== undefined);
-      const outputDir = resolve(process.cwd(), options.output ?? ".");
-
-      // Write skill files via target
-      await target.write(skill, outputDir);
 
       const badge = skill.verified
         ? chalk.green("[verified]")

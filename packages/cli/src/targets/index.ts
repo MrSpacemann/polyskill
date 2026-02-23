@@ -4,13 +4,13 @@ import { join } from "node:path";
 import chalk from "chalk";
 import { claudeCodeTarget } from "./claude-code.js";
 import { openclawTarget } from "./openclaw.js";
-import { opencodeTarget } from "./opencode.js";
+import { opencodeTarget, openCodeRootDir } from "./opencode.js";
 import { localTarget } from "./local.js";
 
 export interface Target {
   name: string;
   dir: string;
-  write(skill: any, outputDir?: string): Promise<void>;
+  write(skill: any, outputDir: string): Promise<void>;
 }
 
 export const targetRegistry: Record<string, Target> = {
@@ -24,10 +24,7 @@ export const targetRegistry: Record<string, Target> = {
 const runtimeRoots: Record<string, string> = {
   "claude-code": join(os.homedir(), ".claude"),
   openclaw: join(os.homedir(), ".openclaw"),
-  opencode:
-    process.platform === "win32"
-      ? join(process.env.APPDATA ?? join(os.homedir(), "AppData", "Roaming"), "opencode")
-      : join(os.homedir(), ".config", "opencode"),
+  opencode: openCodeRootDir(),
 };
 
 /** Returns the names of runtime targets whose root directories exist on disk. */

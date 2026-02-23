@@ -2,17 +2,13 @@ import { writeFile, mkdir } from "node:fs/promises";
 import { join } from "node:path";
 import os from "node:os";
 import chalk from "chalk";
-import { generateSkillMd } from "./skill-md.js";
-
-function toSlug(name: string): string {
-  return name.replace(/^@/, "").replaceAll("/", "-");
-}
+import { generateSkillMd, toSlug } from "./skill-md.js";
 
 export const openclawTarget = {
   name: "openclaw",
   dir: join(os.homedir(), ".openclaw", "skills"),
 
-  async write(skill: any): Promise<void> {
+  async write(skill: any, _outputDir: string): Promise<void> {
     const slug = toSlug(skill.name);
     const skillDir = join(os.homedir(), ".openclaw", "skills", slug);
     await mkdir(skillDir, { recursive: true });

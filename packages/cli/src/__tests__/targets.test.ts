@@ -19,7 +19,7 @@ vi.mock("../config.js", () => ({
 
 import { writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
-import { generateSkillMd } from "../targets/skill-md.js";
+import { generateSkillMd, toSlug } from "../targets/skill-md.js";
 import { detectInstalledTargets, resolveTarget, targetRegistry } from "../targets/index.js";
 import { installCommand } from "../commands/install.js";
 
@@ -40,6 +40,22 @@ beforeEach(() => {
   vi.stubGlobal("fetch", vi.fn());
 });
 
+// ─── toSlug ──────────────────────────────────────────────────────────────────
+
+describe("toSlug", () => {
+  it("strips @ and replaces / with -", () => {
+    expect(toSlug("@obra/superpowers")).toBe("obra-superpowers");
+  });
+
+  it("handles unscoped names (no @)", () => {
+    expect(toSlug("simple-skill")).toBe("simple-skill");
+  });
+
+  it("handles deep scopes with multiple segments", () => {
+    expect(toSlug("@scope/pkg/deep")).toBe("scope-pkg-deep");
+  });
+});
+
 // ─── generateSkillMd ────────────────────────────────────────────────────────
 
 describe("generateSkillMd", () => {
@@ -50,9 +66,9 @@ describe("generateSkillMd", () => {
       keywords: ["ai", "tools"],
     };
     const result = generateSkillMd(manifest, "You are helpful.");
-    expect(result).toContain("name: superpowers");
-    expect(result).toContain("description: Do amazing things");
-    expect(result).toContain("tags: ai, tools");
+    expect(result).toContain('name: "obra-superpowers"');
+    expect(result).toContain('description: "Do amazing things"');
+    expect(result).toContain('tags: ["ai", "tools"]');
     expect(result).toContain("You are helpful.");
   });
 
@@ -61,13 +77,13 @@ describe("generateSkillMd", () => {
     const result = generateSkillMd(manifest, "Instructions here.");
     expect(result).not.toContain("metadata:");
     expect(result).not.toContain("tags:");
-    expect(result).toContain("name: bar");
+    expect(result).toContain('name: "foo-bar"');
   });
 
-  it("uses last path segment for the name", () => {
+  it("uses scoped slug for the name", () => {
     const manifest = { name: "@polyskill/getting-started", description: "Intro" };
     const result = generateSkillMd(manifest, "Body");
-    expect(result).toContain("name: getting-started");
+    expect(result).toContain('name: "polyskill-getting-started"');
     expect(result).not.toContain("@polyskill");
   });
 
@@ -78,6 +94,40 @@ describe("generateSkillMd", () => {
     expect(frontmatter).toMatch(/^---/);
     expect(frontmatter).toMatch(/---$/);
     expect(bodyParts.join("\n\n")).toContain("Body text");
+  });
+
+  it("wraps description containing : and # in double-quotes", () => {
+    const manifest = {
+      name: "@a/b",
+      description: "A skill: does #things",
+    };
+    const result = generateSkillMd(manifest, "");
+    expect(result).toContain('description: "A skill: does #things"');
+  });
+
+  it("escapes inner double-quotes in description", () => {
+    const manifest = {
+      name: "@a/b",
+      description: 'Has "quotes" in it',
+    };
+    const result = generateSkillMd(manifest, "");
+    expect(result).toContain('description: "Has \\"quotes\\" in it"');
+  });
+
+  it("escapes newlines in description", () => {
+    const manifest = { name: "@a/b", description: "line1\nline2" };
+    const result = generateSkillMd(manifest, "");
+    expect(result).toContain('description: "line1\\nline2"');
+  });
+
+  it("quotes tag keywords containing special characters", () => {
+    const manifest = {
+      name: "@a/b",
+      description: "D",
+      keywords: ["safe", "has space", "has,comma"],
+    };
+    const result = generateSkillMd(manifest, "");
+    expect(result).toContain('tags: ["safe", "has space", "has,comma"]');
   });
 });
 
@@ -183,7 +233,7 @@ describe("install command --target claude-code", () => {
     );
     expect(writeFile).toHaveBeenCalledWith(
       expect.stringContaining("SKILL.md"),
-      expect.stringContaining("name: my-skill")
+      expect.stringContaining('name: "test-my-skill"')
     );
   });
 
@@ -199,6 +249,24 @@ describe("install command --target claude-code", () => {
     expect(mkdirCall).toMatch(/test-my-skill/);
     expect(mkdirCall).not.toContain("@");
     expect(mkdirCall).not.toContain("__");
+  });
+});
+
+describe("install command --output with non-local target", () => {
+  it("warns when --output is passed alongside a non-local --target and still uses the correct target", async () => {
+    mockFetchOk(fullSkillResponse);
+    await installCommand.parseAsync(
+      ["@test/my-skill", "--target", "claude-code", "--output", "/tmp/out"],
+      { from: "user" }
+    );
+    expect(console.log).toHaveBeenCalledWith(
+      expect.stringContaining("--output is ignored")
+    );
+    // Skill was written to claude-code path, not --output dir
+    expect(mkdir).toHaveBeenCalledWith(
+      expect.stringContaining(path.join(".claude", "skills", "test-my-skill")),
+      { recursive: true }
+    );
   });
 });
 

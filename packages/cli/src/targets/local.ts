@@ -1,5 +1,5 @@
 import { writeFile, mkdir } from "node:fs/promises";
-import { join, resolve } from "node:path";
+import { join } from "node:path";
 import chalk from "chalk";
 
 /**
@@ -11,6 +11,8 @@ export const localTarget = {
   dir: "./skills/",
 
   async write(skill: any, outputDir: string): Promise<void> {
+    // Keep @ and replace / with __ (e.g. @author/skill → @author__skill).
+    // The @ is intentionally preserved to match the original install behavior.
     const skillDir = join(outputDir, "skills", skill.name.replaceAll("/", "__"));
     await mkdir(skillDir, { recursive: true });
 
