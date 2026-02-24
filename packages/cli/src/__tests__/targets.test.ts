@@ -21,6 +21,7 @@ import { writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
 import { generateSkillMd, toSlug } from "../targets/skill-md.js";
 import { detectInstalledTargets, resolveTarget, targetRegistry } from "../targets/index.js";
+import { codexRootDir } from "../targets/codex.js";
 import { installCommand } from "../commands/install.js";
 
 class ExitError extends Error {
@@ -146,10 +147,38 @@ describe("detectInstalledTargets", () => {
     expect(detectInstalledTargets()).toContain("claude-code");
   });
 
+  it("returns codex when ~/.codex exists", () => {
+    vi.mocked(existsSync).mockImplementation((p) =>
+      String(p) === path.join(os.homedir(), ".codex")
+    );
+    expect(detectInstalledTargets()).toEqual(["codex"]);
+  });
+
   it("returns multiple targets when multiple roots exist", () => {
     vi.mocked(existsSync).mockReturnValue(true);
     const found = detectInstalledTargets();
     expect(found.length).toBeGreaterThan(1);
+  });
+});
+
+// ─── codexRootDir ────────────────────────────────────────────────────────────
+
+describe("codexRootDir", () => {
+  it("defaults to ~/.codex", () => {
+    delete process.env.CODEX_HOME;
+    expect(codexRootDir()).toBe(path.join(os.homedir(), ".codex"));
+  });
+
+  it("uses CODEX_HOME env var when set", () => {
+    process.env.CODEX_HOME = "/custom/codex";
+    expect(codexRootDir()).toBe("/custom/codex");
+    delete process.env.CODEX_HOME;
+  });
+
+  it("ignores empty CODEX_HOME", () => {
+    process.env.CODEX_HOME = "";
+    expect(codexRootDir()).toBe(path.join(os.homedir(), ".codex"));
+    delete process.env.CODEX_HOME;
   });
 });
 
@@ -266,6 +295,25 @@ describe("install command --output with non-local target", () => {
     expect(mkdir).toHaveBeenCalledWith(
       expect.stringContaining(path.join(".claude", "skills", "test-my-skill")),
       { recursive: true }
+    );
+  });
+});
+
+describe("install command --target codex", () => {
+  it("writes SKILL.md to ~/.codex/skills/<slug>/", async () => {
+    mockFetchOk(fullSkillResponse);
+    await installCommand.parseAsync(
+      ["@test/my-skill", "--target", "codex"],
+      { from: "user" }
+    );
+
+    expect(mkdir).toHaveBeenCalledWith(
+      expect.stringContaining(path.join(".codex", "skills", "test-my-skill")),
+      { recursive: true }
+    );
+    expect(writeFile).toHaveBeenCalledWith(
+      expect.stringContaining("SKILL.md"),
+      expect.stringContaining('name: "test-my-skill"')
     );
   });
 });

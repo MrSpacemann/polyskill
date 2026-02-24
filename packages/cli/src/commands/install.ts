@@ -24,7 +24,7 @@ export const installCommand = new Command("install")
   .option("-o, --output <dir>", "Output directory (local target only)")
   .option(
     "--target <runtime>",
-    "Install target: claude-code | openclaw | opencode | local"
+    "Install target: claude-code | codex | openclaw | opencode | local"
   )
   .action(
     async (

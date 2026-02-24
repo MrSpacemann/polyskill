@@ -4,18 +4,14 @@ import os from "node:os";
 import chalk from "chalk";
 import { generateSkillMd, toSlug } from "./skill-md.js";
 
-export function openCodeRootDir(): string {
-  if (process.platform === "win32") {
-    const appData = process.env.APPDATA || join(os.homedir(), "AppData", "Roaming");
-    return join(appData, "opencode");
-  }
-  return join(os.homedir(), ".config", "opencode");
+export function codexRootDir(): string {
+  return process.env.CODEX_HOME || join(os.homedir(), ".codex");
 }
 
-const DIR = join(openCodeRootDir(), "skills");
+const DIR = join(codexRootDir(), "skills");
 
-export const opencodeTarget = {
-  name: "opencode",
+export const codexTarget = {
+  name: "codex",
   dir: DIR,
 
   async write(skill: any, _outputDir: string): Promise<void> {

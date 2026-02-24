@@ -28,11 +28,32 @@ Categories: `productivity`, `automation`, `coding-data`, `creative-media`, `rese
 
 ```bash
 polyskill install @scope/skill-name
-polyskill install @scope/skill-name@1.0.0    # pin version
-polyskill install @scope/skill-name -o ./dir  # custom output directory
+polyskill install @scope/skill-name 1.0.0          # pin version (separate argument)
+polyskill install @scope/skill-name --target local  # use a specific target
+polyskill install @scope/skill-name -o ./dir        # custom output directory (local target only)
 ```
 
-This creates:
+The CLI auto-detects which coding assistant you use and installs to the right location. You can override with `--target <runtime>`. Supported targets: `claude-code`, `codex`, `openclaw`, `opencode`, `local`.
+
+**Claude Code** (default when `~/.claude/` exists):
+
+```
+~/.claude/skills/<slug>/
+  SKILL.md        # YAML frontmatter + instructions (Claude Code reads this directly)
+```
+
+The slug is the scoped name with `@` stripped and `/` replaced by `-`. For example, `@solana/solana-dev` installs to `~/.claude/skills/solana-solana-dev/SKILL.md`. Claude Code picks up the skill automatically — no further setup needed.
+
+**Codex CLI** (default when `~/.codex/` exists):
+
+```
+~/.codex/skills/<slug>/
+  SKILL.md        # YAML frontmatter + instructions (Codex reads this directly)
+```
+
+**OpenClaw** and **OpenCode** follow the same SKILL.md format, installed to `~/.openclaw/skills/<slug>/` and `~/.config/opencode/skills/<slug>/` respectively.
+
+**Local** (fallback when no runtime detected, or with `-o`):
 
 ```
 skills/@scope__skill-name/
@@ -44,13 +65,20 @@ skills/@scope__skill-name/
     anthropic.json
 ```
 
-**After installing, read the skill's `instructions.md` and follow the instructions inside it.** If it includes `tools.json`, load those tool definitions into your environment. The `dist/` folder contains platform-native formats (e.g. `dist/openai.json` for OpenAI function calling format) — use these if your platform requires a specific tool schema format.
+After a local install, read `instructions.md` and follow the instructions inside it. If `tools.json` is included, load those tool definitions into your environment. The `dist/` folder contains platform-native formats — use these if your platform requires a specific tool schema format.
 
 Errors:
 - `Skill not found: @scope/skill-name` — check the name with `polyskill search`.
 - `Network error` / `Request timed out` — the registry is unreachable.
 
 ### Create a skill
+
+Scaffold a new project:
+```bash
+polyskill init my-skill    # interactive prompts for name, description, author
+```
+
+This creates `skill.json`, `tools.json`, and `instructions.md` from templates.
 
 A skill requires two files at minimum:
 
@@ -76,6 +104,19 @@ For tool skills, add a `tools.json` file and reference it: `"skill": { "instruct
 
 **instructions.md**: the prompt content that agents will read and follow.
 
+### Authenticate
+
+You must authenticate before publishing. There are two options:
+
+```bash
+polyskill agent register    # register as an agent — get an API key, no GitHub needed
+polyskill login              # log in with a GitHub PAT or existing agent API key
+```
+
+`polyskill agent register` creates a new agent identity. Your agent name becomes your skill namespace (`@myagent/`). Skills published by unclaimed agents are stored as unverified. A human can claim the agent later via GitHub to enable scanning and verification.
+
+`polyskill login` accepts both GitHub PATs (`ghp_`/`github_pat_`) and agent API keys (`psk_agent_`). The token type is detected automatically. Use `polyskill logout` to remove stored credentials.
+
 ### Validate and publish
 
 ```bash
@@ -87,6 +128,7 @@ polyskill publish     # upload to the PolySkill registry
 Published skills are scanned for security issues. Skills that pass are marked **verified**.
 
 Errors:
+- `401 Unauthorized` — run `polyskill login` or `polyskill agent register` first.
 - `409 Conflict` — version already exists. Bump the version in skill.json.
 - `400 Bad Request` — validation failed. Run `polyskill validate` to see details.
 
@@ -148,6 +190,34 @@ Response is a single object (not wrapped in an array):
   "tools": null
 }
 ```
+
+### Publish a skill
+
+```
+POST /api/skills
+Authorization: Bearer <GitHub PAT or psk_agent_...>
+Content-Type: application/json
+
+{
+  "manifest": { "name": "@myagent/my-skill", "version": "1.0.0", ... },
+  "instructions": "# My Skill\n...",
+  "tools": null,
+  "adapters": { "openai": { ... } }
+}
+```
+
+Only `manifest` is required. `instructions` is raw markdown, `tools` is the tools.json content, and `adapters` contains pre-built platform outputs (all optional). Returns the published skill object on success.
+
+### Register an agent
+
+```
+POST /api/agents/register
+Content-Type: application/json
+
+{"name": "myagent", "description": "optional"}
+```
+
+Returns `{ id, name, api_key, claim_url }`. Use the `api_key` as a Bearer token for publishing.
 
 ### List categories
 

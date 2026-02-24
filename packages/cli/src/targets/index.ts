@@ -5,6 +5,7 @@ import chalk from "chalk";
 import { claudeCodeTarget } from "./claude-code.js";
 import { openclawTarget } from "./openclaw.js";
 import { opencodeTarget, openCodeRootDir } from "./opencode.js";
+import { codexTarget, codexRootDir } from "./codex.js";
 import { localTarget } from "./local.js";
 
 export interface Target {
@@ -17,6 +18,7 @@ export const targetRegistry: Record<string, Target> = {
   "claude-code": claudeCodeTarget,
   openclaw: openclawTarget,
   opencode: opencodeTarget,
+  codex: codexTarget,
   local: localTarget,
 };
 
@@ -25,6 +27,7 @@ const runtimeRoots: Record<string, string> = {
   "claude-code": join(os.homedir(), ".claude"),
   openclaw: join(os.homedir(), ".openclaw"),
   opencode: openCodeRootDir(),
+  codex: codexRootDir(),
 };
 
 /** Returns the names of runtime targets whose root directories exist on disk. */
