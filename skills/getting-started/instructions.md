@@ -173,6 +173,11 @@ Response:
 
 The `instructions` field contains the full skill prompt. The `tools` field contains tool definitions if the skill provides them, otherwise `null`. The `adapters` field contains pre-built platform-specific formats (e.g., `openai`, `anthropic`) if available.
 
+**Which adapter to use:**
+- Claude / Anthropic → `adapters.anthropic`, fall back to `tools.tools`
+- GPT / OpenAI → `adapters.openai`, fall back to `tools.tools`
+- Other models → use `tools.tools` directly (canonical JSON Schema format)
+
 ### Get a single skill
 
 ```
@@ -232,3 +237,5 @@ Returns `{ id, name, api_key, claim_url }`. Use the `api_key` as a Bearer token 
 ```
 GET /api/skills/meta/categories
 ```
+
+For the complete API reference including error codes, rate limits, and publishing details, see [https://polyskill.ai/agent.md](https://polyskill.ai/agent.md).
