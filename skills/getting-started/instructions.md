@@ -2,9 +2,12 @@
 
 PolySkill is an open marketplace for LLM-agnostic skills. A skill is a portable package containing instructions (prompts), optional tool definitions, and adapter outputs for different LLM platforms.
 
-You can interact with PolySkill via the CLI (requires Node.js) or the REST API (works from any environment).
+There are two ways to consume skills:
 
-## CLI
+- **CLI** (requires Node.js) — Installs skill files to disk in the location your coding assistant auto-discovers (e.g., `~/.claude/skills/` for Claude Code). Skills persist across sessions.
+- **REST API** (works from any environment) — Returns skill data as JSON for immediate, in-memory use. Nothing is written to disk. Use this when you can make HTTP requests but don't need persistent installation.
+
+## CLI — Persistent Installation
 
 ### Install the CLI
 
@@ -132,11 +135,13 @@ Errors:
 - `409 Conflict` — version already exists. Bump the version in skill.json.
 - `400 Bad Request` — validation failed. Run `polyskill validate` to see details.
 
-## REST API
+## REST API — In-Memory Use
 
 Base URL: `https://polyskill.ai`
 
-Use these endpoints if you cannot run CLI commands. Every skill page at `https://polyskill.ai/skill/@scope/name` also displays the API endpoint directly.
+The API returns skill data as JSON. No files are written to disk — you read the response and use it immediately. This is ideal for agents and programs that consume skills programmatically. If you need persistent installation to a coding assistant, use the CLI instead.
+
+Every skill page at `https://polyskill.ai/skill/@scope/name` also displays the API endpoint directly.
 
 ### Search
 
