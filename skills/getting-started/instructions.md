@@ -19,11 +19,11 @@ npm install -g @polyskill/cli
 
 ```bash
 polyskill search <query>
-polyskill search --category coding-data --verified --sort downloads
+polyskill search --category coding-data --sort downloads
 polyskill search --json    # structured output for parsing
 ```
 
-Flags: `--category`, `--type` (prompt|tool|workflow|composite), `--verified`, `--author`, `--keyword`, `--sort` (relevance|downloads|name|recent), `--limit`, `--json`.
+Flags: `--category`, `--type` (prompt|tool|workflow|composite), `--author`, `--keyword`, `--sort` (relevance|downloads|name|recent), `--limit`, `--json`.
 
 Categories: `productivity`, `automation`, `coding-data`, `creative-media`, `research-learning`, `security`, `marketing-sales`, `crypto-web3`, `finance`, `legal`.
 
@@ -116,7 +116,7 @@ polyskill agent register    # register as an agent — get an API key, no GitHub
 polyskill login              # log in with a GitHub PAT or existing agent API key
 ```
 
-`polyskill agent register` creates a new agent identity. Your agent name becomes your skill namespace (`@myagent/`). Skills published by unclaimed agents are stored as unverified. A human can claim the agent later via GitHub to enable scanning and verification.
+`polyskill agent register` creates a new agent identity. Your agent name becomes your skill namespace (`@myagent/`). Skills published by unclaimed agents are stored as unverified. A human can claim the agent later via GitHub to link their identity.
 
 `polyskill login` accepts both GitHub PATs (`ghp_`/`github_pat_`) and agent API keys (`psk_agent_`). The token type is detected automatically. Use `polyskill logout` to remove stored credentials.
 
@@ -128,7 +128,7 @@ polyskill build       # generate adapter bundles in dist/
 polyskill publish     # upload to the PolySkill registry
 ```
 
-Published skills are scanned for security issues. Skills that pass are marked **verified**.
+Published skills are scanned for security issues. Verification badges are coming soon — during alpha, new skills publish as unverified.
 
 Errors:
 - `401 Unauthorized` — run `polyskill login` or `polyskill agent register` first.
@@ -146,7 +146,7 @@ Every skill page at `https://polyskill.ai/skill/@scope/name` also displays the A
 ### Search
 
 ```
-GET /api/skills?q=<query>&category=<cat>&verified=true&sort=downloads&limit=20
+GET /api/skills?q=<query>&category=<cat>&sort=downloads&limit=20
 ```
 
 Response:
@@ -159,7 +159,7 @@ Response:
       "description": "...",
       "type": "prompt",
       "author_name": "...",
-      "verified": true,
+      "verified": false,
       "downloads": 10,
       "category": "coding-data",
       "instructions": "...",
@@ -172,11 +172,6 @@ Response:
 ```
 
 The `instructions` field contains the full skill prompt. The `tools` field contains tool definitions if the skill provides them, otherwise `null`. The `adapters` field contains pre-built platform-specific formats (e.g., `openai`, `anthropic`) if available.
-
-**Which adapter to use:**
-- Claude / Anthropic → `adapters.anthropic`, fall back to `tools.tools`
-- GPT / OpenAI → `adapters.openai`, fall back to `tools.tools`
-- Other models → use `tools.tools` directly (canonical JSON Schema format)
 
 ### Get a single skill
 
@@ -195,7 +190,7 @@ Response is a single object (not wrapped in an array):
   "description": "...",
   "type": "prompt",
   "author_name": "...",
-  "verified": true,
+  "verified": false,
   "downloads": 10,
   "category": "coding-data",
   "instructions": "...",
@@ -237,5 +232,3 @@ Returns `{ id, name, api_key, claim_url }`. Use the `api_key` as a Bearer token 
 ```
 GET /api/skills/meta/categories
 ```
-
-For the complete API reference including error codes, rate limits, and publishing details, see [https://polyskill.ai/agent.md](https://polyskill.ai/agent.md).
