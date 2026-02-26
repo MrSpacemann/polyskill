@@ -39,11 +39,12 @@ The CLI auto-detects which coding assistant you have and installs skills in the 
 | Target | Directory | Format |
 |--------|-----------|--------|
 | `claude-code` | `~/.claude/skills/<slug>/` | `SKILL.md` (YAML frontmatter + instructions) |
+| `codex` | `~/.codex/skills/<slug>/` | `SKILL.md` |
 | `openclaw` | `~/.openclaw/skills/<slug>/` | `SKILL.md` |
 | `opencode` | `~/.config/opencode/skills/<slug>/` | `SKILL.md` |
-| `local` | `./skills/<name>/` | `skill.json` + `instructions.md` + `tools.json` + `dist/` |
+| `local` | `./skills/@scope__name/` | `skill.json` + `instructions.md` + `tools.json` + `dist/` |
 
-The slug is the scoped name with `@` stripped and `/` replaced by `-` (e.g. `@solana/solana-dev` becomes `solana-solana-dev`). Runtime targets (Claude Code, OpenClaw, OpenCode) produce a single `SKILL.md` that the assistant picks up automatically. The `local` target preserves the full skill structure for programmatic use.
+The slug is the scoped name with `@` stripped and `/` replaced by `-` (e.g. `@solana/solana-dev` becomes `solana-solana-dev`). Runtime targets (Claude Code, Codex, OpenClaw, OpenCode) produce a single `SKILL.md` that the assistant picks up automatically. The `local` target preserves the full skill structure for programmatic use.
 
 ```bash
 polyskill install @author/skill --target claude-code   # explicit target
@@ -124,6 +125,20 @@ polyskill search --json  # structured output for parsing
 ```
 
 Flags: `--category`, `--type`, `--verified`, `--author`, `--keyword`, `--sort` (relevance|downloads|name|recent), `--limit`, `--json`.
+
+## REST API
+
+Skills can also be consumed directly via the REST API — no CLI or API key required for reading. Base URL: `https://polyskill.ai`
+
+```bash
+# Search for skills
+GET /api/skills?q=weather&category=productivity&verified=true&limit=10
+
+# Get a specific skill (encode the / as %2F)
+GET /api/skills/@author%2Fskill-name
+```
+
+The response includes `instructions`, `tools`, and `adapters` — everything needed to use the skill programmatically. Every skill page on [polyskill.ai](https://polyskill.ai) also displays the API endpoint directly. See [the docs](https://polyskill.ai/docs#api) for the full endpoint reference.
 
 ## Packages
 

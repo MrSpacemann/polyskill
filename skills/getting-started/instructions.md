@@ -136,7 +136,7 @@ Errors:
 
 Base URL: `https://polyskill.ai`
 
-Use these endpoints if you cannot run CLI commands.
+Use these endpoints if you cannot run CLI commands. Every skill page at `https://polyskill.ai/skill/@scope/name` also displays the API endpoint directly.
 
 ### Search
 
@@ -158,22 +158,24 @@ Response:
       "downloads": 10,
       "category": "coding-data",
       "instructions": "...",
-      "tools": null
+      "tools": null,
+      "adapters": {}
     }
   ],
   "total": 1
 }
 ```
 
-The `instructions` field contains the full skill prompt. The `tools` field contains tool definitions if the skill provides them, otherwise `null`.
+The `instructions` field contains the full skill prompt. The `tools` field contains tool definitions if the skill provides them, otherwise `null`. The `adapters` field contains pre-built platform-specific formats (e.g., `openai`, `anthropic`) if available.
 
 ### Get a single skill
 
 ```
-GET /api/skills/%40scope%2Fskill-name
+GET /api/skills/@scope%2Fskill-name
+GET /api/skills/@scope%2Fskill-name/1.0.0
 ```
 
-Note: `@` and `/` in the skill name must be URL-encoded (`%40` and `%2F`).
+Note: encode the `/` in the skill name as `%2F`. Encoding `@` as `%40` is optional — both forms work. If you use `encodeURIComponent()` in code, it encodes both, which is fine.
 
 Response is a single object (not wrapped in an array):
 ```json
@@ -187,7 +189,8 @@ Response is a single object (not wrapped in an array):
   "downloads": 10,
   "category": "coding-data",
   "instructions": "...",
-  "tools": null
+  "tools": null,
+  "adapters": {}
 }
 ```
 
