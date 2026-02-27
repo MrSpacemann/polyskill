@@ -37,7 +37,6 @@ const fullSkillResponse = {
   instructions: "You are a test assistant.",
   adapters: { openai: { platform: "openai" } },
   verified: true,
-  downloads: 100,
 };
 
 function mockFetchResponse(status: number, body: unknown) {

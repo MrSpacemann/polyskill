@@ -20,7 +20,6 @@ interface SkillResult {
   type: string;
   author_name: string;
   verified: boolean;
-  downloads: number;
   category: string | null;
 }
 
@@ -37,7 +36,7 @@ export const searchCommand = new Command("search")
   .option("--author <name>", "Filter by author name")
   .option("--keyword <keyword>", "Filter by keyword")
   .option("--category <category>", "Filter by category (e.g. coding-data, productivity, automation)")
-  .option("--sort <sort>", "Sort results (relevance, downloads, name, recent)")
+  .option("--sort <sort>", "Sort results (relevance, name, recent)")
   .option("--limit <n>", "Max results (default 20)", "20")
   .option("--json", "Output raw JSON (for programmatic use)")
   .option("--registry <url>", "Registry URL", REGISTRY_URL)

@@ -32,7 +32,6 @@ const twoSkillsResponse = {
       type: "prompt",
       author_name: "openclaw",
       verified: true,
-      downloads: 5,
     },
     {
       name: "@test/unverified-skill",
@@ -41,7 +40,6 @@ const twoSkillsResponse = {
       type: "tool",
       author_name: "test",
       verified: false,
-      downloads: 0,
     },
   ],
   total: 2,
@@ -156,10 +154,10 @@ describe("search command", () => {
   it("passes --sort filter to the API", async () => {
     mockFetchResponse(200, { skills: [], total: 0 });
 
-    await searchCommand.parseAsync(["--sort", "downloads"], { from: "user" });
+    await searchCommand.parseAsync(["--sort", "name"], { from: "user" });
 
     const fetchUrl = vi.mocked(fetch).mock.calls[0][0] as string;
-    expect(fetchUrl).toContain("sort=downloads");
+    expect(fetchUrl).toContain("sort=name");
   });
 
   it("works with no query (lists all skills)", async () => {

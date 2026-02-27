@@ -19,11 +19,11 @@ npm install -g @polyskill/cli
 
 ```bash
 polyskill search <query>
-polyskill search --category coding-data --sort downloads
+polyskill search --category coding-data --sort recent
 polyskill search --json    # structured output for parsing
 ```
 
-Flags: `--category`, `--type` (prompt|tool|workflow|composite), `--author`, `--keyword`, `--sort` (relevance|downloads|name|recent), `--limit`, `--json`.
+Flags: `--category`, `--type` (prompt|tool|workflow|composite), `--author`, `--keyword`, `--sort` (relevance|name|recent), `--limit`, `--json`.
 
 Categories: `productivity`, `automation`, `coding-data`, `creative-media`, `research-learning`, `security`, `marketing-sales`, `crypto-web3`, `finance`, `legal`.
 
@@ -146,7 +146,7 @@ Every skill page at `https://polyskill.ai/skill/@scope/name` also displays the A
 ### Search
 
 ```
-GET /api/skills?q=<query>&category=<cat>&sort=downloads&limit=20
+GET /api/skills?q=<query>&category=<cat>&sort=recent&limit=20
 ```
 
 Response:
@@ -160,7 +160,6 @@ Response:
       "type": "prompt",
       "author_name": "...",
       "verified": false,
-      "downloads": 10,
       "category": "coding-data",
       "instructions": "...",
       "tools": null,
@@ -191,7 +190,6 @@ Response is a single object (not wrapped in an array):
   "type": "prompt",
   "author_name": "...",
   "verified": false,
-  "downloads": 10,
   "category": "coding-data",
   "instructions": "...",
   "tools": null,

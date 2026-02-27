@@ -236,7 +236,6 @@ const fullSkillResponse = {
   instructions: "You are a test assistant.",
   adapters: null,
   verified: true,
-  downloads: 0,
 };
 
 function mockFetchOk(body: unknown) {

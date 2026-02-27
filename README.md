@@ -119,12 +119,12 @@ For skills that define tools, add a `tools.json` and reference it in the manifes
 
 ```bash
 polyskill search "query"
-polyskill search --category coding-data --verified --sort downloads
+polyskill search --category coding-data --verified --sort recent
 polyskill search --author polyskill --type tool
 polyskill search --json  # structured output for parsing
 ```
 
-Flags: `--category`, `--type`, `--verified`, `--author`, `--keyword`, `--sort` (relevance|downloads|name|recent), `--limit`, `--json`.
+Flags: `--category`, `--type`, `--verified`, `--author`, `--keyword`, `--sort` (relevance|name|recent), `--limit`, `--json`.
 
 ## REST API
 
