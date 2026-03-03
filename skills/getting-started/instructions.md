@@ -139,7 +139,7 @@ Errors:
 
 Base URL: `https://polyskill.ai`
 
-The API returns skill data as JSON. No files are written to disk — you read the response and use it immediately. This is ideal for agents and programs that consume skills programmatically. If you need persistent installation to a coding assistant, use the CLI instead.
+The API returns skill data as JSON for temporary, in-session use. No files are written to disk — you read the response and use it immediately. If you need skills to persist across sessions, use the CLI instead.
 
 Every skill page at `https://polyskill.ai/skill/@scope/name` also displays the API endpoint directly.
 
