@@ -9,7 +9,13 @@ vi.mock("../config.js", () => ({
   REGISTRY_URL: "http://localhost:3000",
 }));
 
+vi.mock("../npmFetch.js", () => ({
+  fetchSkillFromNpm: vi.fn(),
+  NpmNotFound: class NpmNotFound extends Error {},
+}));
+
 import { installCommand } from "../commands/install.js";
+import { fetchSkillFromNpm } from "../npmFetch.js";
 import { writeFile, mkdir } from "node:fs/promises";
 
 class ExitError extends Error {
@@ -146,8 +152,13 @@ describe("install command", () => {
     expect(process.exit).toHaveBeenCalledWith(1);
   });
 
-  it("prints error and exits on 500", async () => {
-    mockFetchResponse(500, {});
+  it("falls back to npm on registry 500, then exits when npm also fails", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      statusText: "Internal Server Error",
+    } as Response);
+    vi.mocked(fetchSkillFromNpm).mockRejectedValueOnce(new Error("npm unreachable"));
 
     await expect(
       installCommand.parseAsync(
@@ -156,7 +167,8 @@ describe("install command", () => {
       )
     ).rejects.toThrow(ExitError);
 
-    expect(console.log).toHaveBeenCalledWith(expect.stringContaining("Failed to fetch"));
+    expect(fetchSkillFromNpm).toHaveBeenCalledWith("@test/my-skill", undefined);
+    expect(console.log).toHaveBeenCalledWith(expect.stringContaining("npm mirror"));
     expect(process.exit).toHaveBeenCalledWith(1);
   });
 
@@ -175,8 +187,9 @@ describe("install command", () => {
     );
   });
 
-  it("prints error and exits on network failure", async () => {
-    vi.mocked(fetch).mockRejectedValue(new TypeError("fetch failed"));
+  it("falls back to npm when registry is unreachable, then exits when npm also fails", async () => {
+    vi.mocked(fetch).mockRejectedValueOnce(new TypeError("fetch failed"));
+    vi.mocked(fetchSkillFromNpm).mockRejectedValueOnce(new Error("npm unreachable"));
 
     await expect(
       installCommand.parseAsync(
@@ -185,7 +198,8 @@ describe("install command", () => {
       )
     ).rejects.toThrow(ExitError);
 
-    expect(console.log).toHaveBeenCalledWith(expect.stringContaining("Network error"));
+    expect(fetchSkillFromNpm).toHaveBeenCalledWith("@test/my-skill", undefined);
+    expect(console.log).toHaveBeenCalledWith(expect.stringContaining("npm mirror"));
     expect(process.exit).toHaveBeenCalledWith(1);
   });
 
@@ -211,5 +225,52 @@ describe("install command", () => {
       expect.stringContaining("dist/"),
       expect.any(String)
     );
+  });
+});
+
+describe("install command — npm mirror fallback", () => {
+  it("falls back to npm when registry returns 403 (sandbox block)", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: false,
+      status: 403,
+      statusText: "Forbidden",
+    } as Response);
+    vi.mocked(fetchSkillFromNpm).mockResolvedValueOnce(fullSkillResponse);
+
+    await installCommand.parseAsync(
+      ["@test/my-skill", "--output", "/tmp/output"],
+      { from: "user" }
+    );
+
+    expect(fetchSkillFromNpm).toHaveBeenCalledWith("@test/my-skill", undefined);
+    expect(writeFile).toHaveBeenCalled();
+  });
+
+  it("does NOT fall back to npm on registry 404", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: false,
+      status: 404,
+      statusText: "Not Found",
+    } as Response);
+
+    await expect(
+      installCommand.parseAsync(
+        ["@test/my-skill", "--output", "/tmp/output"],
+        { from: "user" }
+      )
+    ).rejects.toMatchObject({ code: 1 });
+    expect(fetchSkillFromNpm).not.toHaveBeenCalled();
+  });
+
+  it("falls back to npm when the registry fetch throws", async () => {
+    vi.mocked(fetch).mockRejectedValueOnce(new Error("ENOTFOUND"));
+    vi.mocked(fetchSkillFromNpm).mockResolvedValueOnce(fullSkillResponse);
+
+    await installCommand.parseAsync(
+      ["@test/my-skill", "--output", "/tmp/output"],
+      { from: "user" }
+    );
+
+    expect(writeFile).toHaveBeenCalled();
   });
 });
