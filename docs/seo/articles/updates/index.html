@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="PolySkill blog — guides, comparisons, and tutorials about Claude Code skills, plugins, MCP servers, and AI agent workflows.">
+  <meta property="og:title" content="Blog — PolySkill">
+  <meta property="og:description" content="Guides, comparisons, and tutorials about Claude Code skills, plugins, MCP servers, and AI agent workflows.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://polyskill.ai/blog/">
+  <link rel="canonical" href="https://polyskill.ai/blog/">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <title>Blog — PolySkill</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <h1 class="docs-title">Blog</h1>
+    <p class="blog-intro">Guides, comparisons, and tutorials about Claude Code skills, AI agents, and the PolySkill ecosystem.</p>
+
+    <div class="blog-grid" id="blog-grid">
+      <a href="/blog/claude-code-pricing" class="blog-card">
+        <div class="blog-card-img-wrap">
+          <img src="/img/og/claude-code-pricing.jpg"
+               srcset="/img/og/claude-code-pricing-600w.jpg 600w, /img/og/claude-code-pricing-1000w.jpg 1000w, /img/og/claude-code-pricing.jpg 1200w"
+               sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1079px) calc(50vw - 2rem), calc(33vw - 2rem)"
+               alt="Claude Code Pricing guide" class="blog-card-img"
+               width="1200" height="669" fetchpriority="high">
+        </div>
+        <div class="blog-card-body">
+          <div class="blog-card-title">Claude Code Pricing (2026): Plans, API Token Costs &amp; How to Save</div>
+          <div class="blog-card-meta">Updated May 30, 2026</div>
+          <div class="blog-card-excerpt">What Claude Code actually costs — plans, API token pricing, and how to keep the bill down.</div>
+        </div>
+      </a>
+      <a href="/blog/claude-code-subagents" class="blog-card">
+        <div class="blog-card-img-wrap">
+          <img src="/img/og/claude-code-subagents.jpg"
+               srcset="/img/og/claude-code-subagents-600w.jpg 600w, /img/og/claude-code-subagents-1000w.jpg 1000w, /img/og/claude-code-subagents.jpg 1200w"
+               sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1079px) calc(50vw - 2rem), calc(33vw - 2rem)"
+               alt="Claude Code Subagents guide" class="blog-card-img"
+               width="1200" height="669" loading="lazy">
+        </div>
+        <div class="blog-card-body">
+          <div class="blog-card-title">Claude Code Subagents: Run Side-Tasks in Isolated Context (2026)</div>
+          <div class="blog-card-meta">Updated May 30, 2026</div>
+          <div class="blog-card-excerpt">Create and use subagents to run side-tasks in isolated context, in parallel.</div>
+        </div>
+      </a>
+      <a href="/blog/claude-code-hooks" class="blog-card">
+        <div class="blog-card-img-wrap">
+          <img src="/img/og/claude-code-hooks.jpg"
+               srcset="/img/og/claude-code-hooks-600w.jpg 600w, /img/og/claude-code-hooks-1000w.jpg 1000w, /img/og/claude-code-hooks.jpg 1200w"
+               sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1079px) calc(50vw - 2rem), calc(33vw - 2rem)"
+               alt="Claude Code Hooks guide" class="blog-card-img"
+               width="1200" height="669" loading="lazy">
+        </div>
+        <div class="blog-card-body">
+          <div class="blog-card-title">Claude Code Hooks: Run Shell Commands on Agent Events (2026)</div>
+          <div class="blog-card-meta">Updated May 30, 2026</div>
+          <div class="blog-card-excerpt">Run shell commands on Claude Code events — format, block, and notify automatically.</div>
+        </div>
+      </a>
+      <a href="/blog/claude-code-commands" class="blog-card">
+        <div class="blog-card-img-wrap">
+          <img src="/img/og/claude-code-commands.jpg"
+               srcset="/img/og/claude-code-commands-600w.jpg 600w, /img/og/claude-code-commands-1000w.jpg 1000w, /img/og/claude-code-commands.jpg 1200w"
+               sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1079px) calc(50vw - 2rem), calc(33vw - 2rem)"
+               alt="Claude Code Commands guide" class="blog-card-img"
+               width="1200" height="669" loading="lazy">
+        </div>
+        <div class="blog-card-body">
+          <div class="blog-card-title">Claude Code Commands: Built-In &amp; Custom Slash Commands (2026)</div>
+          <div class="blog-card-meta">Updated May 30, 2026</div>
+          <div class="blog-card-excerpt">Built-in slash commands plus custom <code>.claude/commands</code> for repeatable workflows.</div>
+        </div>
+      </a>
+      <a href="/blog/claude-code-memory" class="blog-card">
+        <div class="blog-card-img-wrap">
+          <img src="/img/og/claude-code-memory.jpg"
+               srcset="/img/og/claude-code-memory-600w.jpg 600w, /img/og/claude-code-memory-1000w.jpg 1000w, /img/og/claude-code-memory.jpg 1200w"
+               sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1079px) calc(50vw - 2rem), calc(33vw - 2rem)"
+               alt="Claude Code Memory (CLAUDE.md) guide" class="blog-card-img"
+               width="1200" height="669" loading="lazy">
+        </div>
+        <div class="blog-card-body">
+          <div class="blog-card-title">Claude Code Memory (CLAUDE.md): Hierarchy, Imports &amp; What to Put In It (2026)</div>
+          <div class="blog-card-meta">Updated May 30, 2026</div>
+          <div class="blog-card-excerpt">How CLAUDE.md works — the memory hierarchy, imports, and what to put in it.</div>
+        </div>
+      </a>
+      <a href="/blog/claude-code-plugins" class="blog-card">
+        <div class="blog-card-img-wrap">
+          <img src="/img/og/claude-code-plugins.jpg"
+               srcset="/img/og/claude-code-plugins-600w.jpg 600w, /img/og/claude-code-plugins-1000w.jpg 1000w, /img/og/claude-code-plugins.jpg 1200w"
+               sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1079px) calc(50vw - 2rem), calc(33vw - 2rem)"
+               alt="Claude Code Plugins guide" class="blog-card-img"
+               width="1200" height="669" loading="lazy">
+        </div>
+        <div class="blog-card-body">
+          <div class="blog-card-title">Claude Code Plugins: What They Are &amp; How to Install Them (2026)</div>
+          <div class="blog-card-meta">Updated May 20, 2026</div>
+          <div class="blog-card-excerpt">A plugin bundles skills, hooks, MCP servers and slash commands into one install. The /plugin browser, third-party marketplaces, plugin anatomy, and the "skill locked by plugin" fix.</div>
+        </div>
+      </a>
+      <a href="/blog/claude-code-vs-gemini-cli" class="blog-card">
+        <div class="blog-card-img-wrap">
+          <img src="/img/og/claude-code-vs-gemini-cli.jpg"
+               srcset="/img/og/claude-code-vs-gemini-cli-600w.jpg 600w, /img/og/claude-code-vs-gemini-cli-1000w.jpg 1000w, /img/og/claude-code-vs-gemini-cli.jpg 1200w"
+               sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1079px) calc(50vw - 2rem), calc(33vw - 2rem)"
+               alt="Claude Code vs Gemini CLI comparison" class="blog-card-img"
+               width="1200" height="669" loading="lazy">
+        </div>
+        <div class="blog-card-body">
+          <div class="blog-card-title">Claude Code vs Gemini CLI (2026): Pricing, Free Tier & Models</div>
+          <div class="blog-card-meta">Updated March 12, 2026</div>
+          <div class="blog-card-excerpt">Free tier, pricing, models, extensions, MCP support, and performance — an honest breakdown for developers choosing between the two terminal agents.</div>
+        </div>
+      </a>
+      <a href="/blog/claude-code-marketplace" class="blog-card">
+        <div class="blog-card-img-wrap">
+          <img src="/img/og/claude-code-marketplace.jpg"
+               srcset="/img/og/claude-code-marketplace-600w.jpg 600w, /img/og/claude-code-marketplace-1000w.jpg 1000w, /img/og/claude-code-marketplace.jpg 1200w"
+               sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1079px) calc(50vw - 2rem), calc(33vw - 2rem)"
+               alt="Claude Code Marketplace — browse and install skills" class="blog-card-img"
+               width="1200" height="669" loading="lazy">
+        </div>
+        <div class="blog-card-body">
+          <div class="blog-card-title">Claude Code Marketplace: Browse, Install &amp; Discover Skills (2026)</div>
+          <div class="blog-card-meta">Updated May 18, 2026</div>
+          <div class="blog-card-excerpt">Browse 1,000+ security-scanned skills across 10 categories, install in one command, and publish your own to the PolySkill registry.</div>
+        </div>
+      </a>
+      <a href="/blog/claude-code-mcp" class="blog-card">
+        <div class="blog-card-img-wrap">
+          <img src="/img/og/claude-code-mcp.jpg"
+               srcset="/img/og/claude-code-mcp-600w.jpg 600w, /img/og/claude-code-mcp-1000w.jpg 1000w, /img/og/claude-code-mcp.jpg 1200w"
+               sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1079px) calc(50vw - 2rem), calc(33vw - 2rem)"
+               alt="Claude Code MCP servers" class="blog-card-img"
+               width="1200" height="669" loading="lazy">
+        </div>
+        <div class="blog-card-body">
+          <div class="blog-card-title">Claude Code MCP: Add &amp; Configure MCP Servers (2026)</div>
+          <div class="blog-card-meta">Updated May 18, 2026</div>
+          <div class="blog-card-excerpt">Connect Claude Code to databases, GitHub, Slack and more — add a server in one command, pick the right transport, scope it, and fix it when it breaks.</div>
+        </div>
+      </a>
+      <a href="/blog/how-to-add-skills-to-claude-code" class="blog-card">
+        <div class="blog-card-img-wrap">
+          <img src="/img/og/how-to-add-skills-to-claude-code.jpg"
+               srcset="/img/og/how-to-add-skills-to-claude-code-600w.jpg 600w, /img/og/how-to-add-skills-to-claude-code-1000w.jpg 1000w, /img/og/how-to-add-skills-to-claude-code.jpg 1200w"
+               sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1079px) calc(50vw - 2rem), calc(33vw - 2rem)"
+               alt="How to add skills to Claude Code guide" class="blog-card-img"
+               width="1200" height="669" loading="lazy">
+        </div>
+        <div class="blog-card-body">
+          <div class="blog-card-title">How to Install Claude Code Skills & Plugins: 3 Methods (2026)</div>
+          <div class="blog-card-meta">Updated March 10, 2026</div>
+          <div class="blog-card-excerpt">Three ways to add skills to Claude Code — the built-in plugin browser, manual filesystem installation, and the PolySkill registry. Step-by-step instructions for each method.</div>
+        </div>
+      </a>
+      <a href="/blog/claude-code-router" class="blog-card">
+        <div class="blog-card-img-wrap">
+          <img src="/img/og/claude-code-router.jpg"
+               srcset="/img/og/claude-code-router-600w.jpg 600w, /img/og/claude-code-router-1000w.jpg 1000w, /img/og/claude-code-router.jpg 1200w"
+               sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1079px) calc(50vw - 2rem), calc(33vw - 2rem)"
+               alt="Claude Code Router guide" class="blog-card-img"
+               width="1200" height="669" loading="lazy">
+        </div>
+        <div class="blog-card-body">
+          <div class="blog-card-title">Claude Code Router: OpenRouter, DeepSeek & Ollama Setup (2026)</div>
+          <div class="blog-card-meta">Updated March 10, 2026</div>
+          <div class="blog-card-excerpt">Built-in opusplan model routing and the community Claude Code Router project — a complete guide to optimizing your Claude Code workflow.</div>
+        </div>
+      </a>
+      <a href="/blog/codex-vs-claude-code" class="blog-card">
+        <div class="blog-card-img-wrap">
+          <img src="/img/og/codex-vs-claude-code.jpg"
+               srcset="/img/og/codex-vs-claude-code-600w.jpg 600w, /img/og/codex-vs-claude-code-1000w.jpg 1000w, /img/og/codex-vs-claude-code.jpg 1200w"
+               sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1079px) calc(50vw - 2rem), calc(33vw - 2rem)"
+               alt="Codex vs Claude Code comparison" class="blog-card-img"
+               width="1200" height="669" loading="lazy">
+        </div>
+        <div class="blog-card-body">
+          <div class="blog-card-title">Codex vs Claude Code (2026): CLI Agents Compared Side by Side</div>
+          <div class="blog-card-meta">Updated March 10, 2026</div>
+          <div class="blog-card-excerpt">Open-source speed vs deep reasoning — a side-by-side comparison of OpenAI Codex and Anthropic Claude Code for terminal-based AI development.</div>
+        </div>
+      </a>
+      <a href="/blog/claude-code-vs-cursor" class="blog-card">
+        <div class="blog-card-img-wrap">
+          <img src="/img/og/claude-code-vs-cursor.jpg"
+               srcset="/img/og/claude-code-vs-cursor-600w.jpg 600w, /img/og/claude-code-vs-cursor-1000w.jpg 1000w, /img/og/claude-code-vs-cursor.jpg 1200w"
+               sizes="(max-width: 767px) calc(100vw - 2rem), (max-width: 1079px) calc(50vw - 2rem), calc(33vw - 2rem)"
+               alt="Claude Code vs Cursor comparison" class="blog-card-img"
+               width="1200" height="669" loading="lazy">
+        </div>
+        <div class="blog-card-body">
+          <div class="blog-card-title">Claude Code vs Cursor (2026): Which AI Coding Tool Wins?</div>
+          <div class="blog-card-meta">Updated March 10, 2026</div>
+          <div class="blog-card-excerpt">A side-by-side comparison of features, pricing, and use cases for the two most popular AI coding tools.</div>
+        </div>
+      </a>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Install Claude Code Skills & Plugins: 3 Methods (2026) | PolySkill</title>
+  <meta name="description" content="Claude Code supports installable skills that give it new abilities — SEO, database management, deployment, and more. Three installation methods from easiest to most powerful.">
+  <meta property="og:title" content="How to Install Claude Code Skills & Plugins: 3 Methods (2026)">
+  <meta property="og:description" content="Claude Code supports installable skills that give it new abilities — SEO, database management, deployment, and more. Three installation methods from easiest to most powerful.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://polyskill.ai/blog/how-to-add-skills-to-claude-code">
+  <meta property="og:image" content="https://polyskill.ai/img/og/how-to-add-skills-to-claude-code.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="669">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Install Claude Code Skills & Plugins: 3 Methods (2026)">
+  <meta name="twitter:description" content="Claude Code supports installable skills that give it new abilities — SEO, database management, deployment, and more. Three installation methods from easiest to most powerful.">
+  <meta name="twitter:image" content="https://polyskill.ai/img/og/how-to-add-skills-to-claude-code.jpg">
+  <link rel="canonical" href="https://polyskill.ai/blog/how-to-add-skills-to-claude-code">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How to Install Claude Code Skills & Plugins: 3 Methods (2026)",
+    "description": "Claude Code supports installable skills that give it new abilities — SEO, database management, deployment, and more. Three installation methods from easiest to most powerful.",
+    "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
+    "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
+    "datePublished": "2026-02-28",
+    "dateModified": "2026-05-30",
+    "image": "https://polyskill.ai/img/og/how-to-add-skills-to-claude-code.jpg",
+    "speakable": { "@type": "SpeakableSpecification", "cssSelector": ["h1.blog-article-title", ".blog-tldr"] },
+    "mainEntityOfPage": "https://polyskill.ai/blog/how-to-add-skills-to-claude-code"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyskill.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://polyskill.ai/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "How to Add Skills to Claude Code" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I add skills to Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "There are three ways to add skills to Claude Code. Run /plugin in Claude Code and install from the Discover tab; or drop a SKILL.md file into ~/.claude/skills/ (personal) or .claude/skills/ (project-scoped); or install from the PolySkill registry with the polyskill CLI. Claude Code detects newly added skills automatically with no restart required."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are Claude Code skills?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Claude Code skills are reusable instruction packages stored as SKILL.md files that extend what Claude Code can do. Each skill contains YAML frontmatter (name, description, configuration) and markdown instructions that Claude follows when the skill is active. Skills can automate workflows, enforce coding standards, add domain expertise, and define custom slash commands."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I install Claude Code plugins?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Claude Code plugins (which bundle skills, hooks, and other extensions) are installed via the /plugin command. Run /plugin in any Claude Code session to open the interactive browser, go to the Discover tab, and press Enter on a plugin to install it. You can also add third-party marketplaces with /plugin marketplace add owner/repo."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are the best Claude Code skills?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The best skills depend on your workflow. Popular categories include coding standards enforcement, test-driven development workflows, debugging frameworks, and deployment automation. Browse Claude Code's built-in plugin marketplace via /plugin for curated options, or visit polyskill.ai/browse for a searchable registry of cross-agent skills with security scanning."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I create my own Claude Code skill?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Create a folder inside ~/.claude/skills/ (for personal skills) or .claude/skills/ (for project-scoped skills), add a SKILL.md file with YAML frontmatter and markdown instructions, and Claude Code will automatically detect it. The skill becomes available as a slash command or for automatic invocation based on its description."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do Claude Code skills work with other AI tools?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Native Claude Code skills (SKILL.md format) are specific to Claude Code. If you need skills that work across multiple AI agents — Claude Code, OpenAI Codex, and others — the PolySkill registry provides cross-agent skills in an open format that adapters translate for each platform."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <article class="blog-article">
+      <header class="blog-article-header">
+        <h1 class="blog-article-title">How to Install Claude Code Skills &amp; Plugins: 3 Methods (2026)</h1>
+        <div class="blog-article-meta">Published February 28, 2026 · Updated May 30, 2026</div>
+      </header>
+
+      <img src="/img/og/how-to-add-skills-to-claude-code.jpg"
+           srcset="/img/og/how-to-add-skills-to-claude-code-600w.jpg 600w, /img/og/how-to-add-skills-to-claude-code-1000w.jpg 1000w, /img/og/how-to-add-skills-to-claude-code.jpg 1200w"
+           sizes="(max-width: 768px) calc(100vw - 2rem), 720px"
+           alt="How to add skills to Claude Code — three methods: built-in plugin browser, filesystem install, and third-party registry" class="blog-hero-img" width="1200" height="669" fetchpriority="high">
+
+      <div class="blog-article-body">
+        <div class="blog-tldr">
+          <div class="blog-tldr-label">TL;DR</div>
+          <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th scope="col">Method</th>
+                <th scope="col">Best for</th>
+                <th scope="col">How</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>Built-in plugin browser</td>
+                <td>Discovering curated skills</td>
+                <td><code>/plugin</code> in Claude Code</td>
+              </tr>
+              <tr>
+                <td>Filesystem</td>
+                <td>Custom or private skills</td>
+                <td>Add <code>SKILL.md</code> to <code>~/.claude/skills/</code></td>
+              </tr>
+              <tr>
+                <td>Third-party registry</td>
+                <td>Cross-agent skills, security-scanned</td>
+                <td>Give your agent <a href="https://polyskill.ai/agent.md">polyskill.ai/agent.md</a></td>
+              </tr>
+            </tbody>
+          </table>
+          </div>
+        </div>
+
+        <p>Claude Code supports reusable skills and plugins — packaged instructions, tool definitions, and workflows that extend what the agent can do out of the box. Whether you call them Claude Code skills or Claude Code plugins, the concept is the same: give your AI coding agent new abilities it doesn't have by default. There are three ways to add them: Claude Code's built-in plugin browser, manual file installation, or a third-party registry. This guide walks through all three methods with step-by-step instructions.</p>
+
+        <h2 id="add-skills-to-claude-code">How to Add Skills to Claude Code</h2>
+
+        <p>To add skills to Claude Code, use one of three methods: the built-in <code>/plugin</code> browser (easiest), a manual <code>SKILL.md</code> file in <code>~/.claude/skills/</code> (most control), or the PolySkill registry (cross-agent, security-scanned). Claude Code detects newly installed skills automatically — no restart required. Each method is covered step by step below, with a decision guide for picking the right one.</p>
+
+        <h2 id="what-are-skills">What Are Claude Code Skills?</h2>
+
+        <p>A skill is a reusable package of instructions that Claude Code loads into its context when relevant. Each skill is a <code>SKILL.md</code> file: YAML frontmatter for metadata, followed by markdown instructions that tell Claude how to behave.</p>
+
+        <p>Skills can do different things depending on what you need:</p>
+
+        <ul>
+          <li><strong>Coding standards</strong>: enforce naming conventions, file structure, or review checklists across a team</li>
+          <li><strong>Workflow automation</strong>: define multi-step processes like "run tests, lint, then commit with a conventional message"</li>
+          <li><strong>Domain expertise</strong>: give Claude specialized knowledge about your stack, your API, or a specific framework</li>
+          <li><strong>Custom commands</strong>: create <a href="/blog/claude-code-commands">slash commands</a> like <code>/deploy</code> or <code>/review-pr</code> that trigger specific behavior</li>
+        </ul>
+
+        <p>Skills live in one of two places: <code>~/.claude/skills/</code> for personal skills that apply everywhere, or <code>.claude/skills/</code> inside a project for repo-scoped skills that travel with the codebase. Claude Code detects them automatically; no restart required. Once you understand how to use Claude Code skills, they become one of the fastest ways to standardize workflows across a team.</p>
+
+        <h2 id="plugins-vs-skills">Claude Code Plugins vs Skills: What's the Difference?</h2>
+
+        <p>You'll see both terms, "skills" and "plugins," used when talking about extending Claude Code. They overlap significantly, but there's a technical distinction worth understanding.</p>
+
+        <p>A <strong>skill</strong> is a single <code>SKILL.md</code> file: YAML frontmatter plus markdown instructions that tell Claude how to behave in specific situations. Skills are the atomic unit — one file, one capability. A <strong>plugin</strong> is a bundle that can package one or more skills alongside other extensions like <a href="/blog/claude-code-hooks">hooks</a> (shell commands triggered by events), MCP server configurations, and settings overrides. Plugins are how Claude Code's built-in marketplace distributes packages.</p>
+
+        <p>In practice, most plugins contain a single skill. The distinction matters mainly when you're building your own extensions; if you just need to add instructions, create a skill. If you need to bundle instructions with hooks or MCP configs, create a plugin.</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Aspect</th>
+              <th scope="col">Skill</th>
+              <th scope="col">Plugin</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Format</td>
+              <td>Single <code>SKILL.md</code> file</td>
+              <td>Directory with skills + hooks + MCP configs</td>
+            </tr>
+            <tr>
+              <td>Scope</td>
+              <td>One capability or behavior</td>
+              <td>Bundles multiple capabilities together</td>
+            </tr>
+            <tr>
+              <td>Install method</td>
+              <td>Drop into <code>~/.claude/skills/</code></td>
+              <td><code>/plugin</code> command or manual directory setup</td>
+            </tr>
+            <tr>
+              <td>Discovery</td>
+              <td>Manual or third-party registry</td>
+              <td>Built-in marketplace via <code>/plugin</code></td>
+            </tr>
+            <tr>
+              <td>Can include hooks?</td>
+              <td>No</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>Can include MCP configs?</td>
+              <td>No</td>
+              <td>Yes</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>When this guide says "install a skill," the same steps work for plugins too; the install paths and detection mechanism are identical. The <code>/plugin</code> browser (Method 1) installs plugins specifically; filesystem installs (Method 2) and third-party registries (Method 3) work with both.</p>
+
+        <h2 id="method-1-built-in-browser">Method 1: Claude Code's Built-In Plugin Browser</h2>
+
+        <p>Claude Code has a <a href="https://docs.anthropic.com/en/docs/claude-code/skills" target="_blank" rel="noopener">built-in plugin system</a> for discovering and installing skills without leaving your terminal. This is how you install Claude Code plugins, packages that bundle skills alongside other extensions like hooks and MCP server configurations.</p>
+
+        <h3>Step 1: Open the plugin browser</h3>
+
+        <p>In any Claude Code session, type:</p>
+
+        <pre><code>/plugin</code></pre>
+
+        <p>This opens an interactive browser with four tabs:</p>
+
+        <ul>
+          <li><strong>Discover</strong>: browse available plugins from connected marketplaces</li>
+          <li><strong>Installed</strong>: view and manage plugins you've already added</li>
+          <li><strong>Marketplaces</strong>: add, remove, or update marketplace catalogs</li>
+          <li><strong>Errors</strong>: debug plugin loading issues</li>
+        </ul>
+
+        <h3>Step 2: Browse and install</h3>
+
+        <p>Navigate to the <strong>Discover</strong> tab, find a plugin, and press <strong>Enter</strong> to install it. You'll be asked to choose a scope:</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Scope</th>
+              <th scope="col">Location</th>
+              <th scope="col">Applies to</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>User</td>
+              <td><code>~/.claude/</code></td>
+              <td>All your projects</td>
+            </tr>
+            <tr>
+              <td>Project</td>
+              <td><code>.claude/</code> in repo root</td>
+              <td>This repository only</td>
+            </tr>
+            <tr>
+              <td>Local</td>
+              <td><code>.claude.local/</code></td>
+              <td>This machine, not committed</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <h3>Step 3: Add more marketplaces (optional)</h3>
+
+        <p>The official marketplace is available by default. To add community or third-party marketplaces:</p>
+
+        <pre><code>/plugin marketplace add owner/repo</code></pre>
+
+        <p>This accepts GitHub repositories, Git URLs, local paths, or remote URLs. Once added, plugins from that marketplace appear in the Discover tab.</p>
+
+        <p><strong>Pros:</strong> Zero setup, integrated into Claude Code, curated official marketplace available out of the box.</p>
+        <p><strong>Cons:</strong> Limited to what's published to connected marketplaces. No cross-agent compatibility; plugins only work with Claude Code.</p>
+
+        <h2 id="method-2-filesystem">Method 2: Installing Skills from the Filesystem</h2>
+
+        <p>You don't need a marketplace to install Claude Code skills. Claude Code watches the <code>~/.claude/skills/</code> and <code>.claude/skills/</code> directories and loads any valid <code>SKILL.md</code> files it finds.</p>
+
+        <h3>Step 1: Create the skill directory</h3>
+
+        <pre><code>mkdir -p ~/.claude/skills/my-skill</code></pre>
+
+        <p>Use <code>~/.claude/skills/</code> for personal skills or <code>.claude/skills/</code> in a project root for team skills that get committed to version control.</p>
+
+        <h3>Step 2: Write the SKILL.md file</h3>
+
+        <p>Create <code>~/.claude/skills/my-skill/SKILL.md</code> with two parts: YAML frontmatter and markdown instructions:</p>
+
+        <pre><code>---
+name: my-skill
+description: Enforces our team's TypeScript conventions and review checklist.
+user-invocable: true
+---
+
+When writing or reviewing TypeScript code, follow these rules:
+
+1. Use explicit return types on all exported functions
+2. Prefer `interface` over `type` for object shapes
+3. No `any` — use `unknown` and narrow with type guards
+4. All async functions must have error handling</code></pre>
+
+        <h3>Step 3: Verify it loaded</h3>
+
+        <p>Start a new Claude Code session (or continue an existing one) and type <code>/</code> followed by your skill name. If the skill appears in the autocomplete list, it's loaded. Claude will also invoke it automatically when its description matches the current conversation context.</p>
+
+        <h3>Frontmatter reference</h3>
+
+        <p>The YAML frontmatter supports these fields:</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Field</th>
+              <th scope="col">Purpose</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>name</code></td>
+              <td>Slash command name (kebab-case, max 64 chars). Defaults to the folder name.</td>
+            </tr>
+            <tr>
+              <td><code>description</code></td>
+              <td>What the skill does. Claude uses this to decide when to auto-invoke.</td>
+            </tr>
+            <tr>
+              <td><code>user-invocable</code></td>
+              <td>If <code>true</code>, appears in the <code>/</code> slash command menu. If <code>false</code>, only Claude can invoke it.</td>
+            </tr>
+            <tr>
+              <td><code>disable-model-invocation</code></td>
+              <td>If <code>true</code>, only you can invoke it (Claude won't auto-load). Good for destructive commands like <code>/deploy</code>.</td>
+            </tr>
+            <tr>
+              <td><code>allowed-tools</code></td>
+              <td>Tools Claude can use without per-use approval when the skill is active (e.g., <code>Read, Grep, Bash</code>).</td>
+            </tr>
+            <tr>
+              <td><code>context</code></td>
+              <td>Set to <code>fork</code> to run the skill in an isolated <a href="/blog/claude-code-subagents">subagent</a> instead of the main conversation.</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p><strong>Pros:</strong> Full control over skill content, works with private and proprietary instructions, skills committed to <code>.claude/skills/</code> travel with the repo.</p>
+        <p><strong>Cons:</strong> Manual setup for each skill. No discovery or search, so you need to know what you want before creating it.</p>
+
+        <h2 id="method-3-polyskill">Method 3: Using the PolySkill Registry</h2>
+
+        <p><a href="/">PolySkill</a> is a third-party, open-source registry for AI agent skills. It works with Claude Code but isn't limited to it. Published skills use an open format that adapters translate for different agents.</p>
+
+        <h3>Step 1: Install the CLI</h3>
+
+        <pre><code>npm install -g @polyskill/cli</code></pre>
+
+        <h3>Step 2: Search for skills</h3>
+
+        <pre><code>polyskill search "typescript conventions"</code></pre>
+
+        <p>Or browse the web UI at <a href="/browse">polyskill.ai/browse</a> for category-based discovery with full-text search.</p>
+
+        <h3>Step 3: Install a skill</h3>
+
+        <pre><code>polyskill install @author/skill-name</code></pre>
+
+        <p>This downloads the skill and places it in <code>~/.claude/skills/</code> where Claude Code picks it up automatically.</p>
+
+        <h3>What makes this different</h3>
+
+        <ul>
+          <li><strong>Includes Claude Code's official skills</strong>: all of the skills available through Claude Code's built-in plugin marketplace are also published on this registry, so you get everything from Method 1 plus community contributions.</li>
+          <li><strong>Cross-agent compatibility</strong>: skills from this registry aren't locked to Claude Code. They work with other AI agents that support the open skill format.</li>
+          <li><strong>Security scanning</strong>: every published skill goes through static content analysis that checks for credential exfiltration, destructive commands, and pipe-to-shell patterns before it's listed.</li>
+          <li><strong>Searchable registry</strong>: full-text search across skill names, descriptions, keywords, and categories.</li>
+        </ul>
+
+        <p><strong>Pros:</strong> Searchable registry with security scanning, cross-agent skills, web-based browsing.</p>
+        <p><strong>Cons:</strong> Requires a separate CLI install. Smaller catalog than Claude Code's native ecosystem.</p>
+
+        <h2 id="popular-skills">Popular Claude Code Skills Worth Installing</h2>
+
+        <p>Knowing how to install skills is one thing; knowing which ones are worth installing is another. Here are some of the most useful Claude Code skills and plugins across different categories:</p>
+
+        <h3>Coding standards and review</h3>
+        <ul>
+          <li><strong>Code Reviewer</strong>: automatically reviews code changes for bugs, logic errors, security vulnerabilities, and adherence to project conventions. Runs as a subagent with confidence-based filtering so it only flags issues that truly matter.</li>
+          <li><strong>Simplify</strong>: scans changed code for reuse opportunities, quality issues, and inefficiencies, then fixes them. Good for keeping codebases lean after rapid feature development.</li>
+        </ul>
+
+        <h3>Architecture and planning</h3>
+        <ul>
+          <li><strong>Feature Dev</strong>: guided feature development workflow that starts with codebase analysis, designs architecture before writing code, and implements with full context awareness. Useful for non-trivial features that touch multiple files.</li>
+          <li><strong>Frontend Architect</strong>: creates accessible, performant UI components with proper responsive design. Reviews existing components for WCAG compliance, keyboard navigation, and screen reader support.</li>
+        </ul>
+
+        <h3>Workflow automation</h3>
+        <ul>
+          <li><strong>SEO Beast</strong>: autonomous SEO and GEO strategist powered by real search data. Handles keyword research, content optimization, and competitive analysis directly from your terminal.</li>
+          <li><strong>Claude Automation Recommender</strong>: analyzes your codebase and recommends Claude Code automations: hooks, subagents, skills, and MCP servers tailored to your project.</li>
+        </ul>
+
+        <h3>Finding more skills</h3>
+        <p>Two places to discover skills:</p>
+        <ul>
+          <li><strong>Built-in marketplace</strong>: run <code>/plugin</code> in Claude Code and browse the Discover tab for curated plugins</li>
+          <li><strong><a href="/browse">PolySkill registry</a></strong>: searchable web catalog with category-based browsing and security scanning for every published skill</li>
+        </ul>
+
+        <h2 id="which-method">Which Method Should You Use?</h2>
+
+        <p>Now that you know how to add skills to Claude Code, which method should you actually pick? The three methods aren't mutually exclusive; you can use all of them. Here's a decision guide based on what you're trying to do:</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Scenario</th>
+              <th scope="col">Recommended method</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>I want to browse what's popular and get started quickly</td>
+              <td>Built-in plugin browser (<code>/plugin</code>)</td>
+            </tr>
+            <tr>
+              <td>I have custom team conventions to enforce</td>
+              <td>Filesystem (<code>.claude/skills/</code> in repo)</td>
+            </tr>
+            <tr>
+              <td>I need a private skill that shouldn't be shared publicly</td>
+              <td>Filesystem (<code>~/.claude/skills/</code>)</td>
+            </tr>
+            <tr>
+              <td>I use multiple AI agents and want portable skills</td>
+              <td>Third-party registry (<a href="#method-3-polyskill">Method 3</a>)</td>
+            </tr>
+            <tr>
+              <td>I want to audit skills for security before using them</td>
+              <td>Third-party registry (security scanning)</td>
+            </tr>
+            <tr>
+              <td>I'm building a skill for my open-source project</td>
+              <td>Filesystem for development, third-party registry to publish</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>Most developers start with the built-in browser for quick wins, then create filesystem skills as their team's conventions solidify. If you're working across multiple AI coding agents or want to share skills with a broader audience, a third-party registry adds cross-agent distribution and security scanning on top.</p>
+
+        <h2 id="troubleshooting">Troubleshooting Common Issues</h2>
+
+        <h3>Skill doesn't appear in slash commands</h3>
+        <p>Check the file path. The structure must be <code>~/.claude/skills/&lt;folder&gt;/SKILL.md</code>, not just a loose <code>SKILL.md</code> in the skills directory. The file name must be exactly <code>SKILL.md</code> (uppercase). Also verify the YAML frontmatter has <code>user-invocable: true</code> if you want it in the <code>/</code> menu.</p>
+
+        <h3>Claude ignores the skill instructions</h3>
+        <p>Check the <code>description</code> field in your frontmatter. Claude uses this to decide when a skill is relevant. A vague description like "useful tool" won't trigger auto-invocation. Be specific about when the skill should activate. You can always invoke it manually with <code>/skill-name</code> to confirm it works.</p>
+
+        <h3>YAML frontmatter parse errors</h3>
+        <p>The frontmatter must start and end with exactly <code>---</code> on its own line. Common mistakes: indentation with tabs instead of spaces, missing quotes around strings that contain colons, or forgetting the closing <code>---</code>.</p>
+
+        <h3>Third-party CLI install fails</h3>
+        <p>Requires Node.js 18 or later. If you see <code>EACCES</code> permission errors on macOS or Linux, either use a Node version manager like <code>nvm</code> (recommended) or fix npm's global directory permissions instead of using <code>sudo</code>.</p>
+
+        <h3>Two skills with the same name</h3>
+        <p>If a personal skill (<code>~/.claude/skills/</code>) and a project skill (<code>.claude/skills/</code>) share the same name, the project-scoped skill takes precedence. Rename one of them to avoid confusion.</p>
+
+        <p>Related: <a href="/blog/claude-code-router">Claude Code Router: Complete Guide (2026)</a> | <a href="/blog/codex-vs-claude-code">Codex vs Claude Code: Full Comparison (2026)</a> | <a href="/blog/claude-code-vs-cursor">Claude Code vs Cursor: Full Comparison (2026)</a> | <a href="/blog/claude-code-vs-gemini-cli">Claude Code vs Gemini CLI (2026)</a></p>
+
+        <p>Browse next: <a href="/blog/claude-code-subagents">Claude Code Subagents (2026)</a> | <a href="/blog/claude-code-hooks">Claude Code Hooks (2026)</a> | <a href="/blog/claude-code-commands">Claude Code Commands (2026)</a> | <a href="/blog/claude-code-memory">Claude Code Memory (CLAUDE.md) (2026)</a></p>
+
+        <div class="blog-faq-section">
+          <h2 id="faq">Troubleshooting & FAQs</h2>
+
+          <h3>How do I add skills to Claude Code?</h3>
+          <p>Three ways: run <code>/plugin</code> in Claude Code and install from the Discover tab; drop a <code>SKILL.md</code> file into <code>~/.claude/skills/</code> (personal) or <code>.claude/skills/</code> (project-scoped); or install from the <a href="/browse">PolySkill registry</a> with the <code>polyskill</code> CLI. Claude Code picks them up automatically, no restart needed. See the three methods above for full steps.</p>
+
+          <h3>What are Claude Code skills?</h3>
+          <p>Claude Code skills are reusable instruction packages stored as <code>SKILL.md</code> files. Each skill contains YAML frontmatter (name, description, configuration) and markdown instructions that Claude follows when the skill is active. They can automate workflows, enforce coding standards, add domain expertise, and define custom slash commands. See <a href="#what-are-skills">What Are Claude Code Skills?</a> above for details.</p>
+
+          <h3>How do I install Claude Code plugins?</h3>
+          <p>"Plugins" and "skills" are closely related in Claude Code; plugins are packages that bundle skills alongside other extensions. Install them by running <code>/plugin</code> in any Claude Code session, browsing the Discover tab, and pressing Enter on what you want. See <a href="#method-1-built-in-browser">Method 1</a> for the full walkthrough.</p>
+
+          <h3>What are the best Claude Code skills?</h3>
+          <p>The best skills depend on your workflow. For discovery, use Claude Code's built-in <code>/plugin</code> browser to see curated options, or <a href="/browse">browse a third-party registry</a> to search by category: coding standards, automation, debugging, deployment, and more.</p>
+
+          <h3>Can I create my own Claude Code skill?</h3>
+          <p>Yes. Create a folder inside <code>~/.claude/skills/</code> (personal) or <code>.claude/skills/</code> (project-scoped), add a <code>SKILL.md</code> file with YAML frontmatter and markdown instructions, and Claude Code detects it automatically. See <a href="#method-2-filesystem">Method 2</a> for the step-by-step process and frontmatter reference.</p>
+
+          <h3>Do Claude Code skills work with other AI tools?</h3>
+          <p>Native Claude Code skills (<code>SKILL.md</code> format) are specific to Claude Code. If you need skills that work across multiple AI agents, third-party registries provide open formats with adapters for different platforms. See <a href="#method-3-polyskill">Method 3</a> for details.</p>
+        </div>
+
+        <a href="/blog" class="blog-back">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>

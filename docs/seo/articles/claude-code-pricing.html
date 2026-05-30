@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Pricing 2026: Plans, API Costs &amp; What You Actually Pay | PolySkill</title>
+  <meta name="description" content="Claude Code pricing explained: the two billing paths (Claude subscription Free/Pro/Max vs Anthropic API pay-per-token), what a real month costs, and how to keep spend down.">
+  <meta property="og:title" content="Claude Code Pricing 2026: Plans, API Costs &amp; What You Actually Pay">
+  <meta property="og:description" content="The two ways Claude Code bills you (subscription Free/Pro/Max vs API pay-per-token), what a real month costs, and how to keep spend down.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://polyskill.ai/blog/claude-code-pricing">
+  <meta property="og:image" content="https://polyskill.ai/img/og/claude-code-pricing.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="669">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude Code Pricing 2026: Plans, API Costs &amp; What You Actually Pay">
+  <meta name="twitter:description" content="The two ways Claude Code bills you (subscription vs API pay-per-token), what a real month costs, and how to keep spend down.">
+  <meta name="twitter:image" content="https://polyskill.ai/img/og/claude-code-pricing.jpg">
+  <link rel="canonical" href="https://polyskill.ai/blog/claude-code-pricing">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Claude Code Pricing 2026: Plans, API Costs, and What You Actually Pay",
+    "description": "Claude Code pricing explained: the two billing paths (Claude subscription Free/Pro/Max vs Anthropic API pay-per-token), what a real month costs, and how to keep spend down.",
+    "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
+    "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
+    "datePublished": "2026-05-30",
+    "dateModified": "2026-05-30",
+    "image": "https://polyskill.ai/img/og/claude-code-pricing.jpg",
+    "mainEntityOfPage": "https://polyskill.ai/blog/claude-code-pricing"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyskill.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://polyskill.ai/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Code Pricing" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How much does Claude Code cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Claude Code itself is free to install. You pay for the model it runs on through one of two paths: a Claude subscription (Free, Pro at $20/month, or Max at $100 and $200/month, each including a Claude Code usage allowance) or the Anthropic API billed per token with no monthly fee. Most individual developers start on Pro for about $20/month. Confirm exact figures on Anthropic's pricing page, since prices and limits change."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Claude Code free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Claude Code CLI is free and open to install with npm install -g @anthropic-ai/claude-code. Running it is not free past the Free plan's small allowance: you need either a paid Claude subscription (Pro or Max) or an Anthropic API key with a payment method. The cheapest practical path for steady daily use is a Pro subscription, not the metered API."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Claude Code Pro vs Max: which should I get?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Pick Pro ($20/month) if you use Claude Code a few hours a day and hit usage limits rarely. Pick Max ($100 or $200/month) if you live in the agent all day, run long sessions on large codebases, or keep getting throttled on Pro. Start on Pro, watch how often you hit limits, and upgrade only when the throttling costs you more time than the price difference."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Claude Code charge per token?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Only on the API path. A Claude subscription (Pro or Max) gives you a fixed monthly price with a usage allowance, so you are not metered per token. The Anthropic API bills per input and output token instead, with no monthly fee, so cost scales directly with how much you run it. Teams pick the API for predictable per-seat accounting; individuals usually pick a subscription for the flat rate."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do Claude Code skills or plugins cost extra?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Skills, plugins, custom commands, hooks, and MCP servers add no extra Anthropic charge. They are configuration files Claude Code loads locally; they only affect cost indirectly by changing how many tokens a task consumes. Open registries like PolySkill list skills for free, so the building blocks themselves are free even though the model usage they trigger still counts against your plan."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <article class="blog-article">
+      <header class="blog-article-header">
+        <h1 class="blog-article-title">Claude Code Pricing 2026: Plans, API Costs, and What You Actually Pay</h1>
+        <div class="blog-article-meta">Published May 30, 2026 · Updated May 30, 2026</div>
+      </header>
+
+      <img src="/img/og/claude-code-pricing.jpg"
+           srcset="/img/og/claude-code-pricing-600w.jpg 600w, /img/og/claude-code-pricing-1000w.jpg 1000w, /img/og/claude-code-pricing.jpg 1200w"
+           sizes="(max-width: 768px) calc(100vw - 2rem), 720px"
+           alt="Claude Code pricing — the two billing paths, a subscription plan and metered API tokens, side by side" class="blog-hero-img" width="1200" height="669" fetchpriority="high">
+
+      <div class="blog-article-body">
+        <div class="blog-tldr">
+          <div class="blog-tldr-label">In one line</div>
+          <p><strong>Claude Code pricing</strong> has two paths: a flat-rate Claude subscription (Free, Pro at $20/mo, or Max at $100 and $200/mo, each bundling a Claude Code usage allowance) or the Anthropic API billed per token. The CLI is free to install; you pay only for the model usage. Confirm current figures on Anthropic's pricing page, since they change.</p>
+        </div>
+
+        <p>Here is the part most write-ups bury: the cheapest way to run <strong>Claude Code</strong> is rarely the obvious one. New users assume "free CLI" means free, then watch the metered bill climb, or they jump straight to the $200 plan to be safe and overpay by 90%. The real answer depends on one number you can measure in a week. This guide lays out exactly how <strong>Claude Code pricing</strong> works, what a heavy month actually costs, and the simple rule for picking the right plan. By the end you will know which of the two billing paths fits how you work, and how to cut the bill without cutting the value.</p>
+
+        <h2 id="how-pricing-works">How Claude Code Pricing Actually Works (Two Paths)</h2>
+
+        <p>Claude Code is a free, open-source command-line tool. Installing it costs nothing. What you pay for is the Claude model doing the thinking behind it, and Anthropic bills that in one of two ways. <strong>Path one</strong> is a Claude subscription, a flat monthly price (Free, Pro, or Max) that includes a Claude Code usage allowance. <strong>Path two</strong> is the Anthropic API, where you attach an API key and pay per token with no monthly fee. You pick one; you do not pay twice.</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Path</th>
+              <th scope="col">You pay</th>
+              <th scope="col">Best for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Claude subscription</strong></td>
+              <td>Flat monthly: Free, Pro $20/mo, or Max $100 &amp; $200/mo (includes a usage allowance)</td>
+              <td>Individuals who want a predictable bill</td>
+            </tr>
+            <tr>
+              <td><strong>Anthropic API</strong></td>
+              <td>Per token, no monthly fee, no usage cap</td>
+              <td>Teams, automation, and bursty or shared workloads</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>The catch with both: the subscription has rate limits (it slows or pauses you once you burn through the allowance in a rolling window), and the API has no ceiling (it keeps charging as long as you keep running). Figures here are the stable structure, not gospel numbers, so treat the exact dollar amounts as a snapshot and check Anthropic's pricing page before you commit. If you are new to the tool, our guide on <a href="/blog/how-to-add-skills-to-claude-code">how to add skills to Claude Code</a> covers the setup that comes after billing.</p>
+
+        <h2 id="subscription-plans">The Subscription Plans: Free, Pro, Max</h2>
+
+        <p>A Claude subscription is one price for everything: the Claude apps, the web chat, and Claude Code, all sharing a usage allowance. There are three tiers. Free gets you a small taste, Pro is the default for working developers, and Max exists for people who run the agent for hours at a stretch.</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Plan</th>
+              <th scope="col">Price</th>
+              <th scope="col">Claude Code usage</th>
+              <th scope="col">Who it's for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Free</strong></td>
+              <td>$0</td>
+              <td>Small allowance; throttles quickly</td>
+              <td>Trying the tool, not real daily work</td>
+            </tr>
+            <tr>
+              <td><strong>Pro</strong></td>
+              <td>$20/mo</td>
+              <td>Solid allowance for a few hours a day</td>
+              <td>Most individual developers</td>
+            </tr>
+            <tr>
+              <td><strong>Max 5x</strong></td>
+              <td>$100/mo</td>
+              <td>~5x the Pro allowance</td>
+              <td>All-day users on bigger codebases</td>
+            </tr>
+            <tr>
+              <td><strong>Max 20x</strong></td>
+              <td>$200/mo</td>
+              <td>~20x the Pro allowance</td>
+              <td>Power users running long parallel sessions</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>The numbers shift over time, and Anthropic tunes the per-plan limits as model costs change, so the exact "hours" you get are not fixed. The shape holds, though: Pro is the entry point for serious use, and each Max tier roughly multiplies your headroom before throttling. The honest move is to start on Pro and let your own usage tell you whether you need more. Want to feed the agent reusable workflows while you test your limits? <a href="/browse">Browse the skill registry</a> and install one that matches your stack.</p>
+
+        <h2 id="api-path">The API Path: Pay Per Token</h2>
+
+        <p>The API path skips the subscription entirely. You generate an Anthropic API key, set it in your environment, and Claude Code bills you per token: a price for every chunk of text it reads (input) and a higher price for every chunk it writes (output). There is no monthly fee and no usage cap, which is the point and the danger. Different Claude models cost different amounts, so the model you run matters as much as how much you run it.</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Model tier</th>
+              <th scope="col">Relative cost</th>
+              <th scope="col">When to run it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Smallest (Haiku-class)</strong></td>
+              <td>Cheapest per token</td>
+              <td>Quick edits, file lookups, simple refactors</td>
+            </tr>
+            <tr>
+              <td><strong>Mid (Sonnet-class)</strong></td>
+              <td>Mid-range; the everyday default</td>
+              <td>Most coding work, the balanced choice</td>
+            </tr>
+            <tr>
+              <td><strong>Largest (Opus-class)</strong></td>
+              <td>Most expensive per token</td>
+              <td>Hard architecture, gnarly debugging, planning</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>Two features blunt the per-token sting. Prompt caching reuses the parts of your context that do not change (your codebase, your <a href="/blog/claude-code-memory">CLAUDE.md</a>) at a steep discount instead of re-billing them every turn. And the Batches API runs non-urgent jobs at roughly half price. For exact per-million-token rates by model, the Anthropic API pricing page is the source of truth, because those numbers move with each model release.</p>
+
+        <h2 id="subscription-vs-api">Subscription vs API: Which Is Cheaper for You</h2>
+
+        <p>For one person coding most days, the subscription almost always wins on price and on peace of mind. A flat $20 or $100 means you never get a surprise invoice, and Anthropic's allowance is generous enough that you would have to work hard to out-consume a Max plan. The API only beats it when your usage is either very light (you run the agent twice a month) or genuinely industrial (you are scripting it across a fleet).</p>
+
+        <p>The API earns its place in three cases: shared or automated workloads where per-token accounting is cleaner than buying a seat per human; CI pipelines and bots that run on their own schedule; and teams who want one consolidated bill with per-project cost attribution. If you are routing requests across providers or models, the setup in our <a href="/blog/claude-code-router">Claude Code router</a> guide pairs naturally with API billing. For a solo developer, though, paying per token usually means paying more for the privilege of watching a meter.</p>
+
+        <h2 id="real-month">What a Real Month Costs</h2>
+
+        <p>Concrete numbers beat hand-waving, so here is a real shape. Maya, a backend engineer at a 12-person startup, uses Claude Code about three hours a day across a mid-size Python and TypeScript repo. On the API path her first month came in around $140 in token charges, with most of the spend coming from one habit: leaving long debugging sessions running on the largest model. She switched to a $20 Pro subscription, dropped to the mid-tier model for routine work, and her cost fell to a flat $20, with throttling only twice near month-end.</p>
+
+        <p>Contrast that with a four-person team running Claude Code in CI to auto-triage failing tests. Their usage was spiky, mostly off-hours, and spread across no fixed human, so per-token API billing came to roughly $85 a month total, cleaner than buying four subscriptions at $80. The lesson is not "subscription good, API bad." It is that steady individual use rewards the flat rate, and bursty automated use rewards the meter. Measure your own pattern for a week before you decide.</p>
+
+        <h2 id="cut-costs">How to Keep Claude Code Costs Down</h2>
+
+        <p>Most overspending comes from running the biggest model on small tasks and feeding it more context than it needs. These habits cut the bill on either billing path without cutting much value:</p>
+
+        <ul>
+          <li><strong>Right-size the model</strong>:use the mid or small tier for edits and lookups; save the largest model for genuine architecture and hard bugs.</li>
+          <li><strong>Run <code>/clear</code> between tasks</strong>:a fresh context window is a cheaper context window. Carrying 50 messages of irrelevant history into a new task bills you for all of it.</li>
+          <li><strong>Lean on prompt caching</strong>:keep your <a href="/blog/claude-code-memory">CLAUDE.md</a> and project context stable so the cache discount applies instead of re-billing every turn.</li>
+          <li><strong>Be specific</strong>:a vague prompt makes the agent read more files and try more paths. A precise ask ("fix the null check in auth.ts line 40") spends fewer tokens.</li>
+          <li><strong>Batch non-urgent work</strong>:on the API, the Batches API runs background jobs at roughly half the standard rate.</li>
+        </ul>
+
+        <p>If repeated tasks are eating your budget, package them once instead of re-prompting from scratch each time. A <a href="/blog/claude-code-commands">custom slash command</a> or an installed skill turns a six-paragraph prompt into one short invocation, which is fewer tokens and less drift. Ready to trim the repetitive prompting? <a href="/browse">Find a skill that automates your most-repeated task</a> and stop paying to re-explain it.</p>
+
+        <h2 id="extras-cost">Do Skills, Plugins, and MCP Cost Extra?</h2>
+
+        <p>No. Skills, <a href="/blog/claude-code-plugins">plugins</a>, custom commands, <a href="/blog/claude-code-hooks">hooks</a>, <a href="/blog/claude-code-subagents">subagents</a>, and <a href="/blog/claude-code-mcp">MCP servers</a> carry no extra charge from Anthropic. They are local configuration files Claude Code reads at startup, not paid add-ons. They touch cost only indirectly: a skill that makes the agent read ten files spends more tokens than one that targets a single function. So the feature is free, but the work it triggers still counts against your plan or your API meter.</p>
+
+        <p>This is also where the registry side matters. Skills on PolySkill are open-source and free to install, and each one is security-scanned before listing, so adding capability does not add a subscription. The only cost a skill or plugin can create is token usage, and a well-scoped one usually saves tokens by getting the agent to the answer faster. Treat the building blocks as free and focus your budget thinking on model usage, where it actually lives.</p>
+
+        <h2 id="bottom-line">The Bottom Line on Cost</h2>
+
+        <p>Here is the decision, compressed. Start on Pro at $20 a month; it covers most individual developers with room to spare. Move to Max when you start hitting limits often enough that the throttling wastes more time than the upgrade costs, which for all-day users tends to happen fast. Reach for the Anthropic API only when your usage is automated, shared across a team, or so light that a metered bill beats any flat rate. And whichever path you pick, right-size the model and clear context between tasks, because that single habit moves the bill more than your plan choice does. Then confirm today's exact numbers on Anthropic's pricing page before you put down a card, because the structure is stable but the figures are not.</p>
+
+        <p>Browse next: <a href="/blog/how-to-add-skills-to-claude-code">How to Add Skills to Claude Code (2026)</a> | <a href="/blog/claude-code-vs-gemini-cli">Claude Code vs Gemini CLI (2026)</a> | <a href="/blog/claude-code-router">Claude Code Router (2026)</a> | <a href="/blog/claude-code-memory">Claude Code Memory (2026)</a></p>
+
+        <div class="blog-faq-section">
+          <h2 id="faq">Claude Code Pricing Questions, Answered</h2>
+
+          <h3>How much does Claude Code cost?</h3>
+          <p>Claude Code is free to install; you pay for the model behind it. Two paths: a Claude subscription (Free, Pro at $20/mo, or Max at $100 and $200/mo, each with a Claude Code usage allowance) or the Anthropic API billed per token with no monthly fee. Most individuals start on Pro for about $20/mo. Confirm exact figures on Anthropic's pricing page, since they change.</p>
+
+          <h3>Is Claude Code free?</h3>
+          <p>The CLI is free and open-source to install with <code>npm install -g @anthropic-ai/claude-code</code>. Running it past the small Free-plan allowance is not free: you need a paid Claude subscription (Pro or Max) or an Anthropic API key with a payment method. For steady daily use, a Pro subscription is the cheapest practical option.</p>
+
+          <h3>Claude Code Pro vs Max: which should I get?</h3>
+          <p>Pick <strong>Pro</strong> ($20/mo) if you use Claude Code a few hours a day and rarely hit limits. Pick <strong>Max</strong> ($100 or $200/mo) if you run the agent all day, work in large codebases, or keep getting throttled on Pro. Start on Pro, track how often you hit limits, and upgrade only when throttling costs more time than the price gap.</p>
+
+          <h3>Does Claude Code charge per token?</h3>
+          <p>Only on the API path. A Pro or Max subscription is a flat monthly price with a usage allowance, so you are not metered per token. The Anthropic API bills per input and output token with no monthly fee, so cost scales with how much you run it. Individuals usually prefer the subscription's flat rate.</p>
+
+          <h3>Do Claude Code skills or plugins cost extra?</h3>
+          <p>No. Skills, plugins, commands, hooks, and MCP servers add no extra Anthropic charge. They are local config files that only affect cost indirectly by changing how many tokens a task uses. Registries like PolySkill list skills for free, so the building blocks are free even though the model usage they trigger still counts against your plan.</p>
+        </div>
+
+        <a href="/blog" class="blog-back">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>
