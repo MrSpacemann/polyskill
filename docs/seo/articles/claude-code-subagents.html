@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Subagents (2026): Create, Use &amp; When They're Worth It | PolySkill</title>
+  <meta name="description" content="How Claude Code subagents work: create one in .claude/agents/*.md, why isolated context windows matter, running them in parallel, agents-vs-subagents naming, and patterns worth stealing.">
+  <meta property="og:title" content="Claude Code Subagents (2026): Create, Use &amp; When They're Worth It">
+  <meta property="og:description" content="How Claude Code subagents work: create one in .claude/agents/*.md, why isolated context windows matter, running them in parallel, and patterns worth stealing.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://polyskill.ai/blog/claude-code-subagents">
+  <meta property="og:image" content="https://polyskill.ai/img/og/claude-code-subagents.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="669">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude Code Subagents (2026): Create, Use &amp; When They're Worth It">
+  <meta name="twitter:description" content="How Claude Code subagents work: create one in .claude/agents/*.md, why isolated context windows matter, running them in parallel, and the naming cleared up.">
+  <meta name="twitter:image" content="https://polyskill.ai/img/og/claude-code-subagents.jpg">
+  <link rel="canonical" href="https://polyskill.ai/blog/claude-code-subagents">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Claude Code Subagents: How to Create and Use Them (2026)",
+    "description": "How Claude Code subagents work: create one in .claude/agents/*.md, why isolated context windows matter, running them in parallel, agents-vs-subagents naming, and patterns worth stealing.",
+    "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
+    "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
+    "datePublished": "2026-05-30",
+    "dateModified": "2026-05-30",
+    "image": "https://polyskill.ai/img/og/claude-code-subagents.jpg",
+    "mainEntityOfPage": "https://polyskill.ai/blog/claude-code-subagents"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyskill.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://polyskill.ai/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Code Subagents" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is a subagent in Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A subagent is a specialized assistant defined in a markdown file under .claude/agents/. It runs with its own isolated context window, its own system prompt, and an optional restricted tool list. Claude Code hands a subagent a focused task, the subagent works in its own context, and only the result comes back to your main conversation. That isolation is the whole point: the side-task never clutters your primary thread."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I create a Claude Code subagent?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Create a markdown file at .claude/agents/<name>.md (project scope) or ~/.claude/agents/<name>.md (user scope). Add YAML frontmatter with name, description, and an optional tools list, then write the system prompt below it as the file body. The fastest path is the /agents command inside Claude Code, which scaffolds the file and lets you pick allowed tools interactively."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the difference between agents and subagents in Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "They name the same feature. The files live in .claude/agents/ and the built-in command is /agents, so people say agents; the docs call them subagents to stress that each one runs underneath your main session in a separate context. There is no second feature you are missing. When someone searches claude code agents and claude code subagents, they are looking for the exact same markdown files."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "When should I use a subagent instead of a skill?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Reach for a subagent when a task needs its own context window, separate from your main thread: a noisy code review, a long research pass, a batch of independent checks you want running in parallel. Reach for a skill when you want to give the same Claude reusable instructions and assets for a recurring workflow without spawning a separate context. Subagents isolate; skills extend the agent you are already talking to."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can Claude Code subagents run in parallel?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Claude Code can dispatch several subagents at once when their tasks are independent, and each one works in its own context window without blocking the others. This is how a research or fan-out pattern stays fast: split the work across subagents, let them run side by side, then collect the results. Parallelism only helps when the subtasks do not depend on each other's output."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <article class="blog-article">
+      <header class="blog-article-header">
+        <h1 class="blog-article-title">Claude Code Subagents: How to Create and Use Them (2026)</h1>
+        <div class="blog-article-meta">Published May 30, 2026 · Updated May 30, 2026</div>
+      </header>
+
+      <img src="/img/og/claude-code-subagents.jpg"
+           srcset="/img/og/claude-code-subagents-600w.jpg 600w, /img/og/claude-code-subagents-1000w.jpg 1000w, /img/og/claude-code-subagents.jpg 1200w"
+           sizes="(max-width: 768px) calc(100vw - 2rem), 720px"
+           alt="Claude Code subagents — specialized assistants running in isolated context windows under a main session" class="blog-hero-img" width="1200" height="669" fetchpriority="high">
+
+      <div class="blog-article-body">
+        <div class="blog-tldr">
+          <div class="blog-tldr-label">In one line</div>
+          <p><strong>Claude Code subagents</strong> are specialized assistants defined as markdown files in <code>.claude/agents/</code>, each running in its own isolated context window. They keep side-tasks (code review, research, test-writing) out of your main thread and can run several at once.</p>
+        </div>
+
+        <p>Maya was three hours into a payments refactor when she asked Claude Code to "quickly check why the staging logs look weird." Forty messages later, her main conversation was buried under log dumps and two dead-end theories, and the refactor she cared about had scrolled off the top. The side-quest had eaten her context. <strong>Claude Code subagents</strong> exist for exactly that moment: hand the log investigation to a separate assistant with its own context window, get back a three-line answer, and keep your main thread clean. This guide covers what a subagent is, how to build one in <code>.claude/agents/*.md</code>, when the isolation pays off, and where subagents fall short.</p>
+
+        <p>If you have searched both "claude code subagents" and "claude code agents" and wondered whether those are two features, you are in the right place. They are one feature, and we clear up that naming below before getting practical.</p>
+
+        <h2 id="what-a-subagent-is">What a Subagent Is</h2>
+
+        <p>A subagent is a specialized assistant defined in a markdown file under <code>.claude/agents/</code>. It has its own system prompt, its own isolated context window, and an optional list of tools it is allowed to touch. Claude Code delegates a focused task to it, the subagent does the work in its own context, and only the final result returns to your main conversation. Everything it read, tried, and discarded along the way stays in its window, not yours.</p>
+
+        <p>That isolation is the entire reason subagents exist. Your main session has a finite context budget, and a messy side-task spends it fast. A subagent gives the side-task a sandbox. A test-writer subagent can read ten files, draft three failing tests, and report back "added 4 tests, all green" without ever showing you the ten files it skimmed.</p>
+
+        <p>Subagents are not the only way to extend Claude Code. <a href="/blog/how-to-add-skills-to-claude-code">Skills</a> give the agent reusable instructions, <a href="/blog/claude-code-mcp">MCP servers</a> give it new tools, and <a href="/blog/claude-code-hooks">hooks</a> make it run shell commands on events. Subagents are the one that adds a fresh context window. Keep that single difference in your head and the rest of this clicks into place. (New to the setup? The skill registry is a fast way to see working examples; <a href="/browse">browse it</a> when you have a minute.)</p>
+
+        <h2 id="create-your-first-subagent">Creating Your First Subagent</h2>
+
+        <p>A subagent is a plain markdown file with YAML frontmatter on top and a system prompt in the body. Drop it in <code>.claude/agents/</code> for a single project, or <code>~/.claude/agents/</code> to make it available everywhere. Here is a complete code-reviewer subagent:</p>
+
+        <pre><code>---
+name: code-reviewer
+description: Reviews staged changes for bugs and style issues. Use after writing or editing code.
+tools: Read, Grep, Glob, Bash
+---
+
+You are a focused code reviewer. When invoked:
+1. Run `git diff --staged` to see the changes.
+2. Flag real bugs, unsafe patterns, and missing error handling.
+3. Skip nitpicks. Report findings as a short, ranked list.
+Be specific: cite file and line, not vague advice.</code></pre>
+
+        <p>Three frontmatter fields do the work. <strong>name</strong> is the identifier Claude Code uses to call the subagent. <strong>description</strong> tells Claude Code when to reach for it automatically; write it as a trigger ("Use after writing code"), because the main agent reads it to decide when to delegate. <strong>tools</strong> is optional: list only what the subagent needs, and it inherits nothing else. Omit it and the subagent gets the full tool set.</p>
+
+        <p>You do not have to write the file by hand. Run <code>/agents</code> inside Claude Code and it scaffolds the frontmatter, lets you pick allowed tools from a checklist, and saves the file in the right place. Once saved, the subagent is live: Claude Code may invoke it automatically when a task matches the description, or you can call it explicitly ("use the code-reviewer subagent on my staged changes").</p>
+
+        <h2 id="when-subagents-earn-it">When Subagents Earn Their Keep</h2>
+
+        <p>Subagents pay off in two situations: when a task would pollute your main context, and when you can run several pieces of work at once. Both come down to the isolated context window.</p>
+
+        <p>Take the context-pollution case. A reviewer on a fintech team called Larkfield wired up a <code>test-writer</code> subagent in March 2026. Before, asking the main agent to write tests meant it loaded the implementation, the existing test file, and the fixtures: roughly 8,000 tokens of noise that stuck around for the rest of the session. After, the subagent did that reading in its own window and returned "wrote 6 tests in user_auth.test.ts, 6 passing." The main thread stayed on the feature, and the reviewer stopped hitting compaction mid-afternoon.</p>
+
+        <p>The second case is parallelism. Because each subagent runs in its own context, Claude Code can dispatch several at once when their tasks do not depend on each other. A research task that would take one agent twenty sequential lookups can be split across four subagents running side by side, each chasing one question, then merged. The win is real only when the subtasks are genuinely independent: fan one out to check four packages for breaking changes, not to write four files that import each other.</p>
+
+        <p>If a recurring side-task keeps stealing your main thread, that is the signal to make it a subagent. Several context-isolation and review patterns also ship as installable skills, so you can <a href="/browse">see what's in the registry</a> rather than build from scratch.</p>
+
+        <h2 id="subagents-vs-skills-vs-mcp">Subagents vs Skills vs MCP</h2>
+
+        <p>These three get conflated constantly because all of them "extend Claude Code," yet they do different jobs. The quick rule: subagents add a context, skills add instructions, MCP servers add tools.</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Feature</th>
+              <th scope="col">What it adds</th>
+              <th scope="col">Lives in</th>
+              <th scope="col">Reach for it when</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Subagent</strong></td>
+              <td>A separate, isolated context window</td>
+              <td><code>.claude/agents/*.md</code></td>
+              <td>A task would clutter your main thread, or you want parallel work</td>
+            </tr>
+            <tr>
+              <td><strong>Skill</strong></td>
+              <td>Reusable instructions and assets for the current agent</td>
+              <td>A skill folder (installed via PolySkill)</td>
+              <td>You repeat a workflow and want the same agent to know it</td>
+            </tr>
+            <tr>
+              <td><strong>MCP server</strong></td>
+              <td>New tools the agent can call (database, GitHub, Slack)</td>
+              <td><code>.mcp.json</code> / config</td>
+              <td>The agent needs to reach an external system</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>These combine well. A research subagent can use a skill for its method and an MCP server to query a database, all inside its own context. You are not picking one of the three; you are picking which problem you have right now. If the problem is "this keeps polluting my thread," reach for a subagent.</p>
+
+        <h2 id="agents-vs-subagents-naming">"Agents" vs "Subagents": The Naming, Cleared Up</h2>
+
+        <p>"Agents" and "subagents" are the same feature in Claude Code. There is no separate "agents" system you have been missing. The files live in <code>.claude/agents/</code> and the built-in command is <code>/agents</code>, so in casual use people say <em>agents</em>. The docs say <em>subagents</em> to stress that each one runs <em>underneath</em> your main session, in a context separate from the agent you are typing to.</p>
+
+        <p>So when one tutorial says "create a Claude Code agent" and another says "create a subagent," they describe the identical markdown file in the identical folder. The prefix <em>sub-</em> is a relationship, not a different product: your main session is the parent, the spawned helper is the child. Search results split the traffic across both terms, but the answer to "claude code agents" and "claude code subagents" is one and the same.</p>
+
+        <h2 id="patterns-worth-stealing">Subagent Patterns Worth Stealing</h2>
+
+        <p>You do not need a zoo of subagents. Three patterns cover most of the value, and each maps to a repeated side-task.</p>
+
+        <ul>
+          <li><strong>The reviewer</strong>:reads the staged diff, flags real bugs, and reports a ranked list. Triggered automatically after edits via its description, it catches the obvious mistakes before you do, and the diff-reading never touches your main context.</li>
+          <li><strong>The researcher</strong>:fans out across docs, source files, or the web to answer a question, then returns a tight summary with citations. This is the parallel-friendly one: split a "which of these five libraries supports X" question across five subagents.</li>
+          <li><strong>The test-writer</strong>:reads an implementation, drafts tests against it, runs them, and reports pass or fail counts. All the file-reading and trial-and-error stays sandboxed, so your thread sees "6 tests, all passing," not the scaffolding.</li>
+        </ul>
+
+        <p>The thread that ties these together: each one owns a task that is noisy, repeatable, and self-contained. That is the profile of a good subagent. If a job is a one-off, or if it needs to stay in lockstep with your main reasoning, it does not want its own context, so leave it in the main thread.</p>
+
+        <h2 id="where-subagents-fall-short">Where Subagents Fall Short</h2>
+
+        <p>Most write-ups only sell the upside, so here is the counterweight. Subagents are not free, and three things they do badly are worth knowing before you build a dozen of them.</p>
+
+        <p><strong>They start cold.</strong> A subagent does not see your main conversation. It gets only the task you hand it, so anything it needs to know, you pass in. For tightly coupled work where the context <em>is</em> the point, like debugging a bug that only makes sense given the last twenty messages, delegating to a fresh, amnesiac subagent is slower than staying put.</p>
+
+        <p><strong>Round-trips add latency.</strong> Spinning up a subagent, briefing it, and collecting its result has overhead. For a five-second task, that overhead is the whole cost. Subagents win on work big or noisy enough that the isolation is worth the handoff, not on quick lookups.</p>
+
+        <p><strong>The description is load-bearing.</strong> Automatic invocation lives or dies on the <code>description</code> field. Write it vaguely and the main agent either never delegates or delegates to the wrong subagent. A reviewer described as "helps with code" gets ignored; "Use after writing or editing code to catch bugs" gets used. If a subagent never seems to fire, the description is almost always why.</p>
+
+        <p>Browse next: <a href="/blog/how-to-add-skills-to-claude-code">How to Add Skills to Claude Code (2026)</a> | <a href="/blog/claude-code-hooks">Claude Code Hooks (2026)</a> | <a href="/blog/claude-code-mcp">Claude Code MCP (2026)</a> | <a href="/blog/claude-code-commands">Claude Code Commands (2026)</a></p>
+
+        <p>Pick your single most-repeated side-task, the one that keeps hijacking your main thread, and make it a subagent. Live with it for a week. You will know within three uses whether the isolation earns its keep, and a working <code>.claude/agents/*.md</code> file beats a perfect plan you never ship.</p>
+
+        <div class="blog-faq-section">
+          <h2 id="faq">Subagent Questions, Answered</h2>
+
+          <h3>What is a subagent in Claude Code?</h3>
+          <p>A subagent is a specialized assistant defined in a markdown file under <code>.claude/agents/</code>. It runs with its own isolated context window, its own system prompt, and an optional restricted tool list. Claude Code hands it a focused task and only the result returns to your main conversation, so the side-task never clutters your primary thread.</p>
+
+          <h3>How do I create a Claude Code subagent?</h3>
+          <p>Create a markdown file at <code>.claude/agents/&lt;name&gt;.md</code> (project scope) or <code>~/.claude/agents/&lt;name&gt;.md</code> (user scope). Add YAML frontmatter with <code>name</code>, <code>description</code>, and an optional <code>tools</code> list, then write the system prompt below it. The fastest path is the <code>/agents</code> command, which scaffolds the file and lets you pick allowed tools.</p>
+
+          <h3>What's the difference between agents and subagents in Claude Code?</h3>
+          <p>They name the same feature. The files live in <code>.claude/agents/</code> and the command is <code>/agents</code>, so people say <em>agents</em>; the docs say <em>subagents</em> to stress that each one runs underneath your main session in a separate context. Searching "claude code agents" and "claude code subagents" lands on the identical markdown files.</p>
+
+          <h3>When should I use a subagent instead of a skill?</h3>
+          <p>Use a subagent when a task needs its own context window, separate from your main thread: a noisy code review, a long research pass, or parallel checks. Use a <a href="/blog/how-to-add-skills-to-claude-code">skill</a> when you want to give the current agent reusable instructions for a recurring workflow. Subagents isolate; skills extend the agent you are already talking to.</p>
+
+          <h3>Can Claude Code subagents run in parallel?</h3>
+          <p>Yes. Claude Code can dispatch several subagents at once when their tasks are independent, and each works in its own context window without blocking the others. Split the work, let them run side by side, then collect the results. Parallelism only helps when the subtasks do not depend on each other's output.</p>
+        </div>
+
+        <a href="/blog" class="blog-back">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>

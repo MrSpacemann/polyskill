@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Memory &amp; CLAUDE.md (2026): The Complete Guide | PolySkill</title>
+  <meta name="description" content="How Claude Code memory works: the CLAUDE.md file, the enterprise/project/user hierarchy, @path imports, the # quick-add shortcut, and how to keep it from rotting.">
+  <meta property="og:title" content="Claude Code Memory &amp; CLAUDE.md (2026): The Complete Guide">
+  <meta property="og:description" content="How Claude Code memory works: the CLAUDE.md file, the enterprise/project/user hierarchy, @path imports, the # quick-add shortcut, and how to keep it lean.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://polyskill.ai/blog/claude-code-memory">
+  <meta property="og:image" content="https://polyskill.ai/img/og/claude-code-memory.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="669">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude Code Memory &amp; CLAUDE.md (2026): The Complete Guide">
+  <meta name="twitter:description" content="How Claude Code memory works: the CLAUDE.md file, the enterprise/project/user hierarchy, @path imports, and how to keep it lean.">
+  <meta name="twitter:image" content="https://polyskill.ai/img/og/claude-code-memory.jpg">
+  <link rel="canonical" href="https://polyskill.ai/blog/claude-code-memory">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Claude Code Memory: How CLAUDE.md Works (2026)",
+    "description": "How Claude Code memory works: the CLAUDE.md file, the enterprise/project/user hierarchy, @path imports, the # quick-add shortcut, and how to keep it from rotting.",
+    "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
+    "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
+    "datePublished": "2026-05-30",
+    "dateModified": "2026-05-30",
+    "image": "https://polyskill.ai/img/og/claude-code-memory.jpg",
+    "mainEntityOfPage": "https://polyskill.ai/blog/claude-code-memory"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyskill.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://polyskill.ai/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Code Memory" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Claude Code memory?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Claude Code memory is the set of CLAUDE.md files the agent reads automatically at the start of every session. They hold your standing instructions: coding style, project conventions, commands to run, and rules you don't want to repeat. There are three levels (enterprise, project, user), and Claude Code loads them top-down and combines them into one set of context before it reads your first prompt."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is CLAUDE.md?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "CLAUDE.md is a plain Markdown file Claude Code reads as persistent instructions. A project-level CLAUDE.md sits at your repo root and is checked into git so the whole team shares it; a user-level file at ~/.claude/CLAUDE.md applies across all your projects. Run /init to generate a starter project file or # at the start of a prompt to quick-add a single line."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where does Claude Code store memory?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "In three places. Project memory lives at ./CLAUDE.md in the repo root (committed to git, shared with the team). User memory lives at ~/.claude/CLAUDE.md and applies to every project you open. Enterprise memory is a system-level file an admin deploys to all developers on a machine. Claude Code loads all three for a session and combines them."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What should I put in CLAUDE.md?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Put stable facts the agent would otherwise guess wrong: the build and test commands, the package manager, code style rules, directory layout, and hard constraints (\"never commit to main\"). Keep it short. Leave out anything that changes per task, secrets, and long prose. An overstuffed CLAUDE.md burns context on every prompt and the agent starts ignoring it."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I import files into CLAUDE.md?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Write @path/to/file on its own line, and Claude Code inlines that file's contents where the import sits. Use it to pull shared docs into memory, like @docs/style-guide.md or @README.md, so the rules live in one canonical place instead of being copy-pasted. Imports can reference relative or home-directory paths and can nest a few levels deep."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <article class="blog-article">
+      <header class="blog-article-header">
+        <h1 class="blog-article-title">Claude Code Memory: How CLAUDE.md Works (2026)</h1>
+        <div class="blog-article-meta">Published May 30, 2026 · Updated May 30, 2026</div>
+      </header>
+
+      <img src="/img/og/claude-code-memory.jpg"
+           srcset="/img/og/claude-code-memory-600w.jpg 600w, /img/og/claude-code-memory-1000w.jpg 1000w, /img/og/claude-code-memory.jpg 1200w"
+           sizes="(max-width: 768px) calc(100vw - 2rem), 720px"
+           alt="Claude Code memory: a CLAUDE.md file feeding standing instructions to the agent across project and user levels" class="blog-hero-img" width="1200" height="669" fetchpriority="high">
+
+      <div class="blog-article-body">
+        <div class="blog-tldr">
+          <div class="blog-tldr-label">In one line</div>
+          <p><strong>Claude Code memory</strong> is the <code>CLAUDE.md</code> file the agent reads at the start of every session. Keep project rules in <code>./CLAUDE.md</code> (committed to git), personal rules in <code>~/.claude/CLAUDE.md</code>, and use <code>@path</code> to import shared docs and <code>#</code> to quick-add a line mid-session.</p>
+        </div>
+
+        <p>Why does Claude forget the convention you spelled out yesterday? Because nothing wrote it down where the agent looks. <strong>Claude Code memory</strong> is the fix: a Markdown file named <code>CLAUDE.md</code> that Claude Code reads automatically before it ever sees your prompt. Tell it once that you use <code>pnpm</code>, run tests with <code>npm test</code>, and never push straight to main, and it carries that into every session instead of guessing.</p>
+
+        <p>Most teams discover memory the hard way, correcting the same mistake three days running before someone asks "can't we just tell it once?" You can. The mechanism is simpler than the docs make it sound, and the hard part is discipline about what you write down. This guide covers what the file is, the three-level hierarchy, what belongs inside it (and what wrecks it), the two characters that save the most typing, and the habit that keeps a <code>CLAUDE.md</code> from rotting into noise.</p>
+
+        <h2 id="what-claude-md-is">What CLAUDE.md Is</h2>
+
+        <p><code>CLAUDE.md</code> is a plain Markdown file that Claude Code reads as standing instructions at the start of every session, before your first message. It holds the things you'd otherwise repeat: your build commands, code style, directory layout, and rules like "use tabs, not spaces." The agent treats it as context it already knows, so you stop re-explaining your project on every task.</p>
+
+        <p>Mei, a backend engineer on a four-person team, kept watching Claude Code reach for <code>npm</code> when the repo runs on <code>pnpm</code>. She added three lines to a <code>CLAUDE.md</code> at the repo root: the package manager, the test command, and "migrations live in <code>db/migrations</code>, never edit by hand." The next morning the whole team's sessions inherited those rules from git, and the correction she'd typed a dozen times stopped being necessary.</p>
+
+        <p>That is the entire value: write a rule once, never retype it. The file is human-readable Markdown, so you can open it, edit it, and review it in a pull request like any other code. If you've already set up <a href="/blog/claude-code-commands">custom slash commands</a> or <a href="/blog/claude-code-subagents">subagents</a>, memory is the layer underneath them, the shared facts every part of your setup leans on. <a href="/browse">Browse the skill registry</a> and you'll notice most skills assume a clean <code>CLAUDE.md</code> to build on.</p>
+
+        <h2 id="memory-hierarchy">The Memory Hierarchy: Enterprise, Project, User</h2>
+
+        <p>Claude Code memory comes in three levels, and they stack. Enterprise is the system-level file an admin deploys to a whole machine; project is <code>./CLAUDE.md</code> at your repo root, committed to git and shared with the team; user is <code>~/.claude/CLAUDE.md</code>, which applies to every project you open. Claude Code loads all three top-down and combines them into one block of context, so a session sees enterprise, then project, then your personal rules all at once.</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Level</th>
+              <th scope="col">Where it lives</th>
+              <th scope="col">Who it covers</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Enterprise</strong></td>
+              <td>A system-level path an admin manages (OS-specific)</td>
+              <td>Every developer on the machine; org-wide policy</td>
+            </tr>
+            <tr>
+              <td><strong>Project</strong></td>
+              <td><code>./CLAUDE.md</code> at the repo root, checked into git</td>
+              <td>Everyone who clones the repo; the whole team</td>
+            </tr>
+            <tr>
+              <td><strong>User</strong></td>
+              <td><code>~/.claude/CLAUDE.md</code> in your home folder</td>
+              <td>Just you, across all of your projects</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>The split exists so each rule lives at the right blast radius. "We require signed commits" is enterprise. "This repo uses Vitest, not Jest" is a project rule, and it belongs in git so a new hire gets it on day one. "I like terse explanations and no emojis" is a user rule, true for you in every repo, irrelevant to your teammates. Because the files combine rather than overwrite, you don't pick one level, you put each instruction where its scope actually is.</p>
+
+        <h2 id="what-belongs">What Actually Belongs in CLAUDE.md (and What Doesn't)</h2>
+
+        <p>The best <code>CLAUDE.md</code> holds stable facts the agent would otherwise guess wrong, and nothing else. Good candidates: the exact build and test commands, the package manager, code style rules, the directory map, and hard constraints like "never commit to main" or "all API routes need a test." These are short, durable, and save a correction every single session.</p>
+
+        <p>What does <em>not</em> belong matters just as much. Leave out anything that changes per task, secrets and API keys (the file is committed to git), and long prose, the agent doesn't need a paragraph on why you chose a library, only the rule that follows from it. A useful test: if a sentence wouldn't still be true next month, it belongs in a prompt, not in memory.</p>
+
+        <p>A practical starter for a project file looks like this:</p>
+
+        <pre><code># Project: payments-api
+
+## Commands
+- Install: `pnpm install`
+- Test: `pnpm test`
+- Lint: `pnpm lint --fix`
+
+## Conventions
+- TypeScript strict mode; no `any`.
+- Migrations live in `db/migrations`; never edit applied ones.
+- Never commit directly to `main`; open a PR.</code></pre>
+
+        <p>Notice what's missing: no prose, no history, no "please." Bullet points the agent can act on, the kind of thing a new teammate reads in thirty seconds. If you're standing up a fresh repo, run <code>/init</code> and Claude Code scans the project and drafts a <code>CLAUDE.md</code> for you to trim, faster than writing one from scratch. For wiring the agent into a new project, the <a href="/blog/how-to-add-skills-to-claude-code">skills setup guide</a> pairs well with this.</p>
+
+        <h2 id="path-imports">Importing Other Files with @path</h2>
+
+        <p>To pull another file's contents into memory, write <code>@path/to/file</code> on its own line. Claude Code inlines that file where the import sits, so a rule can live in one canonical place and be referenced from <code>CLAUDE.md</code> instead of copy-pasted. This keeps a single source of truth: edit the real doc, and every file that imports it updates too.</p>
+
+        <pre><code># Project memory
+
+See @docs/style-guide.md for formatting rules.
+See @docs/architecture.md for the module layout.
+
+## Personal overrides
+@~/.claude/my-defaults.md</code></pre>
+
+        <p>Imports take relative paths (<code>@docs/style-guide.md</code>), home-directory paths (<code>@~/.claude/my-defaults.md</code>), and can nest a few levels deep. The win shows up on teams: instead of every developer's personal file repeating the org style guide, each one imports the shared copy, and a single edit propagates to everyone. One fintech team cut their per-developer memory file from 80 lines to 12 this way, with one <code>@docs/conventions.md</code> doing the heavy lifting.</p>
+
+        <p>One caution: an import inlines the <em>entire</em> target file into context every session. Importing a 600-line design doc means paying for 600 lines on every prompt whether the task touches it or not. Import lean files, or split a big doc and import only the section you need.</p>
+
+        <h2 id="quick-add">The # Quick-Add Shortcut</h2>
+
+        <p>To add a memory mid-session without opening a file, start a prompt with <code>#</code> and type the rule. Claude Code captures the line and offers to save it to your project or user <code>CLAUDE.md</code>, so a correction you make once becomes permanent in two seconds. It's the fastest path from "ugh, it did that again" to "it won't next time."</p>
+
+        <p>The moment that earns it: you're mid-task, the agent uses American date formatting when your app is European, and you fix it inline. Instead of letting the lesson evaporate when the session ends, you type <code>#</code> Always use DD/MM/YYYY dates and pick "project." The rule lands in <code>./CLAUDE.md</code>, and the next session, plus your teammates' sessions, never make the mistake. To edit those files directly later, run <code>/memory</code>, which opens them for a proper cleanup pass.</p>
+
+        <p>Treat <code>#</code> as capture and <code>/memory</code> as curation. Quick-add in the heat of work, then once a week open <code>/memory</code> and prune what you've piled up, because the easy part is adding rules and the discipline is removing them.</p>
+
+        <h2 id="keeping-memory-lean">Keeping Memory From Rotting</h2>
+
+        <p>A <code>CLAUDE.md</code> you never prune becomes noise the agent learns to ignore. Memory has a real cost: every line loads into the context window on every single prompt, so a bloated file is both an expense and a distraction that buries your important rules under stale ones. The discipline isn't writing memory, it's editing it.</p>
+
+        <p>Four habits keep a file healthy. Delete on sight: when a rule stops being true (you switched from Jest to Vitest), remove the old line in the same edit. Keep it scannable: if you can't read the whole file in under a minute, it's too long. Prefer specific over vague: "run <code>pnpm test:unit</code> before every commit" beats "test your code," because the agent acts on the first and only nods at the second. And review it in pull requests, since project memory is in git, a teammate can catch a dead rule the way they'd catch a bug.</p>
+
+        <p>Here's the failure mode. Over six months a project file grows to 200 lines, half of them contradicting each other, and the agent behaves as if the file weren't there, because functionally it isn't. The fix is the maintenance pass you'd give any config: open <code>/memory</code>, cut anything stale, duplicated, or vague, and you usually delete a third of it without losing a rule that mattered. A short <code>CLAUDE.md</code> the agent follows beats a long one it's learned to skim. When your memory and your <a href="/blog/claude-code-hooks">hooks</a> are both lean, the agent does the right thing by default, which is the whole point.</p>
+
+        <p>Browse next: <a href="/blog/claude-code-commands">Claude Code Commands (2026)</a> | <a href="/blog/claude-code-subagents">Claude Code Subagents (2026)</a> | <a href="/blog/claude-code-hooks">Claude Code Hooks (2026)</a> | <a href="/blog/how-to-add-skills-to-claude-code">How to Add Skills to Claude Code (2026)</a></p>
+
+        <div class="blog-faq-section">
+          <h2 id="faq">Memory Questions, Answered</h2>
+
+          <h3>What is Claude Code memory?</h3>
+          <p>Claude Code memory is the set of <code>CLAUDE.md</code> files the agent reads automatically at the start of every session. They hold your standing instructions: coding style, project conventions, commands, and rules you don't want to repeat. There are three levels (enterprise, project, user), and Claude Code loads them top-down and combines them before it reads your first prompt.</p>
+
+          <h3>What is CLAUDE.md?</h3>
+          <p><code>CLAUDE.md</code> is a plain Markdown file Claude Code reads as persistent instructions. A project-level file sits at your repo root and is checked into git so the team shares it; a user file at <code>~/.claude/CLAUDE.md</code> applies across all your projects. Run <code>/init</code> to generate a starter, or <code>#</code> at the start of a prompt to quick-add a line.</p>
+
+          <h3>Where does Claude Code store memory?</h3>
+          <p>Three places: project memory at <code>./CLAUDE.md</code> in the repo root (committed to git, shared with the team), user memory at <code>~/.claude/CLAUDE.md</code> (all your projects), and enterprise memory, a system-level file an admin deploys machine-wide. Claude Code loads all three for a session and combines them.</p>
+
+          <h3>What should I put in CLAUDE.md?</h3>
+          <p>Stable facts the agent would otherwise guess wrong: build and test commands, the package manager, code style, directory layout, and hard constraints like "never commit to main." Keep it short. Leave out per-task details, secrets, and long prose, an overstuffed file burns context on every prompt and the agent starts ignoring it.</p>
+
+          <h3>How do I import files into CLAUDE.md?</h3>
+          <p>Write <code>@path/to/file</code> on its own line and Claude Code inlines that file's contents where the import sits. Use it to pull shared docs into memory, like <code>@docs/style-guide.md</code>, so rules live in one canonical place instead of being copy-pasted. Imports take relative or home-directory paths and can nest a few levels deep.</p>
+        </div>
+
+        <a href="/blog" class="blog-back">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>

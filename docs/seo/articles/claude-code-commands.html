@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Commands (2026): Slash Commands &amp; Custom Workflows | PolySkill</title>
+  <meta name="description" content="Claude Code commands explained: the built-in slash commands you already have, how to write custom commands in .claude/commands/*.md, passing arguments with $ARGUMENTS, and sharing commands across a team via git.">
+  <meta property="og:title" content="Claude Code Commands (2026): Slash Commands &amp; Custom Workflows">
+  <meta property="og:description" content="The built-in slash commands you already have, how to write custom commands in .claude/commands/*.md, passing arguments with $ARGUMENTS, and sharing commands across a team.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://polyskill.ai/blog/claude-code-commands">
+  <meta property="og:image" content="https://polyskill.ai/img/og/claude-code-commands.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="669">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude Code Commands (2026): Slash Commands &amp; Custom Workflows">
+  <meta name="twitter:description" content="Built-in slash commands, custom commands in .claude/commands/*.md, $ARGUMENTS, and sharing commands across a team via git.">
+  <meta name="twitter:image" content="https://polyskill.ai/img/og/claude-code-commands.jpg">
+  <link rel="canonical" href="https://polyskill.ai/blog/claude-code-commands">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Claude Code Commands: Slash Commands and Custom Workflows (2026)",
+    "description": "Claude Code commands explained: the built-in slash commands you already have, how to write custom commands in .claude/commands/*.md, passing arguments with $ARGUMENTS, and sharing commands across a team via git.",
+    "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
+    "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
+    "datePublished": "2026-05-30",
+    "dateModified": "2026-05-30",
+    "image": "https://polyskill.ai/img/og/claude-code-commands.jpg",
+    "mainEntityOfPage": "https://polyskill.ai/blog/claude-code-commands"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyskill.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://polyskill.ai/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Code Commands" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What are Claude Code commands?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Claude Code commands are slash-prefixed shortcuts you type in the prompt to trigger an action. Built-in ones like /clear, /model, /review, and /init ship with the tool and control the session. Custom commands are Markdown files you save in .claude/commands/, where the filename becomes the command name and the file body is the prompt Claude runs."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I create a custom slash command?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Make a Markdown file in .claude/commands/ inside your project. The filename without the .md becomes the command, so .claude/commands/changelog.md gives you /changelog. Write the prompt you want Claude to run as the file body, save it, and the command is available immediately in that project's next prompt."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I pass arguments to a Claude Code command?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Put $ARGUMENTS in the command file and Claude substitutes everything you type after the command name. For example, /fix the login redirect feeds 'the login redirect' into $ARGUMENTS. For multiple distinct inputs, use positional placeholders, which are 0-based: $0, $1, and so on, so /pr fix-auth high maps fix-auth to $0 and high to $1."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where are Claude Code slash commands stored?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Custom commands live in two places: .claude/commands/ inside a project (project scope, committed to git so teammates get them) and ~/.claude/commands/ in your home folder (personal scope, available in every project). Built-in commands like /help and /compact are part of the Claude Code binary and need no files."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What's the difference between a command and a skill?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "A command runs only when you type its slash name, so you decide exactly when it fires. A skill is loaded by Claude on its own when the task matches the skill's description, so it activates without you asking. Use a command for a workflow you invoke deliberately; use a skill for expertise you want applied automatically."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <article class="blog-article">
+      <header class="blog-article-header">
+        <h1 class="blog-article-title">Claude Code Commands: Slash Commands and Custom Workflows (2026)</h1>
+        <div class="blog-article-meta">Published May 30, 2026 · Updated May 30, 2026</div>
+      </header>
+
+      <img src="/img/og/claude-code-commands.jpg"
+           srcset="/img/og/claude-code-commands-600w.jpg 600w, /img/og/claude-code-commands-1000w.jpg 1000w, /img/og/claude-code-commands.jpg 1200w"
+           sizes="(max-width: 768px) calc(100vw - 2rem), 720px"
+           alt="Claude Code commands — a slash command in the prompt expanding into a saved Markdown workflow file" class="blog-hero-img" width="1200" height="669" fetchpriority="high">
+
+      <div class="blog-article-body">
+        <div class="blog-tldr">
+          <div class="blog-tldr-label">In one line</div>
+          <p><strong>Claude Code commands</strong> are slash shortcuts: built-ins like <code>/clear</code> and <code>/review</code> control the session, and custom <strong>slash commands</strong> are Markdown files in <code>.claude/commands/</code> where the filename becomes the command and the body becomes the prompt Claude runs.</p>
+        </div>
+
+        <p>Every weekday, Maya opened Claude Code and pasted the same six-line prompt: read the open PR, summarize the risky changes, flag anything touching auth, and write a checklist. By Thursday she had typed it forty-something times that month. Then a teammate showed her that the entire prompt could live in one file and run as <code>/review-pr</code>. That is the whole pitch for <strong>Claude Code commands</strong>: a prompt you repeat is a prompt you should save. This guide covers the built-in <strong>slash commands</strong> you already have, how to write your own, how to pass arguments, and how to share <strong>custom commands</strong> with a team through git.</p>
+
+        <p>Most people meet commands through the built-ins and never go further. That is the trap. The built-ins are useful, but the real time savings start the moment you write the first one of your own. You will leave this page knowing exactly which commands ship with the tool, how to author a custom one in under a minute, and which of your daily prompts are worth turning into a command.</p>
+
+        <h2 id="built-in-commands">Built-in Slash Commands You Already Have</h2>
+
+        <p>Built-in slash commands ship with Claude Code and control the session itself. You type them in the prompt with a leading slash, and they run instantly without any setup. The ones you will reach for daily are <code>/clear</code>, <code>/compact</code>, <code>/model</code>, and <code>/review</code>; the rest cover setup and configuration.</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Command</th>
+              <th scope="col">What it does</th>
+              <th scope="col">When you reach for it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>/clear</code></td>
+              <td>Wipes the conversation history and starts a fresh context</td>
+              <td>Switching tasks, when the context has drifted off-topic</td>
+            </tr>
+            <tr>
+              <td><code>/compact</code></td>
+              <td>Summarizes the conversation so far to free up the context window</td>
+              <td>A long session that is getting slow or near its limit</td>
+            </tr>
+            <tr>
+              <td><code>/model</code></td>
+              <td>Switches the active model (for example Opus to Sonnet)</td>
+              <td>Dialing speed up or capability up for the current task</td>
+            </tr>
+            <tr>
+              <td><code>/review</code></td>
+              <td>Asks Claude to review the current changes</td>
+              <td>Before you commit or open a pull request</td>
+            </tr>
+            <tr>
+              <td><code>/init</code></td>
+              <td>Scaffolds a <code>CLAUDE.md</code> by scanning your repo</td>
+              <td>First time you open Claude Code in a project</td>
+            </tr>
+            <tr>
+              <td><code>/mcp</code></td>
+              <td>Shows MCP server status and handles authentication</td>
+              <td>Connecting or debugging external tool servers</td>
+            </tr>
+            <tr>
+              <td><code>/agents</code></td>
+              <td>Lists and manages your subagents</td>
+              <td>Checking which specialized agents are configured</td>
+            </tr>
+            <tr>
+              <td><code>/help</code></td>
+              <td>Lists every available command, built-in and custom</td>
+              <td>When you forget a command name</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>One thing worth knowing on day one: <code>/help</code> shows your custom commands right alongside the built-ins, so once you start writing your own, this is the index you will check. If you have just installed the tool, running <a href="/blog/claude-code-memory"><code>/init</code> to generate a CLAUDE.md</a> is the most valuable first command, because it gives Claude the project context every later prompt relies on. Want to see what teams build on top of these primitives? <a href="/browse">Browse the skill registry</a> to see commands and workflows others have already packaged.</p>
+
+        <h2 id="custom-commands">Custom Slash Commands: Where the Time Goes</h2>
+
+        <p>A custom slash command is a Markdown file in <code>.claude/commands/</code>, and the filename becomes the command name. Save <code>.claude/commands/changelog.md</code> and you can immediately type <code>/changelog</code>; whatever you wrote in that file becomes the prompt Claude runs. There is no registration step, no config to edit, and no restart. Create the file, type the slash, done.</p>
+
+        <p>Custom commands have now been merged into skills, so a file at <code>.claude/commands/deploy.md</code> and a skill at <code>.claude/skills/deploy/SKILL.md</code> both create <code>/deploy</code> and work the same way, and your existing <code>.claude/commands/</code> files keep working.</p>
+
+        <p>Here is the entire setup for a command that summarizes uncommitted work:</p>
+
+        <pre><code># Create the file
+mkdir -p .claude/commands
+echo "Summarize my staged and unstaged git changes as a short, plain-English changelog entry." > .claude/commands/changelog.md</code></pre>
+
+        <p>Now <code>/changelog</code> works in that project. The body of a command file is just a prompt, so anything you would normally type, you can save. Bash injection makes these files far more capable than a saved snippet: a line of the form <code>!`command`</code> (the command wrapped in backticks after the <code>!</code>) runs that shell command and feeds its output into the prompt. A sharper changelog command pulls in both the diff and the existing file this way:</p>
+
+        <pre><code># .claude/commands/changelog.md
+Here is the current diff:
+
+!`git diff --staged`
+
+And the existing changelog for tone:
+
+!`cat CHANGELOG.md`
+
+Write a new entry matching that style. Keep it under five bullet points.</code></pre>
+
+        <p>When you run <code>/changelog</code>, Claude executes <code>git diff --staged</code>, reads <code>CHANGELOG.md</code>, and writes the entry, all from one slash. That is the difference between a command and a snippet: a command can gather its own context before it runs. This pairs naturally with <a href="/blog/claude-code-hooks">Claude Code hooks</a>, which automate actions <em>around</em> the agent, while commands automate the prompts you send <em>into</em> it.</p>
+
+        <h2 id="arguments">Passing Arguments with $ARGUMENTS</h2>
+
+        <p>Static commands are useful, but the ones you live in take input. Put <code>$ARGUMENTS</code> anywhere in a command file and Claude substitutes everything you type after the command name. So <code>/fix the login redirect loop</code> drops "the login redirect loop" into the placeholder, and one file handles every variation of the task.</p>
+
+        <pre><code># .claude/commands/fix.md
+Investigate and fix this bug: $ARGUMENTS
+
+Reproduce it first, write a failing test, then make it pass.
+Show me the diff before committing anything.</code></pre>
+
+        <p>Run <code>/fix the date picker shows tomorrow in UTC-8</code> and the whole sentence flows into <code>$ARGUMENTS</code>. When a command needs more than one distinct input, use positional placeholders, which are 0-based: <code>$0</code>, <code>$1</code>, and so on. They map to the words you pass, in order:</p>
+
+        <pre><code># .claude/commands/scaffold.md
+Create a new $0 component named $1.
+
+Match the patterns in our existing $0 components, include a basic test,
+and add it to the index export.</code></pre>
+
+        <p>Now <code>/scaffold react Button</code> sets <code>$0</code> to "react" and <code>$1</code> to "Button". Positional arguments are how you turn a one-off prompt into a small, reliable generator. Once you have a command you call several times a day, this is the point where it starts feeling less like a shortcut and more like a tiny tool you built for yourself.</p>
+
+        <h2 id="commands-that-pay-off">Commands That Pay Off</h2>
+
+        <p>The commands worth writing are the prompts you already repeat. Three patterns earn their keep for nearly every developer, and each one started as a prompt someone got tired of retyping.</p>
+
+        <ul>
+          <li><strong>The reviewer</strong>:a <code>/review-pr</code> that runs <code>!`git diff main`</code>, applies your team's review checklist, and flags security-sensitive changes. This is Maya's command; it replaced her six-line morning paste and now runs in two keystrokes.</li>
+          <li><strong>The changelog writer</strong>:a <code>/changelog</code> that reads the staged diff and the existing changelog file, then drafts an entry in the right voice. Saves the "what did I even change" pause before every commit.</li>
+          <li><strong>The scaffolder</strong>:a <code>/scaffold $0 $1</code> that generates a new component, hook, or endpoint matching your project's conventions, complete with a test stub. New code that looks like your existing code, every time.</li>
+        </ul>
+
+        <p>A team at a small fintech, Northwind, measured this in March 2026. They counted the prompts their four engineers retyped most often, turned the top seven into project commands, and committed them. Within two weeks the phrase "what's the command for that again" had moved from Slack into <code>/help</code>, and onboarding a fifth engineer took an afternoon instead of a week, because the team's workflows were now files in the repo rather than tribal knowledge.</p>
+
+        <h2 id="commands-vs-skills">Commands vs Skills: Which to Reach For</h2>
+
+        <p>Commands and <a href="/blog/how-to-add-skills-to-claude-code">skills</a> both package reusable instructions, but they fire at different times, and that difference decides which one you want. A command runs only when you type its slash name; you control the exact moment. A skill is loaded by Claude automatically when your task matches the skill's description, so it activates without you asking.</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Aspect</th>
+              <th scope="col">Slash command</th>
+              <th scope="col">Skill</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Triggered by</strong></td>
+              <td>You typing <code>/name</code></td>
+              <td>Claude matching the task to its description</td>
+            </tr>
+            <tr>
+              <td><strong>Lives in</strong></td>
+              <td><code>.claude/commands/*.md</code></td>
+              <td>A skill folder with a <code>SKILL.md</code></td>
+            </tr>
+            <tr>
+              <td><strong>Best for</strong></td>
+              <td>A workflow you invoke deliberately</td>
+              <td>Expertise you want applied automatically</td>
+            </tr>
+            <tr>
+              <td><strong>Scope</strong></td>
+              <td>One prompt you wrote</td>
+              <td>Multi-file knowledge, scripts, references</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>The practical rule: if you want to decide when something happens, write a command. If you want Claude to recognize the situation and act, build a skill. A <code>/deploy</code> command should be deliberate; "always follow our API error-handling conventions" should be a skill that loads itself. Many teams keep both, and every skill on <a href="/browse">PolySkill</a> is security-scanned before listing, which matters because a skill activates on its own where a command waits for you.</p>
+
+        <h2 id="sharing-commands">Sharing Commands Across a Team</h2>
+
+        <p>The reason commands beat personal aliases is that they travel. A command in <code>.claude/commands/</code> sits inside your repository, so when you commit it and a teammate pulls, they get the command too, no setup on their end. This is project scope, and it is how a workflow stops being one person's habit and becomes the team's.</p>
+
+        <p>There are two homes for commands, and the difference is who gets them:</p>
+
+        <ul>
+          <li><strong>Project scope</strong>:<code>.claude/commands/</code> in the repo. Commit it and the whole team shares the command through git. Use this for review checklists, scaffolders, and anything tied to the codebase.</li>
+          <li><strong>Personal scope</strong>:<code>~/.claude/commands/</code> in your home folder. Available in every project you open, visible only to you. Use this for personal habits like a journaling prompt or your own commit-message style.</li>
+        </ul>
+
+        <p>Treat your <code>.claude/commands/</code> directory like the rest of the codebase: review changes to it, name commands clearly, and prune ones nobody runs. A shared command that drifts out of date is worse than no command, because people trust it. When you bring a new engineer on, the commands in the repo are a running tour of how the team actually works, which is exactly why committing them beats keeping a wiki page nobody updates.</p>
+
+        <h2 id="when-not">When a Command Is the Wrong Move</h2>
+
+        <p>Commands are cheap, which makes it easy to write too many. A directory of forty commands nobody remembers is just clutter with a slash in front of it. Three cases where a command is not the answer:</p>
+
+        <p><strong>A prompt you run once.</strong> If you will type something a single time, type it. The minute spent writing the file is only repaid by repetition; a true one-off never repays it.</p>
+
+        <p><strong>Logic that should be a real script.</strong> If your command is mostly shell with <code>!</code> lines and barely any instruction for Claude, you have written a shell script in disguise. Put it in a <code>Makefile</code> or a <code>scripts/</code> file where it can be tested and version-controlled as code.</p>
+
+        <p><strong>Knowledge that should load itself.</strong> If you find yourself typing the same command at the start of every session to remind Claude how the project works, that belongs in <a href="/blog/claude-code-memory">CLAUDE.md</a> or a skill, not in a command you have to remember to run.</p>
+
+        <h2 id="start-here">If You Run a Prompt Twice a Week, It's a Command</h2>
+
+        <p>The math is simple. A custom command takes about a minute to write. A prompt you retype twice a week costs you that minute again every few days, plus the small tax of getting the wording slightly wrong each time. Run it twice a week for a month and the command has paid for itself eight times over, and it never drifts. Pick the one prompt you typed most this week, save it as a file in <code>.claude/commands/</code>, and use it tomorrow. That single command is the cheapest win in the whole tool, and the second one is even easier, because you already know how.</p>
+
+        <p>Browse next: <a href="/blog/how-to-add-skills-to-claude-code">How to Add Skills to Claude Code (2026)</a> | <a href="/blog/claude-code-subagents">Claude Code Subagents (2026)</a> | <a href="/blog/claude-code-hooks">Claude Code Hooks (2026)</a> | <a href="/blog/claude-code-mcp">Claude Code MCP (2026)</a></p>
+
+        <div class="blog-faq-section">
+          <h2 id="faq">Command Questions, Answered</h2>
+
+          <h3>What are Claude Code commands?</h3>
+          <p>Claude Code commands are slash-prefixed shortcuts you type in the prompt to trigger an action. Built-in ones like <code>/clear</code>, <code>/model</code>, <code>/review</code>, and <code>/init</code> ship with the tool and control the session. Custom commands are Markdown files in <code>.claude/commands/</code>, where the filename becomes the command name and the file body becomes the prompt Claude runs.</p>
+
+          <h3>How do I create a custom slash command?</h3>
+          <p>Make a Markdown file in <code>.claude/commands/</code> inside your project. The filename without the <code>.md</code> becomes the command, so <code>.claude/commands/changelog.md</code> gives you <code>/changelog</code>. Write the prompt you want Claude to run as the file body, save it, and the command works immediately in that project.</p>
+
+          <h3>How do I pass arguments to a Claude Code command?</h3>
+          <p>Put <code>$ARGUMENTS</code> in the command file and Claude substitutes everything you type after the command name, so <code>/fix the login redirect</code> feeds "the login redirect" into the placeholder. For several distinct inputs, use positional placeholders, which are 0-based: <code>$0</code>, <code>$1</code>, so <code>/scaffold react Button</code> maps "react" to <code>$0</code> and "Button" to <code>$1</code>.</p>
+
+          <h3>Where are Claude Code slash commands stored?</h3>
+          <p>Custom commands live in <code>.claude/commands/</code> inside a project (committed to git so teammates get them) and <code>~/.claude/commands/</code> in your home folder (personal, in every project). Built-in commands like <code>/help</code> and <code>/compact</code> are part of the Claude Code binary and need no files.</p>
+
+          <h3>What's the difference between a command and a skill?</h3>
+          <p>A command runs only when you type its slash name, so you decide when it fires. A skill is loaded by Claude on its own when the task matches the skill's description, so it activates without you asking. Use a command for a workflow you invoke deliberately; use a skill for expertise you want applied automatically.</p>
+        </div>
+
+        <a href="/blog" class="blog-back">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Hooks (2026): Automate &amp; Control the Agent | PolySkill</title>
+  <meta name="description" content="How Claude Code hooks work: the 8 hook events, configuring them in settings.json, three hooks worth adding today, blocking dangerous commands, and the security tradeoff.">
+  <meta property="og:title" content="Claude Code Hooks (2026): Automate &amp; Control the Agent">
+  <meta property="og:description" content="How Claude Code hooks work: the 8 hook events, configuring them in settings.json, three hooks worth adding today, and the security tradeoff.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://polyskill.ai/blog/claude-code-hooks">
+  <meta property="og:image" content="https://polyskill.ai/img/og/claude-code-hooks.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="669">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude Code Hooks (2026): Automate &amp; Control the Agent">
+  <meta name="twitter:description" content="How Claude Code hooks work: the 8 hook events, configuring them in settings.json, three hooks worth adding today, and the security tradeoff.">
+  <meta name="twitter:image" content="https://polyskill.ai/img/og/claude-code-hooks.jpg">
+  <link rel="canonical" href="https://polyskill.ai/blog/claude-code-hooks">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Claude Code Hooks: Automate and Control the Agent (2026)",
+    "description": "How Claude Code hooks work: the 8 hook events, configuring them in settings.json, three hooks worth adding today, blocking dangerous commands, and the security tradeoff.",
+    "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
+    "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
+    "datePublished": "2026-05-30",
+    "dateModified": "2026-05-30",
+    "image": "https://polyskill.ai/img/og/claude-code-hooks.jpg",
+    "mainEntityOfPage": "https://polyskill.ai/blog/claude-code-hooks"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyskill.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://polyskill.ai/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Code Hooks" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What are Claude Code hooks?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Claude Code hooks are shell commands that run automatically at fixed points in the agent's lifecycle, configured under a hooks key in settings.json. Where a prompt asks the model to behave a certain way, a hook enforces it: the command fires every time the matching event occurs, regardless of what the model decides. Common uses are auto-formatting edited files, blocking risky shell commands, and sending a desktop notification when a task finishes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I add a hook in Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Open your settings.json (run /hooks inside Claude Code, or edit .claude/settings.json directly), add a hooks key, pick an event like PostToolUse, set a matcher for the tools it should apply to, and give it a command to run. The command receives JSON about the event on stdin. Save the file and the hook is active for the next matching action; no restart is required."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What events can a Claude Code hook fire on?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "There are eight hook events: PreToolUse and PostToolUse (before and after a tool call), UserPromptSubmit (when you send a message), Stop and SubagentStop (when the main agent or a subagent finishes), Notification (when Claude Code would alert you), PreCompact (before the context is compacted), and SessionStart (when a session begins or resumes)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can a hook block Claude Code from running a command?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. A PreToolUse hook runs before the tool call and can stop it. Exit with code 2 to deny the action and feed the hook's stderr back to the model as the reason, or print JSON with a permissionDecision of deny. This is how teams hard-block patterns like rm -rf or writes to a .env file no matter how the prompt is worded."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are Claude Code hooks safe?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Hooks run arbitrary shell commands with your full user permissions, so a hook is exactly as safe as the command inside it. Claude Code captures the hook configuration when a session starts, so a mid-session edit to a hook does not take effect until the next session, which limits one injection path. Read any hook you copy from someone else before saving it, the same way you would read a shell script before running it."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <article class="blog-article">
+      <header class="blog-article-header">
+        <h1 class="blog-article-title">Claude Code Hooks: Automate and Control the Agent (2026)</h1>
+        <div class="blog-article-meta">Published May 30, 2026 · Updated May 30, 2026</div>
+      </header>
+
+      <img src="/img/og/claude-code-hooks.jpg"
+           srcset="/img/og/claude-code-hooks-600w.jpg 600w, /img/og/claude-code-hooks-1000w.jpg 1000w, /img/og/claude-code-hooks.jpg 1200w"
+           sizes="(max-width: 768px) calc(100vw - 2rem), 720px"
+           alt="Claude Code hooks — shell commands wired into the agent's lifecycle events to format, block, and notify" class="blog-hero-img" width="1200" height="669" fetchpriority="high">
+
+      <div class="blog-article-body">
+        <div class="blog-tldr">
+          <div class="blog-tldr-label">In one line</div>
+          <p><strong>Claude Code hooks</strong> are shell commands wired to lifecycle events in <code>settings.json</code> that run every single time, so you can format code, block dangerous shell commands, or ping yourself on finish without trusting the model to remember.</p>
+        </div>
+
+        <p>A prompt asks the agent nicely. A <strong>Claude Code hook</strong> makes it certain. When you tell the model "always run the linter after editing," it usually does, and then on a long session it forgets once and ships a formatting diff into your PR. A hook removes the "usually." It is a shell command Claude Code runs at a fixed point in its lifecycle, every time, whether the model planned to or not. That turns probabilistic behavior into deterministic behavior, which is exactly what you want for anything that must happen. This guide covers the eight events you can hook, how to wire one up in <code>settings.json</code>, three hooks worth adding this afternoon, and the security tradeoff you are signing up for.</p>
+
+        <h2 id="what-hooks-do">What Hooks Do</h2>
+
+        <p>A Claude Code hook is a shell command tied to a named moment in the agent's run, defined under a <code>hooks</code> key in your settings file. When that moment arrives, Claude Code runs your command and passes it a JSON payload on standard input describing what just happened, such as which tool is about to run or what the edited file path was. Your command can act on that payload and, for some events, send a result back that changes what the agent does next.</p>
+
+        <p>The reason this is a separate feature from skills or instructions: hooks do not pass through the model. The model cannot skip a hook, reinterpret it, or decide today is different. Tom, a backend engineer on a four-person team, spent two weeks adding "remember to run gofmt" to his project's <a href="/blog/claude-code-memory">CLAUDE.md memory file</a> and still found unformatted code in three commits. He replaced the instruction with a one-line PostToolUse hook that calls <code>gofmt -w</code> on the edited file. The unformatted commits stopped that day.</p>
+
+        <p>It helps to <a href="/browse">browse the skill registry</a> alongside the hooks docs, because the two layers complement each other: skills shape what the agent tries to do, hooks guarantee what happens around it.</p>
+
+        <h2 id="hook-events">The Hook Events</h2>
+
+        <p>Claude Code exposes eight hook events, each firing at a distinct point in the run. Picking the right one is most of the work, because the event decides what JSON your command receives and whether it can change the outcome.</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Event</th>
+              <th scope="col">Fires when</th>
+              <th scope="col">Can it block?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>PreToolUse</strong></td>
+              <td>Before the agent runs a tool (Bash, Edit, Write, and others)</td>
+              <td>Yes, can deny the call</td>
+            </tr>
+            <tr>
+              <td><strong>PostToolUse</strong></td>
+              <td>Right after a tool call succeeds</td>
+              <td>No, but can feed feedback back</td>
+            </tr>
+            <tr>
+              <td><strong>UserPromptSubmit</strong></td>
+              <td>When you submit a message, before the model sees it</td>
+              <td>Yes, can reject the prompt</td>
+            </tr>
+            <tr>
+              <td><strong>Stop</strong></td>
+              <td>When the main agent finishes responding</td>
+              <td>Yes, can force it to continue</td>
+            </tr>
+            <tr>
+              <td><strong>SubagentStop</strong></td>
+              <td>When a subagent finishes its task</td>
+              <td>Yes, can force it to continue</td>
+            </tr>
+            <tr>
+              <td><strong>Notification</strong></td>
+              <td>When Claude Code would notify you (idle, needs input)</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td><strong>PreCompact</strong></td>
+              <td>Before the context window gets compacted</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td><strong>SessionStart</strong></td>
+              <td>When a session starts or resumes</td>
+              <td>No</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>The two you will reach for first are <code>PreToolUse</code> and <code>PostToolUse</code>. PreToolUse is your gate: it runs before a tool executes, so it can inspect the command and stop it. PostToolUse is your reaction, where formatters, linters, and "regenerate the types" steps live. The <code>Stop</code> and <code>Notification</code> events are about you, not the code, and they are where finish-notifications go.</p>
+
+        <h2 id="configuring-a-hook">Configuring a Hook</h2>
+
+        <p>Hooks live in a <code>hooks</code> key in your <code>settings.json</code>. You can edit <code>.claude/settings.json</code> in your project (shared with the team through git) or your user-level <code>~/.claude/settings.json</code> (yours across every project), or run <code>/hooks</code> inside Claude Code to add one through a guided menu. The structure groups commands by event, then by a matcher that picks which tools the hook applies to.</p>
+
+        <p>Here is a PostToolUse hook that runs Prettier on any file the agent edits or writes:</p>
+
+        <pre><code>{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "npx prettier --write \"$CLAUDE_FILE_PATHS\""
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+
+        <p>The <code>matcher</code> is a regular expression against the tool name, so <code>"Edit|Write"</code> catches both. The <code>command</code> is plain shell; Claude Code runs it and exposes details through environment variables and the JSON it sends on stdin. Save the file and the hook is live on the next matching edit, with no restart. If a hook misbehaves, run <code>/hooks</code> to see what is registered and where it came from.</p>
+
+        <h2 id="three-hooks">Three Hooks Worth Adding Today</h2>
+
+        <p>You do not need a wall of hooks. Three earn their keep for almost any project, and each is a few lines.</p>
+
+        <p><strong>1. Auto-format on every edit.</strong> The PostToolUse example above is the highest-value hook for most teams, because it kills formatting churn in review. Swap <code>prettier</code> for <code>gofmt</code>, <code>black</code>, <code>rustfmt</code>, or whatever your language uses, and the agent's edits land already formatted.</p>
+
+        <p><strong>2. Block a dangerous command.</strong> A PreToolUse hook can read the Bash command the agent wants to run and stop it. This script denies anything matching <code>rm -rf</code> by exiting with code 2, which Claude Code treats as a block:</p>
+
+        <pre><code>{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "jq -r '.tool_input.command' | grep -qE 'rm +-rf' && { echo 'Blocked: rm -rf is not allowed' >&2; exit 2; } || exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+
+        <p>When this hook exits 2, the tool call never runs and the message on stderr goes back to the model as the reason. Maya, who runs a data team, added a variant that blocks any write to a production config path; in her words, it let her stop watching every Bash call over the agent's shoulder.</p>
+
+        <p><strong>3. Desktop notification on finish.</strong> A Stop hook fires when the agent is done. On macOS, this pings you so you can step away during a long run:</p>
+
+        <pre><code>{
+  "hooks": {
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"Claude Code is done\" with title \"Claude Code\"'"
+          }
+        ]
+      }
+    ]
+  }
+}</code></pre>
+
+        <p>Start with these three, live with them for a week, and add a fourth only when a repeated annoyance asks for one. If you want ready-made bundles, the <a href="/blog/claude-code-marketplace">Claude Code marketplace</a> and the registry both list packaged hook configurations you can install instead of hand-writing.</p>
+
+        <h2 id="hooks-vs-skills">Hooks vs Skills vs Subagents: Deterministic vs Probabilistic</h2>
+
+        <p>Hooks, skills, and subagents are not competitors; they sit at different points on a control axis. The single question that tells you which to reach for is: does this need to happen <em>every time</em>, or does it need <em>judgment</em>?</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Mechanism</th>
+              <th scope="col">Runs</th>
+              <th scope="col">Best for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Hook</strong></td>
+              <td>Deterministically, on a lifecycle event</td>
+              <td>Guarantees: format, block, notify, validate</td>
+            </tr>
+            <tr>
+              <td><strong>Skill</strong></td>
+              <td>Probabilistically, when the model judges it relevant</td>
+              <td>Know-how: how to use a tool or follow a workflow</td>
+            </tr>
+            <tr>
+              <td><strong>Subagent</strong></td>
+              <td>Probabilistically, in its own context window</td>
+              <td>Side-quests: research, review, a self-contained task</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>Put the formatter in a hook, because it must run on every edit. Put "how our codebase does database migrations" in a <a href="/blog/how-to-add-skills-to-claude-code">skill</a>, because the agent should apply that judgment when it is migrating and ignore it otherwise. Push a noisy code review into a <a href="/blog/claude-code-subagents">subagent</a> so it does not flood your main context. A common stack uses all three: a skill teaches the workflow, a subagent does the heavy lifting, and a hook guarantees the cleanup afterward.</p>
+
+        <h2 id="security">The Security Side of Hooks</h2>
+
+        <p>Hooks run with your full shell access, so a hook is exactly as dangerous as the command inside it. This is the one part of the feature where "most guides only sell the upside" is itself a risk. A hook command can read your files, hit the network, and delete things, all without a confirmation prompt, because the whole point is that it runs automatically.</p>
+
+        <p>Two facts make this manageable. First, Claude Code captures your hook configuration when a session starts, so a hook changed mid-session has no effect until the next session, which closes one path where a malicious edit could take over a running agent. Second, hooks are plain shell, so you can read exactly what one does before you trust it. That is the rule with any hook you did not write: open it, read the command, and only then save it.</p>
+
+        <p>The real exposure is copy-pasting hook configs from the internet without reading them. A hook that quietly exfiltrates an environment variable on every tool call looks almost identical to a benign logging hook. Treat a hook config like a dependency, not a snippet: prefer scanned or official sources, and on PolySkill every published skill, including any that ship hook configuration, is security-scanned before it is listed.</p>
+
+        <h2 id="start-with-one">Add One Hook, Then Trust It</h2>
+
+        <p>The failure mode with hooks is the opposite of the one with prompts. Prompts fail by being too soft; hooks fail by being too eager, because a single bad matcher can run a command on every edit you did not intend. So do the cautious version: add one hook, run <code>/hooks</code> to confirm exactly what it executes and where it is registered, watch it fire once on a real action, and only then forget about it. The auto-format hook is the right first one for almost everyone. Once you have read what it runs and seen it behave, you have a piece of your workflow that no longer depends on the model remembering, which is the entire reason hooks exist.</p>
+
+        <p>Browse next: <a href="/blog/claude-code-subagents">Claude Code Subagents (2026)</a> | <a href="/blog/claude-code-commands">Claude Code Commands (2026)</a> | <a href="/blog/claude-code-mcp">Claude Code MCP (2026)</a> | <a href="/blog/claude-code-memory">Claude Code Memory (2026)</a></p>
+
+        <div class="blog-faq-section">
+          <h2 id="faq">Hook Questions, Answered</h2>
+
+          <h3>What are Claude Code hooks?</h3>
+          <p>Claude Code hooks are shell commands that run automatically at fixed points in the agent's lifecycle, configured under a <code>hooks</code> key in <code>settings.json</code>. Where a prompt asks the model to behave a certain way, a hook enforces it: the command fires every time the matching event occurs, regardless of what the model decides. Common uses are auto-formatting edited files, blocking risky shell commands, and notifying you when a task finishes.</p>
+
+          <h3>How do I add a hook in Claude Code?</h3>
+          <p>Run <code>/hooks</code> inside Claude Code for a guided menu, or edit <code>.claude/settings.json</code> directly: add a <code>hooks</code> key, pick an event like <code>PostToolUse</code>, set a <code>matcher</code> for the tools it applies to, and give it a <code>command</code>. The command gets JSON about the event on stdin. Save the file and the hook is active on the next matching action, no restart needed.</p>
+
+          <h3>What events can a Claude Code hook fire on?</h3>
+          <p>Eight events: <strong>PreToolUse</strong> and <strong>PostToolUse</strong> (before and after a tool call), <strong>UserPromptSubmit</strong> (when you send a message), <strong>Stop</strong> and <strong>SubagentStop</strong> (when the agent or a subagent finishes), <strong>Notification</strong> (when Claude Code would alert you), <strong>PreCompact</strong> (before context is compacted), and <strong>SessionStart</strong> (when a session begins or resumes).</p>
+
+          <h3>Can a hook block Claude Code from running a command?</h3>
+          <p>Yes. A <code>PreToolUse</code> hook runs before the tool call and can stop it. Exit with code <code>2</code> to deny the action and send the hook's stderr back to the model as the reason, or print JSON with a <code>permissionDecision</code> of <code>deny</code>. Teams use this to hard-block patterns like <code>rm -rf</code> or writes to a <code>.env</code> file no matter how the prompt is worded.</p>
+
+          <h3>Are Claude Code hooks safe?</h3>
+          <p>Hooks run arbitrary shell with your full permissions, so a hook is exactly as safe as the command inside it. Claude Code captures hook configuration at session start, so editing a hook mid-session has no effect until the next session, which closes one injection path. Read any hook you copy from someone else before saving it, the way you would read a shell script before running it.</p>
+        </div>
+
+        <a href="/blog" class="blog-back">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code MCP: Add &amp; Configure MCP Servers (2026) | PolySkill</title>
+  <meta name="description" content="How Claude Code MCP works: add MCP servers with one command, the three transports (stdio, HTTP, SSE), server scoping, the servers worth installing first, and troubleshooting.">
+  <meta property="og:title" content="Claude Code MCP: Add &amp; Configure MCP Servers (2026)">
+  <meta property="og:description" content="How Claude Code MCP works: add MCP servers with one command, the three transports, server scoping, the servers worth installing first, and troubleshooting.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://polyskill.ai/blog/claude-code-mcp">
+  <meta property="og:image" content="https://polyskill.ai/img/og/claude-code-mcp.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="669">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude Code MCP: Add &amp; Configure MCP Servers (2026)">
+  <meta name="twitter:description" content="How Claude Code MCP works: add MCP servers with one command, the three transports, server scoping, and troubleshooting.">
+  <meta name="twitter:image" content="https://polyskill.ai/img/og/claude-code-mcp.jpg">
+  <link rel="canonical" href="https://polyskill.ai/blog/claude-code-mcp">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Claude Code MCP: Add & Configure MCP Servers (2026)",
+    "description": "How Claude Code MCP works: add MCP servers with one command, the three transports (stdio, HTTP, SSE), server scoping, the servers worth installing first, and troubleshooting.",
+    "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
+    "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
+    "datePublished": "2026-05-18",
+    "dateModified": "2026-05-30",
+    "image": "https://polyskill.ai/img/og/claude-code-mcp.jpg",
+    "mainEntityOfPage": "https://polyskill.ai/blog/claude-code-mcp"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyskill.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://polyskill.ai/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Code MCP" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I add an MCP server to Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Run claude mcp add <name> -- <command> for a local stdio server, or claude mcp add --transport http <name> <url> for a remote one. Claude Code stores the entry and the server's tools become available in your next session. Use /mcp inside Claude Code to view connection status and authenticate servers that need OAuth."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is MCP in Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "MCP (Model Context Protocol) is an open standard created by Anthropic for connecting AI agents to external tools and data sources. Claude Code is the reference implementation: an MCP server exposes tools (like querying a database or reading GitHub issues) and Claude Code calls them in context. It supports stdio, HTTP, and SSE transports with OAuth."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Where are Claude Code MCP servers configured?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Three scopes: local (just you, current project, stored in project config), project (committed to the repo in a .mcp.json file so the whole team gets it), and user (available across all your projects). If the same server name exists in more than one scope, local overrides project, which overrides user."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why is my Claude Code MCP server not connecting?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The most common causes are: the server command or path is wrong (test it in a plain terminal first), a required environment variable or API key is missing, an OAuth server hasn't been authenticated yet (run /mcp and complete the flow), or the transport is mismatched (a remote URL added as stdio). Run claude mcp list to see configured servers and /mcp for live status."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do MCP servers work with agents other than Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. MCP is an open protocol, so the same server works with any MCP-capable client (Claude Code, Codex, Gemini CLI, and others). Your investment in an MCP integration is not locked to one agent. PolySkill lists MCP-powered skills that bundle server configuration for cross-agent use."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <article class="blog-article">
+      <header class="blog-article-header">
+        <h1 class="blog-article-title">Claude Code MCP: Add &amp; Configure MCP Servers (2026)</h1>
+        <div class="blog-article-meta">Published May 18, 2026 · Updated May 30, 2026</div>
+      </header>
+
+      <img src="/img/og/claude-code-mcp.jpg"
+           srcset="/img/og/claude-code-mcp-600w.jpg 600w, /img/og/claude-code-mcp-1000w.jpg 1000w, /img/og/claude-code-mcp.jpg 1200w"
+           sizes="(max-width: 768px) calc(100vw - 2rem), 720px"
+           alt="Claude Code MCP — an agent connected to external tools and data sources over the Model Context Protocol" class="blog-hero-img" width="1200" height="669" fetchpriority="high">
+
+      <div class="blog-article-body">
+        <div class="blog-tldr">
+          <div class="blog-tldr-label">In one line</div>
+          <p><strong>Claude Code MCP</strong> lets the agent call external tools (databases, GitHub, Slack, your own services) through a single open protocol. Add a server with <code>claude mcp add</code>, manage connections with <code>/mcp</code>, and the tools show up in your next session.</p>
+        </div>
+
+        <p>Out of the box, <strong>Claude Code</strong> can read your files and run shell commands. MCP is how it reaches everything else. The <strong>Model Context Protocol</strong> is the open standard Anthropic shipped in late 2024 to connect AI agents to external systems, and Claude Code is its reference implementation. Once you wire up an MCP server, Claude Code can query your Postgres database, open GitHub PRs, post to Slack, or pull Linear tickets, in context and mid-task, without copy-pasting anything. This guide is the practical path: add a server, understand the three transports, scope it correctly, and fix it when it breaks.</p>
+
+        <h2 id="what-mcp-is">What MCP Is (and Why Claude Code Leans on It)</h2>
+
+        <p>An MCP server is a small program that advertises a set of tools. A Postgres MCP server exposes "run a read-only query." A GitHub server exposes "list issues," "open a pull request," "comment on a PR." Claude Code connects to the server, sees those tools, and decides when to call them based on what you asked.</p>
+
+        <p>The reason this matters: without MCP, every integration would be bespoke glue code. With it, the integration is a reusable server that any MCP-capable agent can use. Anthropic created the protocol, so Claude Code's support is the deepest in the market: stdio, HTTP, and SSE transports, plus OAuth for servers that need authenticated access. The same server you configure today also works with Codex or Gemini CLI tomorrow; the protocol is the contract, not the agent.</p>
+
+        <p>One distinction worth keeping straight early: an MCP server adds <em>tools the agent can call</em>. A <a href="/blog/how-to-add-skills-to-claude-code">skill</a> adds <em>instructions the agent follows</em>, and a <a href="/blog/claude-code-hooks">hook</a> runs a shell command automatically on an event. They solve different problems and are often used together. A skill that says "use the database server to validate the schema before migrating" only works if the MCP server is connected.</p>
+
+        <h2 id="add-mcp-server">How to Add an MCP Server to Claude Code</h2>
+
+        <p>There is one command. Everything else is detail. To add a local server that Claude Code launches as a subprocess:</p>
+
+        <pre><code>claude mcp add github -- npx -y @modelcontextprotocol/server-github</code></pre>
+
+        <p>The part after <code>--</code> is the command Claude Code runs to start the server. To add a remote server reachable over HTTP:</p>
+
+        <pre><code>claude mcp add --transport http linear https://mcp.linear.app/mcp</code></pre>
+
+        <p>Pass environment variables (API keys, tokens) the server needs with <code>-e</code>:</p>
+
+        <pre><code>claude mcp add postgres -e DATABASE_URL=postgres://localhost/mydb \
+  -- npx -y @modelcontextprotocol/server-postgres</code></pre>
+
+        <p>Then start Claude Code and run <code>/mcp</code> — one of the built-in <a href="/blog/claude-code-commands">slash commands</a>. You'll see each server's connection state and, for OAuth servers, a prompt to authenticate in your browser. Once a server shows <em>connected</em>, its tools are live for that session, with no restart needed. To see everything configured without opening Claude Code, use <code>claude mcp list</code>.</p>
+
+        <h2 id="transports">The Three Transports, and When Each One Fits</h2>
+
+        <p>"Transport" just means how Claude Code talks to the server. Picking the wrong one is the single most common setup mistake, so it's worth 60 seconds of clarity.</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Transport</th>
+              <th scope="col">How it runs</th>
+              <th scope="col">Use it for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>stdio</strong></td>
+              <td>Claude Code spawns the server locally as a subprocess</td>
+              <td>Local tools: filesystem, a local database, anything that runs on your machine</td>
+            </tr>
+            <tr>
+              <td><strong>HTTP</strong></td>
+              <td>Claude Code calls a running remote endpoint (streamable HTTP)</td>
+              <td>Hosted services: a vendor's managed MCP server or a shared internal server</td>
+            </tr>
+            <tr>
+              <td><strong>SSE</strong></td>
+              <td>Remote endpoint using server-sent events for streaming</td>
+              <td>Older remote servers that predate streamable HTTP</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>Rule of thumb: if the server is a package you install and run, it's stdio. If it's a URL someone gave you, it's HTTP (or SSE if their docs say so). Mixing these up (adding a URL as stdio) produces a server that never connects and gives no useful error, which is why the troubleshooting section below leads with it.</p>
+
+        <h2 id="scoping">Scoping: Who Gets the Server</h2>
+
+        <p>The same server can be configured at three levels, and the level decides who and what it applies to:</p>
+
+        <ul>
+          <li><strong>Local</strong>:only you, only this project. Good for experiments and personal API keys you don't want in the repo.</li>
+          <li><strong>Project</strong>:committed to the repo as a <code>.mcp.json</code> file. Everyone who clones the project gets the same servers. This is how a team standardizes its toolchain.</li>
+          <li><strong>User</strong>:available in every project you open. Good for servers you always want, like a personal notes or search server.</li>
+        </ul>
+
+        <p>When a name collides across scopes, the narrower scope wins: local overrides project, project overrides user. Commit project scope deliberately: a <code>.mcp.json</code> that references a teammate's localhost service will fail for everyone else, so project-scoped servers should be ones the whole team can actually reach.</p>
+
+        <h2 id="servers-worth-installing">MCP Servers Worth Connecting First</h2>
+
+        <p>The ecosystem is large and uneven. These are the categories that pay for themselves on day one for most developers:</p>
+
+        <ul>
+          <li><strong>Version control</strong>:a GitHub or GitLab server turns "open a PR for this" into something Claude Code does itself instead of dictating <code>gh</code> commands.</li>
+          <li><strong>Database</strong>:a Postgres or SQLite server lets the agent read your real schema before it writes a migration, which eliminates a whole class of guessed-column bugs.</li>
+          <li><strong>Issue tracking</strong>:Linear or Jira servers let the agent pull ticket context so "implement PROJ-412" actually means something.</li>
+          <li><strong>Browser/automation</strong>:a Puppeteer or Playwright server gives the agent a real browser for scraping, screenshots, and end-to-end checks.</li>
+        </ul>
+
+        <p>Rather than hand-configuring each one, you can install a <a href="/browse">skill from PolySkill</a> that bundles the server configuration and the usage instructions together, and every skill in the registry is security-scanned before listing. That matters more for MCP than almost anywhere else, since a malicious server runs with whatever access you grant it.</p>
+
+        <h2 id="when-not-mcp">When MCP Is the Wrong Tool</h2>
+
+        <p>Most guides only sell the upside, so here's the counterweight. MCP is not free: every connected server adds tool definitions to the context window and a connection to maintain. (If a heavy MCP-driven task is bloating your main context, running it inside a <a href="/blog/claude-code-subagents">subagent</a> keeps those tool definitions out of the primary conversation.) Three cases where you should not reach for it:</p>
+
+        <p><strong>One-off tasks.</strong> If you need a value from an API exactly once, asking Claude Code to <code>curl</code> it is faster than standing up a server. MCP earns its cost through repeated use.</p>
+
+        <p><strong>Things shell already does well.</strong> Reading and writing local files, running tests, git operations: Claude Code does these natively. A filesystem MCP server on top of that is usually redundant overhead.</p>
+
+        <p><strong>Untrusted servers.</strong> An MCP server is code running with the access you give it. A community server with database write access is a supply-chain risk, not a convenience. Treat server selection with the same caution as any dependency: prefer official or scanned sources, and scope credentials tightly.</p>
+
+        <h2 id="troubleshooting">Troubleshooting MCP Connections</h2>
+
+        <h3>Server shows "failed" or never connects</h3>
+        <p>Run the server's start command directly in a plain terminal first. If it doesn't run there, Claude Code can't run it either; it's a command, path, or dependency problem, not an MCP problem. Most "MCP is broken" reports are a missing <code>npx</code> package or a wrong binary path.</p>
+
+        <h3>Connected, but the tools never get used</h3>
+        <p>The server is fine; the agent just doesn't see a reason to call it. Be explicit ("use the postgres server to check the schema"), and confirm the tools are listed under <code>/mcp</code>. A server with zero advertised tools is misconfigured on the server side.</p>
+
+        <h3>OAuth server stuck unauthenticated</h3>
+        <p>Run <code>/mcp</code>, select the server, and complete the browser flow. Tokens expire. If a previously working server starts failing, re-authenticating through <code>/mcp</code> is the first thing to try.</p>
+
+        <h3>Works for you, breaks for the team</h3>
+        <p>A project-scoped <code>.mcp.json</code> referencing <code>localhost</code> or a personal key will fail for everyone else. Project scope must point at resources the whole team can reach; keep personal endpoints in local scope.</p>
+
+        <h2 id="start-here">Start With One Server</h2>
+
+        <p>Don't wire up ten servers on day one. Add the single one that removes your most repetitive copy-paste (for most people that's GitHub or a database) and use it for a week until reaching for it is reflex. Add the next only when a real task demands it. An over-stuffed MCP config is just context-window tax you pay on every prompt; a lean one is leverage.</p>
+
+        <p>Browse next: <a href="/blog/how-to-add-skills-to-claude-code">How to Add Skills to Claude Code (2026)</a> | <a href="/blog/claude-code-subagents">Claude Code Subagents (2026)</a> | <a href="/blog/claude-code-hooks">Claude Code Hooks (2026)</a> | <a href="/blog/claude-code-commands">Claude Code Commands (2026)</a> | <a href="/blog/claude-code-marketplace">Claude Code Marketplace (2026)</a></p>
+
+        <div class="blog-faq-section">
+          <h2 id="faq">MCP Questions, Answered</h2>
+
+          <h3>How do I add an MCP server to Claude Code?</h3>
+          <p>Run <code>claude mcp add &lt;name&gt; -- &lt;command&gt;</code> for a local stdio server, or <code>claude mcp add --transport http &lt;name&gt; &lt;url&gt;</code> for a remote one. The server's tools become available in your next session. Use <code>/mcp</code> inside Claude Code for connection status and OAuth.</p>
+
+          <h3>What is MCP in Claude Code?</h3>
+          <p>MCP (Model Context Protocol) is an open standard created by Anthropic for connecting AI agents to external tools and data. An MCP server exposes tools (querying a database, reading GitHub issues) and Claude Code calls them in context. It supports stdio, HTTP, and SSE transports with OAuth.</p>
+
+          <h3>Where are Claude Code MCP servers configured?</h3>
+          <p>Three scopes: <strong>local</strong> (just you, this project), <strong>project</strong> (committed to the repo in <code>.mcp.json</code> so the whole team gets it), and <strong>user</strong> (all your projects). Narrower scope wins on a name collision: local over project over user.</p>
+
+          <h3>Why is my Claude Code MCP server not connecting?</h3>
+          <p>Usually: a wrong command/path (test it in a plain terminal first), a missing environment variable or key, an OAuth server not yet authenticated (run <code>/mcp</code>), or a transport mismatch (a remote URL added as stdio). <code>claude mcp list</code> shows what's configured.</p>
+
+          <h3>Do MCP servers work with agents other than Claude Code?</h3>
+          <p>Yes. MCP is an open protocol, so the same server works with any MCP-capable client (Claude Code, Codex, Gemini CLI, and others). The integration isn't locked to one agent.</p>
+        </div>
+
+        <a href="/blog" class="blog-back">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>
