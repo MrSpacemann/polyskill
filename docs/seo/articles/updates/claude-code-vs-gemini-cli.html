@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code vs Gemini CLI (2026): Pricing, Free Tier & Models | PolySkill</title>
+  <meta name="description" content="Claude Code vs Gemini CLI compared — free tier, pricing, models, extensions, MCP support, and performance. Honest breakdown for developers choosing between them.">
+  <meta property="og:title" content="Claude Code vs Gemini CLI (2026): Pricing, Free Tier & Models">
+  <meta property="og:description" content="Claude Code vs Gemini CLI compared — free tier, pricing, models, extensions, MCP support, and performance. Honest breakdown for developers choosing between them.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://polyskill.ai/blog/claude-code-vs-gemini-cli">
+  <meta property="og:image" content="https://polyskill.ai/img/og/claude-code-vs-gemini-cli.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="669">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude Code vs Gemini CLI (2026): Pricing, Free Tier & Models">
+  <meta name="twitter:description" content="Claude Code vs Gemini CLI compared — free tier, pricing, models, extensions, MCP support, and performance. Honest breakdown for developers choosing between them.">
+  <meta name="twitter:image" content="https://polyskill.ai/img/og/claude-code-vs-gemini-cli.jpg">
+  <link rel="canonical" href="https://polyskill.ai/blog/claude-code-vs-gemini-cli">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Claude Code vs Gemini CLI (2026): Pricing, Free Tier & Models",
+    "description": "Claude Code vs Gemini CLI compared — free tier, pricing, models, extensions, MCP support, and performance. Honest breakdown for developers choosing between them.",
+    "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
+    "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
+    "datePublished": "2026-02-28",
+    "dateModified": "2026-06-29",
+    "image": "https://polyskill.ai/img/og/claude-code-vs-gemini-cli.jpg",
+    "speakable": { "@type": "SpeakableSpecification", "cssSelector": ["h1.blog-article-title", ".blog-tldr"] },
+    "mainEntityOfPage": "https://polyskill.ai/blog/claude-code-vs-gemini-cli"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyskill.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://polyskill.ai/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Code vs Gemini CLI" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is Gemini CLI free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Gemini CLI is completely free with any Google account. You get up to 60 requests per minute and 1,000 requests per day with access to Gemini 3 Pro and a 1 million token context window. No credit card required."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much does Gemini CLI cost compared to Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Gemini CLI is free with a Google account (60 req/min, 1,000 req/day). Claude Code requires a Pro subscription at $20/month or Max at $100–$200/month. For higher Gemini CLI limits, Google AI Pro costs $19.99/month."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How many requests per day do you get free on Gemini CLI?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "About 1,000/day via a Google account login; roughly 1,500/day on the free API tier with Flash models; but only about 50/day if you use Gemini 3 Pro on the free API tier. The login method decides your limit."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Why am I hitting Gemini CLI limits so fast?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "You're probably on the free API tier using the Pro model, which is capped near 50 requests a day. Switch scripted jobs to Flash (about 1,500/day) or log in with your Google account (about 1,000/day) for interactive work."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Gemini CLI support MCP servers?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Both Gemini CLI and Claude Code support the Model Context Protocol (MCP). You can connect MCP servers to either tool for database access, API integrations, and other external tool connections."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are Gemini CLI skills and extensions?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Gemini CLI extensions are packages defined by a gemini-extension.json manifest that add new capabilities like tool integrations and workflows. Agent skills (currently in preview) let Gemini CLI delegate subtasks to specialized agents. Claude Code has a similar ecosystem with SKILL.md-based skills and MCP servers."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can Gemini CLI replace Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "They have different strengths. Gemini CLI excels at quick tasks, free access, and Google Search grounding. Claude Code excels at complex multi-file refactors, deep reasoning, and IDE integration. The tools pair well: Gemini CLI for daily velocity, Claude Code for complex architectural work."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Which has the bigger context window?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Both offer up to 1 million tokens. The key difference is that Gemini CLI gives you 1M tokens on the free tier, while Claude Code's 1M context is available on paid plans (200K standard, 1M in beta on higher tiers)."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Gemini CLI open source?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Gemini CLI is fully open source under the Apache 2.0 license, hosted on GitHub with over 95,000 stars. Claude Code is proprietary. You can use it through Anthropic's subscription plans but cannot self-host or modify it."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <article class="blog-article">
+      <header class="blog-article-header">
+        <h1 class="blog-article-title">Claude Code vs Gemini CLI (2026): Pricing, Free Tier & Models</h1>
+        <div class="blog-article-meta">Published February 28, 2026 · Updated June 29, 2026</div>
+      </header>
+
+      <img src="/img/og/claude-code-vs-gemini-cli.jpg"
+           srcset="/img/og/claude-code-vs-gemini-cli-600w.jpg 600w, /img/og/claude-code-vs-gemini-cli-1000w.jpg 1000w, /img/og/claude-code-vs-gemini-cli.jpg 1200w"
+           sizes="(max-width: 768px) calc(100vw - 2rem), 720px"
+           alt="Claude Code vs Gemini CLI comparison — two terminal AI coding agents side by side" class="blog-hero-img" width="1200" height="669" fetchpriority="high">
+
+      <div class="blog-article-body">
+        <div class="blog-tldr">
+          <div class="blog-tldr-label">The short version</div>
+          <p>Gemini CLI is free with any Google account (Gemini 3 Pro, a 1M-token context window, 60 requests/min, no trial gate). Claude Code costs $20–$200/mo and buys extended-thinking reasoning, a native VS Code extension, and sub-agent orchestration. Run Gemini CLI for free daily velocity; bring in Claude Code when a task needs real planning depth.</p>
+        </div>
+
+        <p>Gemini CLI went from obscurity to 95,900 GitHub stars in eight months. Google's open-source terminal agent gives developers free access to Gemini 3 Pro with a million-token context window, no subscription required. <a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank" rel="noopener">Claude Code</a>, Anthropic's proprietary agent, counters with deeper reasoning, VS Code integration, and the most autonomous multi-file editing in the market. This guide compares both tools across pricing, capabilities, extensibility, and real-world use cases.</p>
+
+        <h2 id="two-terminal-agents">Two Terminal Agents, Two Business Models</h2>
+
+        <p>Both Claude Code and <a href="https://github.com/google-gemini/gemini-cli" target="_blank" rel="noopener">Gemini CLI</a> are AI coding agents that run in your terminal. You describe a task in natural language, the agent reads your codebase, makes edits, runs commands, and iterates. The interfaces look similar: a prompt in your terminal. The business models behind them are fundamentally different.</p>
+
+        <p>Google open-sourced Gemini CLI under the Apache 2.0 license in June 2025. Within months it accumulated over 95,000 GitHub stars, a weekly release cadence, and an active contributor community. Anyone can fork it, self-host it, or build on top of it. The free tier is generous enough that most individual developers never need to pay.</p>
+
+        <p>Anthropic keeps Claude Code proprietary. You access it through a subscription to Claude Pro, Max, or Team plans. There's no self-hosting option and no source code to inspect. In exchange, Anthropic controls the full stack (model, agent, and tooling), which lets them optimize the reasoning pipeline in ways that an open-source project with a separate model API cannot.</p>
+
+        <p>This isn't a case where one approach is obviously better. Open source means transparency, community contributions, and zero cost. Proprietary means tighter integration, more aggressive optimization, and a single company accountable for the result.</p>
+
+        <h2 id="pricing">Gemini CLI Pricing vs Claude Code: Free Tier and Beyond</h2>
+
+        <p>The biggest practical difference between these tools is cost. Gemini CLI is free — genuinely free, not freemium. Sign in with any Google account and you get access to Gemini 3 Pro with 60 requests per minute and 1,000 requests per day. No credit card. No trial period. No feature gating.</p>
+
+        <p>Claude Code requires a paid subscription. The Pro plan at $20/month gives you rate-limited access to the full agentic experience. Max plans at $100/month (5x limits) or $200/month (20x limits) are for heavy users who need higher throughput. For a full plan-by-plan breakdown, see our <a href="/blog/claude-code-pricing">Claude Code pricing</a> guide.</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Plan</th>
+              <th scope="col">Claude Code</th>
+              <th scope="col">Gemini CLI</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Free</td>
+              <td>No access (chat only)</td>
+              <td>Full access — 60 req/min, 1K req/day</td>
+            </tr>
+            <tr>
+              <td>~$20/mo</td>
+              <td>Pro — rate-limited agentic access</td>
+              <td>Google AI Pro — higher limits, priority</td>
+            </tr>
+            <tr>
+              <td>~$100/mo</td>
+              <td>Max (5x) — 5x Pro rate limits</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>~$200/mo</td>
+              <td>Max (20x) — 20x Pro rate limits</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>Enterprise</td>
+              <td>Team/Enterprise plans available</td>
+              <td>Vertex AI (pay-per-use)</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>For students, indie developers, and anyone budget-conscious, Gemini CLI is the clear winner on cost. You get a capable terminal agent with a million-token context window for zero dollars. Claude Code's paid model only makes sense if the deeper reasoning and tighter tooling integration justify $20+/month for your workflow.</p>
+
+        <h3>Gemini CLI free-tier limits, by login method (2026)</h3>
+        <p>The catch most "is Gemini CLI free?" answers miss: your daily limit depends entirely on <em>how you signed in</em>. Two developers can run the same command and hit different walls. There are three routes, with three different allowances:</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Route</th>
+              <th scope="col">Free limit (2026)</th>
+              <th scope="col">Best for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Google account login (Code Assist, individuals)</td>
+              <td>~60 req/min, <strong>1,000 req/day</strong></td>
+              <td>Everyday interactive CLI coding</td>
+            </tr>
+            <tr>
+              <td>API key — Flash (2.5 Flash / Flash-Lite)</td>
+              <td><strong>~1,500 req/day</strong>, 1M tokens/min</td>
+              <td>Scripts, automation, high request counts</td>
+            </tr>
+            <tr>
+              <td>API key — Gemini 3 Pro (free)</td>
+              <td><strong>~5 req/min, 50 req/day</strong></td>
+              <td>Light testing of the Pro model only</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>The headline trap is <strong>Pro on the free API tier: roughly 50 requests a day.</strong> Wire Gemini 3 Pro into a nightly script via an API key and it dies after 50 calls — the fix usually isn't paying, it's switching that job to Flash, which gives you ~1,500/day for free. To stay on the free tier: log in with your Google account for interactive work, default to Flash for anything scripted, and never put a paid API key behind an automated loop without a budget alert. Quotas shift, so confirm against Google's <a href="https://google-gemini.github.io/gemini-cli/docs/quota-and-pricing.html" target="_blank" rel="noopener">official quota-and-pricing page</a> before relying on a number.</p>
+
+        <p>You start paying only when you need higher limits (a paid Gemini Code Assist subscription) or production-grade reliability with no daily cap (pay-as-you-go API / Vertex AI, billed per token). Interactive solo coding usually stays free; automated, high-volume, or production workloads eventually pay.</p>
+
+        <h2 id="context-models-reasoning">Context, Models, and Reasoning</h2>
+
+        <p>Gemini CLI runs on Gemini 3 Pro with intelligent routing; it automatically switches between Pro and Flash models depending on task complexity. The headline feature is the 1 million token context window available on the free tier. That's enough to hold most entire codebases in a single session. Gemini CLI also has Google Search grounding: it can query Google Search mid-task to pull in current documentation, API references, or Stack Overflow answers without leaving the terminal.</p>
+
+        <p>Claude Code runs on Anthropic's latest models, Opus 4.8 and Sonnet 4.6, with the ability to switch between them using the <code>/model</code> command. The standard context window is 200K tokens, with 1M available in beta on higher-tier plans. Claude Code's distinctive feature is extended thinking: a deep reasoning mode where the model works through complex problems step by step before generating code. For architectural decisions, tricky debugging, and multi-step refactors, this reasoning depth produces noticeably better results.</p>
+
+        <p>Consider a developer migrating an Express.js app to Hono. With Gemini CLI, she feeds the entire codebase into the 1M context window and gets route-by-route suggestions pulled from Hono's current docs via Search grounding. With Claude Code, she triggers extended thinking, which maps dependency chains across 40+ files before writing a migration plan that accounts for middleware ordering, error handling, and test coverage. Different strengths for different parts of the same project.</p>
+
+        <p>Context management also differs. Claude Code has <code>/compact</code> to summarize and compress conversation history when you're approaching the context limit, plus automatic context compaction. Gemini CLI handles context more simply; the massive window means you hit limits less often, but it offers fewer tools for managing long sessions.</p>
+
+        <p>Both tools support plan mode, a structured approach where the agent outlines its plan before executing. Claude Code's plan mode is more mature, with explicit approval gates and the ability to iterate on the plan before any code is written.</p>
+
+        <h2 id="extensions-skills-mcp">Extensions, Skills, and MCP Support</h2>
+
+        <p>Both tools are extensible, but they've taken different approaches to their extension ecosystems.</p>
+
+        <p><strong>Claude Code</strong> uses a layered system: <a href="/blog/how-to-add-skills-to-claude-code">skills</a> (SKILL.md files that add capabilities and workflows), MCP servers (for connecting to external tools and databases), hooks (shell commands that fire on agent events), and custom slash commands. The <a href="/browse">PolySkill registry</a> hosts community-contributed skills for everything from coding standards to deployment automation. Claude Code also has a native VS Code extension that brings the full agent experience into the editor.</p>
+
+        <p><strong>Gemini CLI</strong> uses a manifest-based extension system. Extensions are defined by a <code>gemini-extension.json</code> file that declares tools, prompts, and configurations. An official extension gallery hosts community-contributed packages, and the format is well-documented. Gemini CLI also supports MCP servers, making tool integrations cross-compatible between both tools. Custom commands are configured via TOML files.</p>
+
+        <h3 id="gemini-cli-agent-skills">Gemini CLI Agent Skills</h3>
+
+        <p>Agent skills are a newer Gemini CLI feature currently in preview. They allow the CLI to delegate subtasks to specialized agent configurations, conceptually similar to Claude Code's sub-agent architecture but implemented differently. Search interest in Gemini CLI skills grew from zero to 1,600 monthly searches in three months, reflecting how quickly developers are adopting composable agent workflows.</p>
+
+        <p>The MCP compatibility is worth highlighting: if you've built MCP servers for one tool, they'll generally work with the other. Your investment in tool integrations isn't locked to either platform.</p>
+
+        <h2 id="side-by-side">Side-by-Side Feature Breakdown</h2>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Feature</th>
+              <th scope="col">Claude Code</th>
+              <th scope="col">Gemini CLI</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>License</td>
+              <td>Proprietary</td>
+              <td>Open source (Apache 2.0)</td>
+            </tr>
+            <tr>
+              <td>Cost</td>
+              <td>$20–$200/mo</td>
+              <td>Free (paid upgrades available)</td>
+            </tr>
+            <tr>
+              <td>Models</td>
+              <td>Opus 4.8, Sonnet 4.6</td>
+              <td>Gemini 3 Pro, Flash (auto-routed)</td>
+            </tr>
+            <tr>
+              <td>Context window</td>
+              <td>200K standard, 1M beta</td>
+              <td>1M on free tier</td>
+            </tr>
+            <tr>
+              <td>IDE integration</td>
+              <td>VS Code extension (native)</td>
+              <td>Terminal only</td>
+            </tr>
+            <tr>
+              <td>Multi-agent</td>
+              <td>Agent teams, sub-agents</td>
+              <td>Agent skills (preview)</td>
+            </tr>
+            <tr>
+              <td>Extension system</td>
+              <td>Skills, hooks, slash commands</td>
+              <td>Extensions (JSON manifest), TOML commands</td>
+            </tr>
+            <tr>
+              <td>MCP support</td>
+              <td>Yes</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>Search grounding</td>
+              <td>No</td>
+              <td>Yes (Google Search)</td>
+            </tr>
+            <tr>
+              <td>Extended thinking</td>
+              <td>Yes</td>
+              <td>No</td>
+            </tr>
+            <tr>
+              <td>Plan mode</td>
+              <td>Yes (with approval gates)</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>Open source</td>
+              <td>No</td>
+              <td>Yes</td>
+            </tr>
+            <tr>
+              <td>Self-hosting</td>
+              <td>No</td>
+              <td>Yes (bring your own API key)</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <h2 id="which-problems">Which Problems Each Tool Solves Better</h2>
+
+        <p><strong>Gemini CLI is the better choice when:</strong></p>
+
+        <ul>
+          <li><strong>Budget is a constraint.</strong> Free access with generous limits means you can use it all day without thinking about cost.</li>
+          <li><strong>You need current information.</strong> Google Search grounding lets Gemini CLI pull in up-to-date docs, changelogs, and examples mid-task. Useful when working with new APIs or rapidly evolving libraries.</li>
+          <li><strong>Quick fixes and small tasks.</strong> For bug fixes, documentation updates, and routine code changes, Gemini CLI's speed and zero cost make it ideal for high-frequency, low-complexity work.</li>
+          <li><strong>CI/CD integration on a budget.</strong> Open source and free means you can run it in pipelines without per-seat licensing concerns.</li>
+          <li><strong>You want to inspect or modify the agent itself.</strong> The Apache 2.0 license means you can fork, extend, and customize.</li>
+        </ul>
+
+        <p>The pattern is clear: Gemini CLI wins on accessibility and breadth. You can throw it at 50 small tasks in a day and never worry about rate limits or invoices. But when the task shifts from "fix this bug" to "restructure this module," the calculus changes.</p>
+
+        <p><strong>Claude Code is the better choice when:</strong></p>
+
+        <ul>
+          <li><strong>Complex multi-file refactors.</strong> Extended thinking and sub-agent architecture produce more reliable results on tasks that require planning across many files and understanding deep dependency chains.</li>
+          <li><strong>Architectural decisions.</strong> The reasoning depth helps with choosing between design patterns, evaluating trade-offs, and producing well-structured solutions to ambiguous problems.</li>
+          <li><strong>IDE workflow.</strong> The native VS Code extension means you can use Claude Code without leaving your editor, with full access to the agentic features.</li>
+          <li><strong>Mature extension ecosystem.</strong> Claude Code's skill and MCP ecosystem is larger and more established, with more community-contributed packages available.</li>
+          <li><strong>Mission-critical code review.</strong> When correctness matters more than speed, Claude Code's deeper reasoning catches subtle issues that faster models miss.</li>
+        </ul>
+
+        <p>In practice, the two tools pair well. A freelance developer might use Gemini CLI for 80% of daily tasks (lint fixes, test scaffolding, doc updates) and switch to Claude Code for the 20% that involve cross-cutting refactors or design decisions. The free-plus-paid combination often costs less than a single high-tier subscription to either ecosystem.</p>
+
+        <h2 id="verdict">Our Recommendation</h2>
+
+        <p>Start with Gemini CLI. Not as a compromise, but as the rational first move: it costs nothing, the million-token context covers most real codebases whole, and you learn what terminal-based AI coding actually feels like before spending a dollar.</p>
+
+        <p>Bring in Claude Code the first time Gemini CLI stalls on something genuinely hard — a multi-file refactor that needs a real plan, an architectural call with live trade-offs, a bug that wants reasoning instead of retries. That stall is the moment its subscription stops reading as a cost and starts reading as leverage.</p>
+
+        <p>More on this: <a href="/blog/codex-vs-claude-code">Codex vs Claude Code (2026)</a> | <a href="/blog/claude-code-vs-cursor">Claude Code vs Cursor (2026)</a> | <a href="/blog/claude-code-pricing">Claude Code Pricing</a> | <a href="/blog/claude-code-router">Claude Code Router Guide</a> | <a href="/blog/how-to-add-skills-to-claude-code">How to Add Skills to Claude Code</a></p>
+
+        <div class="blog-faq-section">
+          <h2 id="faq">Gemini CLI FAQ</h2>
+
+          <h3>Is Gemini CLI free?</h3>
+          <p>Yes. Gemini CLI is completely free with any Google account. You get up to 60 requests per minute and 1,000 requests per day with access to Gemini 3 Pro and a 1 million token context window. No credit card required.</p>
+
+          <h3>How much does Gemini CLI cost compared to Claude Code?</h3>
+          <p>Gemini CLI is free with a Google account (60 req/min, 1,000 req/day). Claude Code requires a Pro subscription at $20/month or Max at $100–$200/month. For higher Gemini CLI limits, Google AI Pro costs $19.99/month.</p>
+
+          <h3>How many requests per day do you get free on Gemini CLI?</h3>
+          <p>About 1,000/day via a Google account login; roughly 1,500/day on the free API tier with Flash models; but only about 50/day if you use Gemini 3 Pro on the free API tier. The login method decides your limit.</p>
+
+          <h3>Why am I hitting Gemini CLI limits so fast?</h3>
+          <p>You're probably on the free API tier using the Pro model, which is capped near 50 requests a day. Switch scripted jobs to Flash (~1,500/day) or log in with your Google account (~1,000/day) for interactive work.</p>
+
+          <h3>Does Gemini CLI support MCP servers?</h3>
+          <p>Yes. Both Gemini CLI and Claude Code support the Model Context Protocol (MCP). You can connect MCP servers to either tool for database access, API integrations, and other external tool connections.</p>
+
+          <h3>What are Gemini CLI skills and extensions?</h3>
+          <p>Gemini CLI extensions are packages defined by a <code>gemini-extension.json</code> manifest that add new capabilities like tool integrations and workflows. Agent skills (currently in preview) let Gemini CLI delegate subtasks to specialized agents. Claude Code has a similar ecosystem with SKILL.md-based skills and MCP servers.</p>
+
+          <h3>Can Gemini CLI replace Claude Code?</h3>
+          <p>They have different strengths. Gemini CLI excels at quick tasks, free access, and Google Search grounding. Claude Code excels at complex multi-file refactors, deep reasoning, and IDE integration. The tools pair well: Gemini CLI for daily velocity, Claude Code for complex architectural work.</p>
+
+          <h3>Which has the bigger context window?</h3>
+          <p>Both offer up to 1 million tokens. The key difference is that Gemini CLI gives you 1M tokens on the free tier, while Claude Code's 1M context is available on paid plans (200K standard, 1M in beta on higher tiers).</p>
+
+          <h3>Is Gemini CLI open source?</h3>
+          <p>Yes. Gemini CLI is fully open source under the Apache 2.0 license, hosted on GitHub with over 95,000 stars. Claude Code is proprietary. You can use it through Anthropic's subscription plans but cannot self-host or modify it.</p>
+        </div>
+
+        <a href="/blog" class="blog-back">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>
