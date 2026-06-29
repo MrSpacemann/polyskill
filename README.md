@@ -1,8 +1,26 @@
+<div align="center">
+
 # PolySkill
 
-An open format and CLI for portable, LLM-agnostic Skills that any AI model or agent can discover, install, and use.
+**The open registry for AI agent skills — like `npm`, for Claude Code, Codex, and any agent.**
 
-Skills are self-contained packages that give an LLM a new capability — from structured prompt templates to multi-step agent workflows. PolySkill provides a universal format, a CLI to create and publish them, and a registry to discover and install them.
+[![npm](https://img.shields.io/npm/v/@polyskill/cli.svg)](https://www.npmjs.com/package/@polyskill/cli)
+[![license: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![PRs welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
+
+[**Browse skills →**](https://polyskill.ai) · [**Docs**](https://polyskill.ai/docs) · [**Blog**](https://polyskill.ai/blog)
+
+</div>
+
+---
+
+Today, Claude Code skills live scattered across GitHub gists, zip files, and Slack messages — there's no `npm install` for them. **PolySkill is that missing registry.** Search, install, create, and publish portable, LLM-agnostic skills from a single CLI.
+
+Skills are self-contained packages that give an LLM a new capability — from structured prompt templates to multi-step agent workflows. PolySkill provides a universal format, a CLI to create and publish them, and a registry to discover and install them. Works with **Claude Code, Codex, OpenCode, and OpenClaw** today — and any tool via the open spec.
+
+> ▶ **Try it without installing:** browse the live registry at **[polyskill.ai](https://polyskill.ai)**.
+
+<!-- TODO: add a terminal demo GIF here (vhs/asciinema of: polyskill search "code review" → polyskill install) — the single strongest star-conversion lever. -->
 
 ## Install
 
@@ -182,6 +200,24 @@ const output = adapter.transpile(skill);
 pnpm install
 pnpm build
 pnpm test
+```
+
+## Contributing & community
+
+PolySkill is open source and community-driven. The fastest ways to help:
+
+- ⭐ **Star this repo** if it's useful — it's how other developers find it.
+- **Publish a skill** with `polyskill publish` — it goes in front of every agent user, and every skill is security-scanned before listing.
+- **Open an issue or PR** — see [CONTRIBUTING.md](CONTRIBUTING.md).
+
+New to skills? Start with [How to add skills to Claude Code](https://polyskill.ai/blog/how-to-add-skills-to-claude-code), then [create and publish your own](https://polyskill.ai/docs).
+
+### For skill authors
+
+Published a skill? Add this badge to your skill's own README so people can install it in one command:
+
+```markdown
+[![Available on PolySkill](https://img.shields.io/badge/Available_on-PolySkill-7c3aed)](https://polyskill.ai/skill/@you/your-skill)
 ```
 
 ## License

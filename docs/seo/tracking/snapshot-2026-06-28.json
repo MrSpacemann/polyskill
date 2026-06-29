@@ -1,0 +1,276 @@
+{
+  "period": {
+    "start": "2026-05-31",
+    "end": "2026-06-28"
+  },
+  "totals": {
+    "clicks": 28,
+    "impressions": 8808,
+    "ctr": 0.3,
+    "position": 15.6
+  },
+  "top_queries": [
+    {
+      "q": "polyskill",
+      "clicks": 5,
+      "impressions": 102,
+      "position": 4.2
+    },
+    {
+      "q": "how to install skills in claude code",
+      "clicks": 1,
+      "impressions": 21,
+      "position": 12.9
+    },
+    {
+      "q": "add skills to claude",
+      "clicks": 0,
+      "impressions": 6,
+      "position": 31.3
+    },
+    {
+      "q": "add claude skills",
+      "clicks": 0,
+      "impressions": 5,
+      "position": 29.2
+    },
+    {
+      "q": "add skill to claude",
+      "clicks": 0,
+      "impressions": 4,
+      "position": 24.5
+    },
+    {
+      "q": "adding skills to claude",
+      "clicks": 0,
+      "impressions": 3,
+      "position": 26.3
+    },
+    {
+      "q": "add skill to claude code",
+      "clicks": 0,
+      "impressions": 2,
+      "position": 1
+    },
+    {
+      "q": "add skills to claude code",
+      "clicks": 0,
+      "impressions": 2,
+      "position": 1
+    },
+    {
+      "q": "adding a skill to claude",
+      "clicks": 0,
+      "impressions": 2,
+      "position": 28
+    },
+    {
+      "q": "adicionar skill claude",
+      "clicks": 0,
+      "impressions": 2,
+      "position": 22.5
+    },
+    {
+      "q": "any router claude code",
+      "clicks": 0,
+      "impressions": 2,
+      "position": 30
+    },
+    {
+      "q": "can you use claude code with gemini",
+      "clicks": 0,
+      "impressions": 2,
+      "position": 28
+    },
+    {
+      "q": "using openrouter",
+      "clicks": 1,
+      "impressions": 1,
+      "position": 5
+    },
+    {
+      "q": "/plugin isn't available in this environment.",
+      "clicks": 0,
+      "impressions": 1,
+      "position": 8
+    },
+    {
+      "q": "add a skill to claude",
+      "clicks": 0,
+      "impressions": 1,
+      "position": 29
+    },
+    {
+      "q": "add new skill to claude",
+      "clicks": 0,
+      "impressions": 1,
+      "position": 25
+    },
+    {
+      "q": "add skill to claude design",
+      "clicks": 0,
+      "impressions": 1,
+      "position": 28
+    },
+    {
+      "q": "adicionar skills no claude",
+      "clicks": 0,
+      "impressions": 1,
+      "position": 27
+    },
+    {
+      "q": "aggiungere skill a claude",
+      "clicks": 0,
+      "impressions": 1,
+      "position": 10
+    },
+    {
+      "q": "best coding skill for claude",
+      "clicks": 0,
+      "impressions": 1,
+      "position": 1
+    }
+  ],
+  "top_pages": [
+    {
+      "page": "https://polyskill.ai/blog/how-to-add-skills-to-claude-code",
+      "clicks": 10,
+      "impressions": 4583,
+      "position": 13
+    },
+    {
+      "page": "https://polyskill.ai/blog/claude-code-vs-gemini-cli",
+      "clicks": 0,
+      "impressions": 1821,
+      "position": 25.3
+    },
+    {
+      "page": "https://polyskill.ai/blog/claude-code-router",
+      "clicks": 2,
+      "impressions": 1569,
+      "position": 12.5
+    },
+    {
+      "page": "https://polyskill.ai/",
+      "clicks": 14,
+      "impressions": 236,
+      "position": 4.8
+    },
+    {
+      "page": "https://polyskill.ai/blog/claude-code-mcp",
+      "clicks": 0,
+      "impressions": 151,
+      "position": 16
+    },
+    {
+      "page": "https://polyskill.ai/blog/claude-code-marketplace",
+      "clicks": 0,
+      "impressions": 113,
+      "position": 16.2
+    },
+    {
+      "page": "https://polyskill.ai/blog/codex-vs-claude-code",
+      "clicks": 1,
+      "impressions": 107,
+      "position": 23.8
+    },
+    {
+      "page": "https://polyskill.ai/skill/@cyberkaida/reverse-engineering-assistant",
+      "clicks": 0,
+      "impressions": 105,
+      "position": 15.3
+    },
+    {
+      "page": "https://polyskill.ai/browse",
+      "clicks": 0,
+      "impressions": 47,
+      "position": 13.4
+    },
+    {
+      "page": "https://polyskill.ai/skill/@kbwo/ccmanager",
+      "clicks": 1,
+      "impressions": 34,
+      "position": 5.8
+    },
+    {
+      "page": "https://polyskill.ai/blog/claude-code-vs-cursor",
+      "clicks": 0,
+      "impressions": 31,
+      "position": 36.3
+    },
+    {
+      "page": "https://polyskill.ai/skill/@bayramannakov/claude-reflect",
+      "clicks": 0,
+      "impressions": 18,
+      "position": 8.7
+    },
+    {
+      "page": "https://polyskill.ai/skill/@BankrBot/ens-primary-name",
+      "clicks": 0,
+      "impressions": 8,
+      "position": 7.6
+    },
+    {
+      "page": "https://polyskill.ai/docs",
+      "clicks": 0,
+      "impressions": 7,
+      "position": 2.3
+    },
+    {
+      "page": "https://polyskill.ai/skill/@builtbyzac/memory-kit",
+      "clicks": 0,
+      "impressions": 5,
+      "position": 17.2
+    },
+    {
+      "page": "https://polyskill.ai/skill/@BankrBot/siwa",
+      "clicks": 0,
+      "impressions": 4,
+      "position": 8
+    },
+    {
+      "page": "https://polyskill.ai/skill/@alchemiststudiosdotai/tunacode",
+      "clicks": 0,
+      "impressions": 3,
+      "position": 3
+    },
+    {
+      "page": "https://polyskill.ai/skill/@eqtylab/cupcake",
+      "clicks": 0,
+      "impressions": 2,
+      "position": 10
+    },
+    {
+      "page": "https://polyskill.ai/skill/@googleworkspace/recipe-generate-report-from-sheet",
+      "clicks": 0,
+      "impressions": 2,
+      "position": 6.5
+    },
+    {
+      "page": "https://polyskill.ai/skill/@googleworkspace/gws-events-renew",
+      "clicks": 0,
+      "impressions": 1,
+      "position": 8
+    }
+  ],
+  "target_countries": [
+    {
+      "country": "usa",
+      "clicks": 6,
+      "impressions": 4206,
+      "position": 23.1
+    },
+    {
+      "country": "sgp",
+      "clicks": 2,
+      "impressions": 178,
+      "position": 7.2
+    },
+    {
+      "country": "chn",
+      "clicks": 0,
+      "impressions": 289,
+      "position": 7.9
+    }
+  ]
+}
