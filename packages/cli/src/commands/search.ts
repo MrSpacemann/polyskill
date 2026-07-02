@@ -80,11 +80,19 @@ export const searchCommand = new Command("search")
       }
 
       if (!res.ok) {
-        console.log(chalk.red(`\nSearch failed: ${res.statusText}\n`));
+        // statusText is empty over HTTP/2 — always include the numeric status
+        const reason = res.statusText ? `${res.status} ${res.statusText}` : `HTTP ${res.status}`;
+        console.log(chalk.red(`\nSearch failed: ${reason}\n`));
         process.exit(1);
       }
 
-      const data = (await res.json()) as SearchResponse;
+      let data: SearchResponse;
+      try {
+        data = (await res.json()) as SearchResponse;
+      } catch {
+        console.log(chalk.red("\nSearch failed: invalid response from registry\n"));
+        process.exit(1);
+      }
 
       // JSON mode: dump raw response and exit
       if (options.json) {

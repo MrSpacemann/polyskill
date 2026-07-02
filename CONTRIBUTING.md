@@ -57,7 +57,7 @@ skills/   Example skills
 Both `@polyskill/core` and `@polyskill/cli` are published to npm. Always use `pnpm publish` (not `npm publish`) — it resolves `workspace:*` dependencies to concrete versions automatically.
 
 ```bash
-# 1. Bump version in package.json AND src/index.ts (CLI has a hardcoded .version() call)
+# 1. Bump version in the package's package.json (the CLI reads its version from there at runtime)
 # 2. Build and test
 pnpm build && pnpm test
 

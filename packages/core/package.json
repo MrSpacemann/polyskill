@@ -2,6 +2,26 @@
   "name": "@polyskill/core",
   "version": "0.1.4",
   "description": "Core types, validation, and adapters for PolySkill",
+  "license": "MIT",
+  "homepage": "https://polyskill.ai",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrSpacemann/polyskill.git",
+    "directory": "packages/core"
+  },
+  "bugs": "https://github.com/MrSpacemann/polyskill/issues",
+  "keywords": [
+    "polyskill",
+    "skills",
+    "llm",
+    "agents",
+    "claude-code",
+    "json-schema",
+    "function-calling"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -12,7 +32,7 @@
     "clean": "rm -rf dist"
   },
   "dependencies": {
-    "ajv": "^8.17.1",
+    "ajv": "^8.20.0",
     "ajv-formats": "^3.0.1"
   },
   "files": [
@@ -22,8 +42,8 @@
     "access": "public"
   },
   "devDependencies": {
-    "@types/node": "^22.0.0",
-    "typescript": "^5.7.0",
-    "vitest": "^3.0.0"
+    "@types/node": "^22.20.0",
+    "typescript": "^5.9.3",
+    "vitest": "^3.2.6"
   }
 }

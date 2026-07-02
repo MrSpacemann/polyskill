@@ -6,6 +6,7 @@ import { geminiAdapter } from "./gemini.js";
 import { kimiAdapter } from "./kimi.js";
 
 export type { Adapter } from "./types.js";
+export { openaiCompatibleAdapter } from "./openai-compatible.js";
 export { openaiAdapter } from "./openai.js";
 export { anthropicAdapter } from "./anthropic.js";
 export { grokAdapter } from "./grok.js";

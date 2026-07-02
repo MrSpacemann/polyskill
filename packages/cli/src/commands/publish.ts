@@ -56,6 +56,8 @@ export const publishCommand = new Command("publish")
       const adapter = getAdapter(platform);
       if (adapter) {
         adapters[platform] = adapter.transpile(skill);
+      } else {
+        console.log(chalk.yellow(`  Skipping unknown adapter: ${platform}`));
       }
     }
 

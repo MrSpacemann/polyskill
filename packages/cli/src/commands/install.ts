@@ -1,13 +1,19 @@
 /*
  * Install flow state machine (source of truth — keep in sync with logic):
  *
- *   FETCH_REGISTRY
- *     ├─ res.ok ─────────────────────────────────→ HAVE_SKILL
- *     ├─ status == 404 ──────────────────────────→ NOT_FOUND (exit 1)
- *     └─ throw | status 403 | status 5xx ────────→ FETCH_NPM
- *                                                    ├─ ok ──────→ HAVE_SKILL
+ *   VALIDATE_NAME (typed arg)
+ *     ├─ invalid ────────────────────────────────→ BAD_NAME (exit 1)
+ *     └─ ok ──→ FETCH_REGISTRY
+ *                 ├─ res.ok ─────────────────────→ CHECK_NAME
+ *                 ├─ status == 404 ──────────────→ NOT_FOUND (exit 1)
+ *                 └─ throw | status 403 | 5xx ───→ FETCH_NPM
+ *                                                    ├─ ok ──────→ CHECK_NAME
  *                                                    └─ NpmNotFound
  *                                                       | throw ─→ BOTH_FAILED (exit 1)
+ *
+ *   CHECK_NAME (response name shapes fs paths)
+ *     ├─ malformed ──────────────────────────────→ BAD_RESPONSE (exit 1)
+ *     └─ ok ──→ HAVE_SKILL
  *
  *   HAVE_SKILL ──→ RESOLVE_TARGET ──→ WRITE_FILES ──→ SUCCESS
  *                       │                  └──→ WRITE_ERR (EACCES, ENOSPC, ...)
@@ -23,6 +29,7 @@ import chalk from "chalk";
 import { REGISTRY_URL } from "../config.js";
 import { resolveTarget } from "../targets/index.js";
 import { fetchSkillFromNpm, NpmNotFound } from "../npmFetch.js";
+import { SKILL_NAME_RE } from "../npmName.js";
 
 export const installCommand = new Command("install")
   .description("Install a Skill from the PolySkill registry")
@@ -41,6 +48,14 @@ export const installCommand = new Command("install")
       options: { registry: string; output?: string; target?: string }
     ) => {
       const registryUrl = options.registry;
+
+      if (!SKILL_NAME_RE.test(name)) {
+        console.log(
+          chalk.red(`\nInvalid skill name: ${name}`) +
+            chalk.dim("\nExpected @scope/name (lowercase letters, digits, hyphens)\n")
+        );
+        process.exit(1);
+      }
 
       console.log(chalk.bold(`\nInstalling ${name}${version ? `@${version}` : ""}...`));
 
@@ -93,6 +108,13 @@ export const installCommand = new Command("install")
           }
           process.exit(1);
         }
+      }
+
+      // The response's name is used to build filesystem paths — never write
+      // anywhere a malformed/hostile response could point (e.g. `..` segments).
+      if (typeof skill.name !== "string" || !SKILL_NAME_RE.test(skill.name)) {
+        console.log(chalk.red(`\nRegistry returned a malformed skill name: ${skill.name}\n`));
+        process.exit(1);
       }
 
       // Resolve target (--target flag, --output implies local, or auto-detect)

@@ -17,4 +17,4 @@ export type { ValidationResult } from "./validator.js";
 export { loadSkill } from "./loader.js";
 
 export type { Adapter } from "./adapters/index.js";
-export { getAdapter, listAdapters, openaiAdapter, anthropicAdapter, grokAdapter, geminiAdapter, kimiAdapter } from "./adapters/index.js";
+export { getAdapter, listAdapters, openaiCompatibleAdapter, openaiAdapter, anthropicAdapter, grokAdapter, geminiAdapter, kimiAdapter } from "./adapters/index.js";

@@ -1,4 +1,5 @@
-const SKILL_NAME_RE = /^@([a-z0-9-]+)\/([a-z0-9-]+)$/;
+/** Canonical skill-name shape — mirrors the `name` pattern in skill-manifest.schema.json */
+export const SKILL_NAME_RE = /^@([a-z0-9-]+)\/([a-z0-9-]+)$/;
 
 /** `@scope/name` -> `@polyskill/scope.name` (injective; `.` illegal in
  *  polyskill names, legal in npm scoped package names). */

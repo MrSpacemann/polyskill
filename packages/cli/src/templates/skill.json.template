@@ -7,7 +7,6 @@
   "author": {
     "name": "{{authorName}}"
   },
-  "main": "./src/index.ts",
   "skill": {
     "instructions": "./instructions.md",
     "tools": "./tools.json"
