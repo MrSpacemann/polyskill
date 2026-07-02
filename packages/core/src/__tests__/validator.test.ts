@@ -170,6 +170,49 @@ describe("validateTools", () => {
     expect(result.valid).toBe(true);
   });
 
+  it("accepts additionalProperties: false in parameters (OpenAI strict mode)", () => {
+    const result = validateTools({
+      tools: [
+        {
+          name: "strict_tool",
+          description: "Strict-mode tool",
+          parameters: {
+            type: "object",
+            properties: {
+              location: { type: "string", description: "City name" },
+              options: {
+                type: "object",
+                properties: { units: { type: "string" } },
+                additionalProperties: false,
+              },
+            },
+            required: ["location"],
+            additionalProperties: false,
+          },
+        },
+      ],
+    });
+    expect(result.valid).toBe(true);
+    expect(result.errors).toEqual([]);
+  });
+
+  it("rejects non-boolean additionalProperties in parameters", () => {
+    const result = validateTools({
+      tools: [
+        {
+          name: "bad_tool",
+          description: "Bad additionalProperties",
+          parameters: {
+            type: "object",
+            properties: {},
+            additionalProperties: "nope",
+          },
+        },
+      ],
+    });
+    expect(result.valid).toBe(false);
+  });
+
   it("rejects tools with extra properties on tool object", () => {
     const result = validateTools({
       tools: [

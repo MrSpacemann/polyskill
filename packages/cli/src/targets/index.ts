@@ -2,6 +2,7 @@ import { existsSync } from "node:fs";
 import os from "node:os";
 import { join } from "node:path";
 import chalk from "chalk";
+import { select } from "@inquirer/prompts";
 import { claudeCodeTarget } from "./claude-code.js";
 import { openclawTarget } from "./openclaw.js";
 import { opencodeTarget, openCodeRootDir } from "./opencode.js";
@@ -45,13 +46,14 @@ export function detectInstalledTargets(): string[] {
  *   2. --output given (implies local, backward compat)
  *   3. Auto-detect from installed runtimes
  *      - 1 found  → use it, print confirmation
- *      - >1 found → print list, exit with message to re-run with --target
+ *      - >1 found → interactive picker on a TTY; otherwise exit with a
+ *                   message to re-run with --target (agents / CI pipes)
  *      - 0 found  → fall back to local with a warning
  */
-export function resolveTarget(
+export async function resolveTarget(
   flag: string | undefined,
   hasOutputFlag: boolean
-): Target {
+): Promise<Target> {
   if (flag) {
     const target = targetRegistry[flag];
     if (!target) {
@@ -78,6 +80,16 @@ export function resolveTarget(
   }
 
   if (found.length > 1) {
+    if (process.stdin.isTTY && process.stdout.isTTY) {
+      const choice = await select({
+        message: "Multiple runtimes detected — install to which one?",
+        choices: found.map((name) => ({
+          name: `${name} (${targetRegistry[name].dir})`,
+          value: name,
+        })),
+      });
+      return targetRegistry[choice];
+    }
     console.log(
       chalk.yellow(
         `\nMultiple runtimes detected: ${found.join(", ")}.\nRe-run with --target <runtime> to choose one.\n`

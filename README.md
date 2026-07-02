@@ -119,6 +119,8 @@ For skills that define tools, add a `tools.json` and reference it in the manifes
 }
 ```
 
+Tool `parameters` are standard JSON Schema objects. `"additionalProperties": false` is supported — set it (at every object level) if you target OpenAI strict function calling.
+
 ## CLI Commands
 
 | Command | Description |

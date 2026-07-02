@@ -33,6 +33,10 @@
               "required": {
                 "type": "array",
                 "items": { "type": "string" }
+              },
+              "additionalProperties": {
+                "type": "boolean",
+                "description": "Standard JSON Schema key — set false for OpenAI strict function calling"
               }
             },
             "additionalProperties": false

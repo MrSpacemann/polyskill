@@ -17,8 +17,14 @@ vi.mock("../config.js", () => ({
   REGISTRY_URL: "http://localhost:3000",
 }));
 
+// Mock the interactive picker used by resolveTarget on TTYs
+vi.mock("@inquirer/prompts", () => ({
+  select: vi.fn(),
+}));
+
 import { writeFile, mkdir } from "node:fs/promises";
 import { existsSync } from "node:fs";
+import { select } from "@inquirer/prompts";
 import { generateSkillMd, toSlug } from "../targets/skill-md.js";
 import { detectInstalledTargets, resolveTarget, targetRegistry } from "../targets/index.js";
 import { codexRootDir } from "../targets/codex.js";
@@ -185,38 +191,70 @@ describe("codexRootDir", () => {
 // ─── resolveTarget ───────────────────────────────────────────────────────────
 
 describe("resolveTarget", () => {
-  it("returns specified target when --target flag given", () => {
-    const target = resolveTarget("claude-code", false);
+  /** Force isTTY on stdin+stdout for one call; restores afterwards. */
+  async function withTTY<T>(value: boolean | undefined, fn: () => Promise<T>): Promise<T> {
+    const stdinTTY = process.stdin.isTTY;
+    const stdoutTTY = process.stdout.isTTY;
+    (process.stdin as any).isTTY = value;
+    (process.stdout as any).isTTY = value;
+    try {
+      return await fn();
+    } finally {
+      (process.stdin as any).isTTY = stdinTTY;
+      (process.stdout as any).isTTY = stdoutTTY;
+    }
+  }
+
+  it("returns specified target when --target flag given", async () => {
+    const target = await resolveTarget("claude-code", false);
     expect(target.name).toBe("claude-code");
   });
 
-  it("returns local target when --output flag given (no --target)", () => {
-    const target = resolveTarget(undefined, true);
+  it("returns local target when --output flag given (no --target)", async () => {
+    const target = await resolveTarget(undefined, true);
     expect(target.name).toBe("local");
   });
 
-  it("exits with error for unknown target name", () => {
-    expect(() => resolveTarget("unknown-runtime", false)).toThrow(ExitError);
+  it("exits with error for unknown target name", async () => {
+    await expect(resolveTarget("unknown-runtime", false)).rejects.toThrow(ExitError);
     expect(process.exit).toHaveBeenCalledWith(1);
   });
 
-  it("auto-detects single runtime and returns it", () => {
+  it("auto-detects single runtime and returns it", async () => {
     vi.mocked(existsSync).mockImplementation((p) =>
       String(p) === path.join(os.homedir(), ".claude")
     );
-    const target = resolveTarget(undefined, false);
+    const target = await resolveTarget(undefined, false);
     expect(target.name).toBe("claude-code");
   });
 
-  it("exits with message when multiple runtimes detected", () => {
+  it("exits with message when multiple runtimes detected without a TTY", async () => {
     vi.mocked(existsSync).mockReturnValue(true);
-    expect(() => resolveTarget(undefined, false)).toThrow(ExitError);
+    await withTTY(undefined, async () => {
+      await expect(resolveTarget(undefined, false)).rejects.toThrow(ExitError);
+    });
     expect(process.exit).toHaveBeenCalledWith(1);
+    expect(select).not.toHaveBeenCalled();
   });
 
-  it("falls back to local when no runtimes detected", () => {
+  it("prompts to pick a runtime when multiple detected on a TTY", async () => {
+    vi.mocked(existsSync).mockReturnValue(true);
+    vi.mocked(select).mockResolvedValue("codex");
+
+    const target = await withTTY(true, () => resolveTarget(undefined, false));
+
+    expect(target.name).toBe("codex");
+    expect(process.exit).not.toHaveBeenCalled();
+    const promptArg = vi.mocked(select).mock.calls[0][0] as {
+      choices: Array<{ value: string }>;
+    };
+    expect(promptArg.choices.map((c) => c.value)).toContain("claude-code");
+    expect(promptArg.choices.map((c) => c.value)).toContain("codex");
+  });
+
+  it("falls back to local when no runtimes detected", async () => {
     vi.mocked(existsSync).mockReturnValue(false);
-    const target = resolveTarget(undefined, false);
+    const target = await resolveTarget(undefined, false);
     expect(target.name).toBe("local");
   });
 });
