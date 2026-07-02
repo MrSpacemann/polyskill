@@ -1,5 +1,18 @@
 # polyskill Project Wiki
 
+## Core JSON schemas are ALSO the server's validator — loosen client-first only
+
+<!-- added: 2026-07-03 -->
+
+The registry server (private `skill_marketplace` repo) validates publishes with the same
+`@polyskill/core` schemas. Changing a schema here therefore needs a lockstep server upgrade
+(publish core → bump the server's dependency, per CONTRIBUTING). Safe order: LOOSENING
+(accepting more) ships client-first — worst case the old server rejects the new shape with a
+clear 400 at publish. TIGHTENING must ship server-first or freshly-valid local skills would
+already be live that the server later can't re-validate. 2026-07-03: `parameters` gained
+boolean `additionalProperties` (OpenAI strict mode) — a loosening; server catches up on its
+next core bump.
+
 ## CLI version comes from package.json at runtime — never hardcode it
 
 <!-- added: 2026-07-02 -->

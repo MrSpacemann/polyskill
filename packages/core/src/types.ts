@@ -41,6 +41,7 @@ export interface JsonSchemaProperty {
   items?: JsonSchemaProperty;
   properties?: Record<string, JsonSchemaProperty>;
   required?: string[];
+  additionalProperties?: boolean;
 }
 
 /** Parameter schema for a tool — standard JSON Schema object */
@@ -48,6 +49,8 @@ export interface ToolParameterSchema {
   type: "object";
   properties: Record<string, JsonSchemaProperty>;
   required?: string[];
+  /** Set false for OpenAI strict function calling */
+  additionalProperties?: boolean;
 }
 
 /** A single canonical tool definition */

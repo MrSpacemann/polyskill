@@ -118,7 +118,7 @@ export const installCommand = new Command("install")
       }
 
       // Resolve target (--target flag, --output implies local, or auto-detect)
-      const target = resolveTarget(options.target, options.output !== undefined);
+      const target = await resolveTarget(options.target, options.output !== undefined);
       const outputDir = resolve(process.cwd(), options.output ?? ".");
 
       if (options.output !== undefined && target.name !== "local") {
