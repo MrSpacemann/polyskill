@@ -228,6 +228,36 @@ describe("install command", () => {
   });
 });
 
+describe("install command — name validation", () => {
+  it("rejects a non-scoped name before any network call", async () => {
+    await expect(
+      installCommand.parseAsync(["not-scoped", "--output", "/tmp/output"], {
+        from: "user",
+      })
+    ).rejects.toMatchObject({ code: 1 });
+
+    expect(fetch).not.toHaveBeenCalled();
+    expect(console.log).toHaveBeenCalledWith(
+      expect.stringContaining("Invalid skill name")
+    );
+  });
+
+  it("rejects a malformed name in the registry response before writing files", async () => {
+    mockFetchResponse(200, { ...fullSkillResponse, name: "..\\..\\evil" });
+
+    await expect(
+      installCommand.parseAsync(["@test/my-skill", "--output", "/tmp/output"], {
+        from: "user",
+      })
+    ).rejects.toMatchObject({ code: 1 });
+
+    expect(writeFile).not.toHaveBeenCalled();
+    expect(console.log).toHaveBeenCalledWith(
+      expect.stringContaining("malformed skill name")
+    );
+  });
+});
+
 describe("install command — npm mirror fallback", () => {
   it("falls back to npm when registry returns 403 (sandbox block)", async () => {
     vi.mocked(fetch).mockResolvedValueOnce({

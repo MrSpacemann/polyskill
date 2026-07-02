@@ -2,6 +2,18 @@
   "name": "@polyskill/cli",
   "version": "0.1.13",
   "description": "CLI for creating, validating, and publishing PolySkill skills",
+  "license": "MIT",
+  "homepage": "https://polyskill.ai",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrSpacemann/polyskill.git",
+    "directory": "packages/cli"
+  },
+  "bugs": "https://github.com/MrSpacemann/polyskill/issues",
+  "keywords": ["polyskill", "skills", "llm", "agents", "claude-code", "codex", "opencode", "cli"],
+  "engines": {
+    "node": ">=18"
+  },
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

@@ -1,5 +1,32 @@
 # polyskill Project Wiki
 
+## CLI version comes from package.json at runtime — never hardcode it
+
+<!-- added: 2026-07-02 -->
+
+`packages/cli/src/index.ts` reads its version via `createRequire(import.meta.url)("../package.json")`.
+Do not reintroduce a hardcoded `.version("x.y.z")` string.
+
+**Why:** the old hardcoded string drifted in production — npm's `@polyskill/cli@0.1.13`
+reports `0.1.12` from `--version` because the publish bumped only package.json.
+CONTRIBUTING's "bump in two places" step didn't prevent it; a single source of truth does.
+
+## getting-started skill: repo is canonical, but published version can run AHEAD of repo
+
+<!-- added: 2026-07-02 -->
+
+The registry's published `@polyskill/getting-started` was 1.0.8 while the repo said 1.0.7 —
+and the published 1.0.8 content was STALE (taught `--sort downloads`, which the live API
+rejects: "Must be one of: relevance, name, recent"; removed from the repo in commit 9110cd6).
+Repo bumped to 1.0.9 on 2026-07-02 so the corrected content is publishable again; it still
+needs an authenticated `polyskill publish skills/getting-started` to go live.
+
+**Why:** publishing without committing the version bump (or vice versa) forks the two copies,
+and the registry rejects re-publishing at or below the published version — so a stale published
+skill silently becomes unfixable until someone notices and bumps past it. After any publish of
+this skill, verify `curl -s https://polyskill.ai/api/skills/%40polyskill%2Fgetting-started | jq .version`
+matches `skills/getting-started/skill.json`.
+
 ## Terminal/exit paths must live OUTSIDE the registry-fetch try/catch in `install.ts`
 
 <!-- added: 2026-05-17 -->

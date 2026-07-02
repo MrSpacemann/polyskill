@@ -142,6 +142,39 @@ describe("search command", () => {
     expect(process.exit).toHaveBeenCalledWith(1);
   });
 
+  it("includes the HTTP status even when statusText is empty (HTTP/2)", async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: false,
+      status: 502,
+      statusText: "",
+      json: () => Promise.resolve({}),
+    } as Response);
+
+    await expect(
+      searchCommand.parseAsync(["weather"], { from: "user" })
+    ).rejects.toThrow(ExitError);
+
+    expect(console.log).toHaveBeenCalledWith(expect.stringContaining("502"));
+  });
+
+  it("prints error and exits when the registry returns invalid JSON", async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: "OK",
+      json: () => Promise.reject(new SyntaxError("Unexpected token <")),
+    } as Response);
+
+    await expect(
+      searchCommand.parseAsync(["weather"], { from: "user" })
+    ).rejects.toThrow(ExitError);
+
+    expect(console.log).toHaveBeenCalledWith(
+      expect.stringContaining("invalid response from registry")
+    );
+    expect(process.exit).toHaveBeenCalledWith(1);
+  });
+
   it("passes --category filter to the API", async () => {
     mockFetchResponse(200, { skills: [], total: 0 });
 
