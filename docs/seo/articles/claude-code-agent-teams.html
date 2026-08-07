@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Agent Teams (2026): Multi-Agent Sessions That Talk | PolySkill</title>
+  <meta name="description" content="Claude Code agent teams explained: enabling the experimental flag, how teammates differ from subagents, spawning a team, split panes vs in-process, the shared task list, token cost, and the limitations you hit first.">
+  <meta property="og:title" content="Claude Code Agent Teams (2026): Multi-Agent Sessions That Talk">
+  <meta property="og:description" content="Enabling the experimental flag, teammates vs subagents, spawning a team, split panes, the shared task list, token cost, and the real limitations.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://polyskill.ai/blog/claude-code-agent-teams">
+  <meta property="og:image" content="https://polyskill.ai/img/og/claude-code-agent-teams.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="669">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude Code Agent Teams (2026): Multi-Agent Sessions That Talk">
+  <meta name="twitter:description" content="Enabling the experimental flag, teammates vs subagents, spawning a team, split panes, the shared task list, token cost, and the real limitations.">
+  <meta name="twitter:image" content="https://polyskill.ai/img/og/claude-code-agent-teams.jpg">
+  <link rel="canonical" href="https://polyskill.ai/blog/claude-code-agent-teams">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Claude Code Agent Teams: When Agents Talk to Each Other (2026)",
+    "description": "Claude Code agent teams explained: enabling the experimental flag, how teammates differ from subagents, spawning a team, split panes vs in-process, the shared task list, token cost, and the limitations you hit first.",
+    "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
+    "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
+    "datePublished": "2026-08-07",
+    "dateModified": "2026-08-07",
+    "image": "https://polyskill.ai/img/og/claude-code-agent-teams.jpg",
+    "mainEntityOfPage": "https://polyskill.ai/blog/claude-code-agent-teams"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyskill.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://polyskill.ai/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Code Agent Teams" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What are Claude Code agent teams?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Agent teams let one Claude Code session coordinate several other full Claude Code instances. The main session acts as team lead, spawning teammates that each get their own context window, claim work from a shared task list, and message each other directly through a mailbox. The feature is experimental and disabled by default."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I enable agent teams in Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Set the environment variable CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS to 1, either in your shell or in the env key of settings.json. Without it no team is set up at session start, no team directories are written, and Claude will not spawn or propose teammates. After enabling, describe the task and the teammates you want in plain language and Claude spawns them."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How are agent teams different from subagents?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Subagents run inside a single session and report results back to the main agent only; they never talk to each other. Agent teammates are separate Claude Code instances that share a task list, claim work themselves, and message each other peer to peer. You can also open a teammate's transcript and instruct it directly without going through the lead. Teams cost significantly more tokens because each teammate is a full instance."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How many teammates should I spawn?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Three to five works for most workflows. There is no hard limit, but token cost scales linearly with teammate count and coordination overhead grows faster than the parallelism helps. A useful ratio is five to six tasks per teammate, so fifteen independent tasks suggests about three teammates. Three focused teammates usually outperform five scattered ones."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do agent teams cost more?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, significantly. Each teammate is a separate Claude Code instance with its own context window, so token usage scales with the number of active teammates rather than being summarized back into one context the way subagent results are. For research, review, and new feature work the extra tokens are usually worthwhile; for sequential or routine tasks a single session is more cost-effective."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <article class="blog-article">
+      <header class="blog-article-header">
+        <h1 class="blog-article-title">Claude Code Agent Teams: When Agents Talk to Each Other (2026)</h1>
+        <div class="blog-article-meta">Published August 7, 2026 · Updated August 7, 2026</div>
+      </header>
+
+      <img src="/img/og/claude-code-agent-teams.jpg"
+           srcset="/img/og/claude-code-agent-teams-600w.jpg 600w, /img/og/claude-code-agent-teams-1000w.jpg 1000w, /img/og/claude-code-agent-teams.jpg 1200w"
+           sizes="(max-width: 768px) calc(100vw - 2rem), 720px"
+           alt="Claude Code agent teams — a lead session coordinating teammates that message each other through a shared mailbox and task list" class="blog-hero-img" width="1200" height="669" fetchpriority="high">
+
+      <div class="blog-article-body">
+        <div class="blog-tldr">
+          <div class="blog-tldr-label">In one line</div>
+          <p><strong>Claude Code agent teams</strong> let one session act as a lead that spawns full Claude Code teammates, each with its own context window, sharing a task list and messaging each other directly. The feature is experimental and off until you set <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1</code>.</p>
+        </div>
+
+        <p>Five agents spent forty minutes arguing about why an app kept exiting after one message, and the theory that survived was the one nobody started with. That's the use case Anthropic's own documentation leads with, and it's a fair description of what <strong>Claude Code agent teams</strong> are actually for. You already know a single agent tends to find one plausible explanation and stop looking. Teams attack that directly by making several independent investigators try to disprove each other. Below: how to turn the feature on, the one architectural difference that separates teammates from subagents, how to spawn and steer a team, what it costs, and the limitations you will hit in the first hour.</p>
+
+        <h2 id="turning-it-on">Turning It On (It's Off by Default)</h2>
+
+        <p>Agent teams are experimental and disabled by default. Enable them by setting <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS</code> to <code>1</code>, in your shell environment or in <code>settings.json</code>:</p>
+
+        <pre><code>{
+  "env": {
+    "CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS": "1"
+  }
+}</code></pre>
+
+        <p>Without that variable, no team is set up at session start, no team directories are written, and Claude won't spawn or propose teammates at all. If you asked for a team and got subagents instead, this variable is the first thing to check.</p>
+
+        <p>The setup story got simpler in v2.1.178. Before that release you asked Claude to create and name a team first, using <code>TeamCreate</code> and <code>TeamDelete</code> tools. Both are gone. Now a team forms when the first teammate spawns, and cleanup happens automatically when the session exits. Older tutorials that walk you through creating a team by name are describing a version that no longer exists.</p>
+
+        <h2 id="vs-subagents">Teammates vs Subagents: The Difference Is the Mailbox</h2>
+
+        <p>Both let you parallelize, and choosing between them comes down to one question: do the workers need to talk to each other?</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col"></th>
+              <th scope="col">Subagents</th>
+              <th scope="col">Agent teams</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Context</strong></td>
+              <td>Own window; results return to the caller</td>
+              <td>Own window; fully independent</td>
+            </tr>
+            <tr>
+              <td><strong>Communication</strong></td>
+              <td>Report back to the main agent only</td>
+              <td>Teammates message each other directly</td>
+            </tr>
+            <tr>
+              <td><strong>Coordination</strong></td>
+              <td>Main agent manages all work</td>
+              <td>Shared task list with self-coordination</td>
+            </tr>
+            <tr>
+              <td><strong>Token cost</strong></td>
+              <td>Lower; results summarized back</td>
+              <td>Higher; each teammate is a full instance</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>A subagent is a function call that happens to be intelligent: you send a task, you get a result, and nothing else crosses the boundary. A teammate is a colleague. It can read the shared task list, claim the next unblocked item without being told, and send a message to another teammate by name. You can also open its transcript and talk to it directly rather than routing instructions through the lead.</p>
+
+        <p>Reach for <a href="/blog/claude-code-subagents">subagents</a> when only the result matters and you want the cheaper option. Reach for a team when the workers need to share findings and challenge each other, which is a much narrower set of tasks than the excitement around multi-agent systems suggests.</p>
+
+        <h2 id="spawning">Spawning Your First Team</h2>
+
+        <p>There's no command. You describe the task and the teammates you want in plain language, and Claude spawns them:</p>
+
+        <pre><code>I'm designing a CLI tool that helps developers track TODO comments across
+their codebase. Spawn three teammates to explore this from different angles:
+one on UX, one on technical architecture, one playing devil's advocate.</code></pre>
+
+        <p>Claude populates the shared task list, spawns a teammate per perspective, has them explore, and synthesizes findings when they finish. It may sometimes use subagents instead; since subagents appear in the same agent panel, the panel alone doesn't confirm a team formed. Ask again and explicitly request an agent team if that happens.</p>
+
+        <p>You can be specific about size and model: "Spawn 4 teammates to refactor these modules in parallel. Use Sonnet for each teammate." Teammates don't inherit the lead's <code>/model</code> selection by default, and you change that with <strong>Default teammate model</strong> in <code>/config</code>, where picking <strong>Default (leader's model)</strong> makes them follow the lead. Teammates do inherit the lead's effort level.</p>
+
+        <p>For risky work, require a plan first: "Spawn an architect teammate to refactor the authentication module. Require plan approval before they make any changes." The teammate works in read-only <a href="/blog/claude-code-plan-mode">plan mode</a> until the lead approves, and a rejected plan sends it back to revise and resubmit. The lead makes those calls autonomously, so give it criteria in your prompt if you care about the standard, such as "only approve plans that include test coverage."</p>
+
+        <p>You can also reuse role definitions you already have. Mention a subagent type by name and the teammate honors that definition's <code>tools</code> allowlist and <code>model</code>, with the body appended to its system prompt: "Spawn a teammate using the security-reviewer agent type to audit the auth module." Two frontmatter fields don't carry over, and this catches people out: <code>skills</code> and <code>mcpServers</code> in a subagent definition are ignored when it runs as a teammate. Teammates load skills and MCP servers from your project and user settings like a regular session, which is a good reason to keep <a href="/browse">shared skills</a> at the project level rather than pinned to one agent definition.</p>
+
+        <h2 id="display">In-Process or Split Panes</h2>
+
+        <p>Two display modes, and the default changed recently enough that upgraded sessions surprise people.</p>
+
+        <p><strong>In-process</strong> is the default: every teammate runs in your main terminal. Use up and down arrows in the agent panel below the prompt to select one, press <code>Enter</code> to open its transcript and message it, <code>Escape</code> to interrupt its turn, <code>x</code> to stop it, and <code>Ctrl+T</code> to toggle the task list. This works in any terminal with no extra setup.</p>
+
+        <p><strong>Split panes</strong> gives each teammate its own pane and requires tmux or iTerm2 with the <code>it2</code> CLI. Set it in <code>~/.claude/settings.json</code>:</p>
+
+        <pre><code>{
+  "teammateMode": "auto"
+}</code></pre>
+
+        <p>Before v2.1.179 the default was <code>"auto"</code>, so sessions that previously opened split panes now stay in one terminal unless you set the mode explicitly. Split-pane mode isn't supported in VS Code's integrated terminal, Windows Terminal, or Ghostty.</p>
+
+        <p>One behavior in the panel confuses everyone once. An idle teammate's row hides 30 seconds after the whole panel goes idle, and when more than three are idle the surplus rows collapse into a single <code>2 idle agents</code> row. A hidden row means hidden, not stopped: the teammate is still running and addressable, and messaging it by name brings the row back.</p>
+
+        <p>While you're viewing a teammate, plain text and skills go to that teammate but built-in commands still run in the lead's session. A teammate's model and fast mode are fixed at spawn, so <code>/model</code> and <code>/fast</code> only change the lead. <code>/effort</code> does apply to the viewed teammate's later turns.</p>
+
+        <h2 id="task-list">The Shared Task List and How Work Gets Claimed</h2>
+
+        <p>The shared task list is the coordination substrate. Tasks have three states, pending, in progress, and completed, and can depend on other tasks; a pending task with unresolved dependencies can't be claimed until those complete. Claude Code unblocks dependents automatically when a teammate finishes their prerequisite.</p>
+
+        <p>Work gets distributed two ways. The lead assigns tasks explicitly when you tell it who should do what, or a teammate self-claims the next unassigned, unblocked task after finishing its current one. Claiming uses file locking so two teammates can't grab the same task in a race.</p>
+
+        <p>Underneath, each agent's mailbox is a JSON file at <code>~/.claude/teams/{team-name}/inboxes/{agent-name}.json</code>, with team config at <code>~/.claude/teams/{team-name}/config.json</code> and the task list under <code>~/.claude/tasks/{team-name}/</code>. The team name is <code>session-</code> plus the first eight characters of the session ID. Don't hand-edit the config: it holds runtime state like session IDs and pane IDs and gets overwritten on the next state update. The config directory is removed when the session ends; the task list persists locally so resumed sessions keep their tasks.</p>
+
+        <p>If you want hard gates rather than suggestions, three <a href="/blog/claude-code-hooks">hook events</a> exist for teams. <code>TeammateIdle</code> runs when a teammate is about to go idle, <code>TaskCreated</code> when a task is being created, and <code>TaskCompleted</code> when one is being marked done. Exit with code 2 from any of them to block the transition and send feedback, which is how you enforce "tests pass before a task counts as complete."</p>
+
+        <h2 id="cost">What It Costs in Tokens</h2>
+
+        <p>Agent teams use significantly more tokens than a single session, and the reason is structural rather than incidental. A subagent's work gets summarized back into one context; a teammate's context window is its own and stays its own. Usage scales with the number of active teammates.</p>
+
+        <p>Anthropic's own sizing guidance is the useful part: start with three to five teammates for most workflows, and aim for five to six tasks per teammate to keep everyone busy without excessive context switching. Fifteen independent tasks suggests about three teammates. Beyond a point, more teammates stop speeding things up proportionally while coordination overhead keeps rising, and the documentation is blunt that three focused teammates often outperform five scattered ones.</p>
+
+        <p>Nadia, who leads a four-person platform team, ran a team of six on a cross-service refactor and found two of them idling on dependencies for most of the run while still holding open context. She now sizes teams from the dependency graph rather than the file count, which is the same instinct as sizing a sprint. Working out whether that spend makes sense for you starts with the <a href="/blog/claude-code-pricing">pricing model</a>, because teams are the one Claude Code feature where token cost is a planning input rather than a footnote.</p>
+
+        <h2 id="limitations">The Limitations You'll Hit First</h2>
+
+        <p>This is experimental software and the constraints are real, so here they are in the order you're likely to meet them.</p>
+
+        <p><strong>No session resumption with in-process teammates.</strong> <code>/resume</code> and <code>/rewind</code> don't restore them. After resuming, the lead may try to message teammates that no longer exist, and the fix is telling it to spawn new ones.</p>
+
+        <p><strong>Task status lags.</strong> Teammates sometimes fail to mark tasks complete, which blocks anything depending on them. If a task looks stuck, check whether the work is actually done and update the status yourself or nudge the teammate through the lead.</p>
+
+        <p><strong>The lead can finish early.</strong> It may decide the team is done before all tasks are. It may also start doing tasks itself instead of delegating; "wait for your teammates to complete their tasks before proceeding" fixes that one.</p>
+
+        <p><strong>Structural limits you can't work around.</strong> One team per session, scoped to that session. No nested teams, since only the lead can manage the team. The lead is fixed for the session's lifetime with no promoting a teammate. And all teammates start with the lead's permission mode: if the lead runs with <code>--dangerously-skip-permissions</code>, so does everyone. You can change individual modes after spawning but not at spawn time, which is worth pairing with the <a href="/blog/claude-code-permissions">permissions model</a> before you run a team on anything sensitive.</p>
+
+        <p>On that last point, one safeguard is well designed. When one agent messages another, Claude Code tells the recipient the message came from another Claude session rather than from you. A teammate can't approve a permission prompt or give consent on your behalf, and a teammate denied an action can't relay it to another teammate to get around the check. In auto mode the classifier treats a relayed approval claim as untrusted input and reviews every inter-agent message before delivery.</p>
+
+        <h2 id="start-small">Start With an Investigation, Not a Refactor</h2>
+
+        <p>The first team you run should produce a document, not a diff. Reviewing a pull request from three angles, researching a library, or chasing a bug with competing hypotheses all have clear boundaries, no file conflicts, and an output you can judge in five minutes. Parallel implementation is where the coordination problems live: two teammates editing the same file means overwrites, so the work has to be split by file ownership before it's split by teammate. Get one investigation under your belt, watch how the mailbox and task list actually behave, and only then point a team at code. The failure mode isn't that teams don't work; it's spending six teammates' worth of tokens on something one session would have done better.</p>
+
+        <p>Browse next: <a href="/blog/claude-code-subagents">Claude Code Subagents (2026)</a> | <a href="/blog/claude-code-review">Claude Code Review (2026)</a> | <a href="/blog/claude-code-hooks">Claude Code Hooks (2026)</a> | <a href="/blog/claude-code-memory">Claude Code Memory (2026)</a></p>
+
+        <div class="blog-faq-section">
+          <h2 id="faq">Agent Team Questions, Answered</h2>
+
+          <h3>What are Claude Code agent teams?</h3>
+          <p>Agent teams let one Claude Code session coordinate several other full Claude Code instances. The main session acts as team lead, spawning teammates that each get their own context window, claim work from a shared task list, and message each other directly through a mailbox. The feature is experimental and disabled by default.</p>
+
+          <h3>How do I enable agent teams in Claude Code?</h3>
+          <p>Set <code>CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS</code> to <code>1</code>, in your shell or in the <code>env</code> key of <code>settings.json</code>. Without it, no team is set up at session start, no team directories are written, and Claude won't spawn or propose teammates. Then describe the task and the teammates you want in plain language.</p>
+
+          <h3>How are agent teams different from subagents?</h3>
+          <p>Subagents run inside one session and report back to the main agent only; they never talk to each other. Teammates are separate Claude Code instances that share a task list, claim work themselves, and message each other peer to peer. You can also open a teammate's transcript and instruct it directly. Teams cost significantly more tokens because each teammate is a full instance.</p>
+
+          <h3>How many teammates should I spawn?</h3>
+          <p>Three to five suits most workflows. There's no hard limit, but token cost scales linearly with teammate count and coordination overhead grows faster than the parallelism helps. Aim for five to six tasks per teammate, so fifteen independent tasks suggests about three teammates. Three focused teammates usually beat five scattered ones.</p>
+
+          <h3>Do agent teams cost more?</h3>
+          <p>Yes, significantly. Each teammate is a separate instance with its own context window, so usage scales with active teammates rather than being summarized back into one context the way subagent results are. For research, review, and new feature work the extra tokens are usually worth it; for sequential or routine tasks a single session is more cost-effective.</p>
+        </div>
+
+        <a href="/blog" class="blog-back">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>

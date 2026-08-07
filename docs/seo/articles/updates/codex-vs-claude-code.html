@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Codex vs Claude Code (2026): CLI Agents Compared Side by Side | PolySkill</title>
+  <meta name="description" content="OpenAI's Codex runs in a cloud sandbox. Claude Code runs on your machine. Here's what that means for speed, cost, and real-world coding workflows.">
+  <meta property="og:title" content="Codex vs Claude Code (2026): CLI Agents Compared Side by Side">
+  <meta property="og:description" content="OpenAI's Codex runs in a cloud sandbox. Claude Code runs on your machine. Here's what that means for speed, cost, and real-world coding workflows.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://polyskill.ai/blog/codex-vs-claude-code">
+  <meta property="og:image" content="https://polyskill.ai/img/og/codex-vs-claude-code.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="669">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Codex vs Claude Code (2026): CLI Agents Compared Side by Side">
+  <meta name="twitter:description" content="OpenAI's Codex runs in a cloud sandbox. Claude Code runs on your machine. Here's what that means for speed, cost, and real-world coding workflows.">
+  <meta name="twitter:image" content="https://polyskill.ai/img/og/codex-vs-claude-code.jpg">
+  <link rel="canonical" href="https://polyskill.ai/blog/codex-vs-claude-code">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Codex vs Claude Code: Which AI Coding Agent Wins in 2026?",
+    "description": "OpenAI's Codex runs in a cloud sandbox. Claude Code runs on your machine. Here's what that means for speed, cost, and real-world coding workflows.",
+    "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
+    "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
+    "datePublished": "2026-02-26",
+    "dateModified": "2026-08-07",
+    "image": "https://polyskill.ai/img/og/codex-vs-claude-code.jpg",
+    "mainEntityOfPage": "https://polyskill.ai/blog/codex-vs-claude-code"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyskill.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://polyskill.ai/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "Codex vs Claude Code" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is Codex or Claude Code better for coding?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It depends on the task. Codex is faster for straightforward edits and GitHub-native workflows thanks to its Rust-based architecture and tight GitHub integration. Claude Code is stronger for complex reasoning, large refactors, and multi-agent orchestration. Many teams use both — Codex for velocity, Claude Code for depth."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is OpenAI Codex free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The Codex CLI is open source under the Apache 2.0 license, but you need either a ChatGPT Plus subscription ($20/month) or an OpenAI API key to use it. The CLI itself is free to install and modify, but the AI models it calls are not."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Claude Code support MCP?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Claude Code has native MCP (Model Context Protocol) support, including both stdio and HTTP transports with OAuth authentication. Anthropic created the MCP standard, so Claude Code is the reference implementation. Browse MCP-powered skills on PolySkill."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can Codex use Claude models?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Codex CLI only supports OpenAI's own models (the GPT-5 series, including the Codex-tuned variants). Similarly, Claude Code only uses Anthropic's Claude models (Opus 4.6, Sonnet 4.6). Each tool is locked to its maker's model family."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is the difference between Codex and Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The biggest differences are: Codex is open source (Apache 2.0) while Claude Code is proprietary. Codex is built in Rust for speed while Claude Code focuses on deep reasoning via extended thinking. Codex has native GitHub integration (Actions, Cloud, PRs) while Claude Code has the deeper MCP ecosystem (Anthropic created the standard) plus hooks and skills. Both support MCP with stdio, HTTP, and OAuth, but Claude Code is the reference implementation. Codex uses OpenAI models; Claude Code uses Anthropic models."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <article class="blog-article">
+      <header class="blog-article-header">
+        <h1 class="blog-article-title">Codex vs Claude Code: Which AI Coding Agent Wins in 2026?</h1>
+        <div class="blog-article-meta">Published February 26, 2026 · Updated August 7, 2026</div>
+      </header>
+
+      <img src="/img/og/codex-vs-claude-code.jpg"
+           srcset="/img/og/codex-vs-claude-code-600w.jpg 600w, /img/og/codex-vs-claude-code-1000w.jpg 1000w, /img/og/codex-vs-claude-code.jpg 1200w"
+           sizes="(max-width: 768px) calc(100vw - 2rem), 720px"
+           alt="Claude Code vs Codex comparison — scales balancing a terminal agent and a coding CLI" class="blog-hero-img" width="1200" height="669" fetchpriority="high">
+
+      <div class="blog-article-body">
+        <div class="blog-tldr">
+          <div class="blog-tldr-label">TL;DR</div>
+          <ul class="blog-tldr-list" role="list">
+            <li>Codex is open source (Apache 2.0), Rust-built, and GitHub-native. Claude Code is proprietary, reasoning-first, and MCP-native.</li>
+            <li>Codex burns fewer tokens on comparable tasks due to Rust efficiency. Claude Code solves harder problems in fewer iterations due to extended thinking.</li>
+            <li>Most teams end up running both: Codex for GitHub workflows and velocity, Claude Code for complex reasoning and ecosystem depth.</li>
+          </ul>
+        </div>
+
+        <p>Should you bet on OpenAI's open-source speed or Anthropic's reasoning depth? That's the real question behind the <strong>Codex vs Claude Code</strong> comparison. Both tools run in your terminal, both read and edit your codebase autonomously, and both start at $20/month. But they represent fundamentally different architectural bets — one open-source and optimized for throughput, the other proprietary and optimized for understanding. This guide breaks down the technical differences that actually matter in practice.</p>
+
+        <h2 id="open-vs-proprietary">Codex vs Claude Code: Open Source vs Proprietary</h2>
+
+        <p><a href="https://github.com/openai/codex" target="_blank" rel="noopener">Codex CLI</a> ships under the Apache 2.0 license. Every line of its Rust source code is public, with tens of thousands of GitHub stars, hundreds of contributors, and a community that patches bugs in the open. You can fork it, self-host it, and deploy it on air-gapped infrastructure. This isn't just a philosophical point; teams with compliance requirements, security audits, or air-gapped environments need an agent they can inspect and control.</p>
+
+        <p><a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank" rel="noopener">Claude Code</a> is closed-source and opinionated. You get a polished agent with tight integration between the CLI, IDE extensions (VS Code, JetBrains), and Anthropic's model stack. You can't inspect or modify the agent logic itself, but you can extend it extensively through MCP servers, hooks, and <a href="/browse">installable skills</a>. The tradeoff: less control over the core agent, more power in the extensibility layer.</p>
+
+        <p>For teams that require auditability, forking ability, or air-gapped deployment, Codex wins by default. For teams that want a batteries-included agent with the deepest reasoning capabilities available, Claude Code is the stronger choice.</p>
+
+        <h2 id="architecture">Architecture Under the Hood</h2>
+
+        <p>The architectural differences between Codex and Claude Code explain most of the performance and behavior differences you'll see in daily use.</p>
+
+        <p><strong>Codex is built in Rust</strong>, delivering fast startup, low memory footprint, and efficient token usage. Its 3-level sandboxing model (read-only, workspace-write, danger-full-access) uses OS-level isolation. Codex Cloud launches tasks in sandboxed environments directly from your repos. The Rust architecture means Codex burns fewer tokens per comparable task; its request/response pipeline has less overhead, and the model spends fewer tokens on tool coordination.</p>
+
+        <p><strong>Claude Code is built in TypeScript</strong> and leans into depth over speed. Extended thinking lets the model trace dependencies, consider edge cases, and weigh tradeoffs before writing a single line. Its sub-agent architecture delegates exploration, planning, and code review to specialized agents that work in parallel. Claude Code's context window scales up to 1M tokens (beta), letting it hold an entire codebase in a single session. It's slower per-task, but on complex refactors, framework migrations, and architectural decisions, that upfront reasoning reduces total iterations.</p>
+
+        <p>AGENTS.md (Codex) and CLAUDE.md (Claude Code) serve the same purpose (project-level instructions that guide agent behavior) and coexist without conflict in the same repository.</p>
+
+        <h2 id="github-integration">GitHub Integration: Where Codex Has No Competition</h2>
+
+        <p>Codex's deepest competitive advantage is GitHub-native workflows. This isn't a feature bolted on after launch; it's core to the product:</p>
+
+        <ul>
+          <li><strong>Codex Cloud</strong>: launch autonomous coding tasks directly from any GitHub repository. Codex spins up a sandboxed environment, makes changes, and opens a PR, all without touching your local machine.</li>
+          <li><strong>GitHub Actions</strong>: first-class integration with CI/CD workflows. Codex can run as a step in your pipeline, handling tasks like auto-fixing lint errors, generating migration files, or updating documentation after code changes.</li>
+          <li><strong>PR and issue workflows</strong>: assign Codex to issues and it generates implementation PRs. Tag it in PR reviews and it responds with analysis. The GitHub surface area is where Codex lives most naturally.</li>
+          <li><strong>Repository context</strong>: Codex reads your repo structure, README, AGENTS.md, and codebase conventions directly from GitHub without needing a local checkout.</li>
+        </ul>
+
+        <p>Claude Code handles GitHub through the <code>gh</code> CLI and direct git commands, which is functional but not native. If your team's development workflow is centered on GitHub (issues → branches → PRs → reviews → merge), Codex has a meaningful edge.</p>
+
+        <h2 id="mcp-skills-hooks">MCP, Skills, and Hooks: Where Claude Code Has No Competition</h2>
+
+        <p>Claude Code's deepest competitive advantage is the extensibility ecosystem, and it starts with MCP.</p>
+
+        <p><strong>MCP (Model Context Protocol)</strong> is the standard Anthropic created for connecting AI agents to external tools and data sources. Claude Code is the reference implementation, supporting stdio, HTTP, and OAuth transports. In practice, this means you can connect Claude Code to:</p>
+
+        <ul>
+          <li><strong>Databases</strong>: query Postgres, MySQL, or any database through an MCP server, with the agent reading schemas and writing queries in context</li>
+          <li><strong>APIs and services</strong>: connect to Slack, Linear, Jira, Notion, or any service with an MCP server</li>
+          <li><strong>Infrastructure tools</strong>: manage deployments, monitor services, and interact with cloud providers</li>
+        </ul>
+
+        <p><strong>Hooks</strong> fire shell commands on agent events (before/after tool calls, on conversation start, on notification). This enables patterns like: auto-run tests after every file edit, lint code before committing, log all agent actions for auditing, or block certain operations in production environments.</p>
+
+        <p><strong>Skills</strong> are portable instruction packages (<code>SKILL.md</code> files) that add new behaviors to Claude Code, including coding standards, workflow automations, domain expertise, and custom slash commands. <a href="/blog/how-to-add-skills-to-claude-code">Install them</a> via the built-in <code>/plugin</code> browser, manual filesystem install, or from the <a href="/browse">PolySkill registry</a> (which includes security scanning for every published skill).</p>
+
+        <p>Codex supports MCP with stdio, Streamable HTTP, and OAuth, but the ecosystem is younger. Skills and hooks are Claude Code-specific concepts with no Codex equivalent.</p>
+
+        <h2 id="token-costs">Real Token Costs: What Each Agent Burns</h2>
+
+        <p>Token efficiency directly impacts your monthly bill. The two agents have different consumption profiles:</p>
+
+        <p><strong>Codex's Rust architecture</strong> means lower overhead per interaction. The tool coordination pipeline is leaner, and the model spends fewer tokens managing state between steps. For a typical task like "add input validation to this form component," Codex completes in fewer total tokens because it has less framework overhead between you and the model.</p>
+
+        <p><strong>Claude Code's extended thinking</strong> front-loads token spend on reasoning. For simple tasks, this is wasted budget; you're paying for thinking that wasn't needed. For complex tasks (multi-file refactors, architectural decisions, debugging race conditions), the upfront reasoning saves tokens downstream by reducing iterations and avoiding wrong-path exploration.</p>
+
+        <p>Cost comparison at different usage levels:</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Usage Level</th>
+              <th scope="col">Codex (ChatGPT Plus)</th>
+              <th scope="col">Claude Code (Pro)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Light (casual daily use)</td>
+              <td>$20/mo, generous at this tier</td>
+              <td>$20/mo, may hit rate limits</td>
+            </tr>
+            <tr>
+              <td>Medium (primary tool)</td>
+              <td>$20/mo or API pay-per-token</td>
+              <td>$100/mo Max (5x limits)</td>
+            </tr>
+            <tr>
+              <td>Heavy (team/production)</td>
+              <td>$200/mo Pro or API</td>
+              <td>$200/mo Max (20x limits)</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>Codex's open-source CLI is free to install; you only pay for model calls. At the $20/month tier, Codex offers more generous usage thanks to lower per-request token consumption. Claude Code's Pro plan at $20/month gives access to the full agent but with stricter rate limits. For cost optimization, see our <a href="/blog/claude-code-router">Claude Code Router guide</a> on using <code>opusplan</code> routing and alternative models.</p>
+
+        <h2 id="decision-framework">When to Use Which: A Decision Framework</h2>
+
+        <p><strong>Choose Codex if:</strong></p>
+        <ul>
+          <li>Your development workflow centers on GitHub: issues, PRs, Actions, and code review all happen there. Codex slots in natively.</li>
+          <li>You need to self-host or audit your tooling. Apache 2.0 means full source access, forking rights, and air-gapped deployment.</li>
+          <li>Most of your tasks are straightforward: quick edits, PR reviews, issue triage, CI checks. Codex handles these with less overhead.</li>
+          <li>Token cost is a primary concern. Rust efficiency means more work per dollar at comparable task complexity.</li>
+        </ul>
+
+        <p><strong>Choose Claude Code if:</strong></p>
+        <ul>
+          <li>You need deep reasoning: framework migrations, architectural decisions, complex debugging, and multi-step refactors where extended thinking saves iterations.</li>
+          <li>You rely on the MCP ecosystem: database connections, API integrations, and external service access through MCP servers.</li>
+          <li>You want extensibility through skills and hooks: portable instruction packages and event-driven shell commands that customize agent behavior.</li>
+          <li>You work with large codebases. The 1M token context window (beta) lets the agent hold your entire project in a single session.</li>
+        </ul>
+
+        <p><strong>Run both when:</strong></p>
+        <ul>
+          <li>Your team has both GitHub-centric workflows (perfect for Codex) and complex architectural work (perfect for Claude Code).</li>
+          <li>You want Codex's speed for volume and Claude Code's depth for the tasks that need planning.</li>
+          <li>Both agents read AGENTS.md and CLAUDE.md respectively, and they coexist in the same repo without conflict.</li>
+        </ul>
+
+        <h2 id="running-both">Running Both in the Same Project</h2>
+
+        <p>Codex and Claude Code share a terminal and coexist in the same repository. Here's a practical setup:</p>
+
+        <ul>
+          <li><strong>Codex for GitHub surface area</strong>: assign it to issues for implementation PRs, use it in CI for automated fixes, and tag it in reviews for analysis. Its GitHub-native integration makes this frictionless.</li>
+          <li><strong>Claude Code for deep work sessions</strong>: use it for feature planning (plan mode), large refactors (sub-agent architecture), and tasks that need external tool access (MCP servers). Install <a href="/browse">skills</a> to add coding standards and workflow automations that persist across sessions.</li>
+          <li><strong>Keep both instruction files</strong>: <code>AGENTS.md</code> guides Codex, <code>CLAUDE.md</code> guides Claude Code. Maintain both with project conventions, and each agent follows its own instructions.</li>
+        </ul>
+
+        <h2 id="bottom-line">The Bottom Line</h2>
+
+        <p>Codex and Claude Code optimize for opposite things, and that contrast is the whole decision. Codex spends fewer tokens and slots into GitHub without ceremony. Claude Code spends more tokens up front and gets further on problems where the hard part is deciding what to do, not typing it out.</p>
+
+        <p>Look at your own last ten tasks. If most were well-scoped and lived on GitHub, Codex will cost less and move quicker. If most were ambiguous or architectural, Claude Code's reasoning earns back its overhead. The honest split in your own history usually settles the question faster than any feature table.</p>
+
+        <p>Go deeper: <a href="/blog/how-to-add-skills-to-claude-code">How to Add Skills to Claude Code (2026)</a> | <a href="/blog/claude-code-vs-cursor">Claude Code vs Cursor: Full Comparison (2026)</a> | <a href="/blog/claude-code-router">Claude Code Router: Complete Guide (2026)</a> | <a href="/blog/claude-code-vs-gemini-cli">Claude Code vs Gemini CLI (2026)</a></p>
+
+        <p>Related: <a href="/blog/claude-code-review">Claude Code Review (2026)</a> | <a href="/blog/claude-code-agent-teams">Claude Code Agent Teams (2026)</a> | <a href="/blog/claude-code-plan-mode">Claude Code Plan Mode (2026)</a> | <a href="/blog/claude-code-subagents">Claude Code Subagents (2026)</a></p>
+
+        <div class="blog-faq-section">
+          <h2 id="faq">Codex vs Claude Code: Quick Answers</h2>
+
+          <h3>Is Codex or Claude Code better for coding?</h3>
+          <p>It depends on the task. Codex is faster for straightforward edits and GitHub-native workflows thanks to its Rust-based architecture and tight GitHub integration. Claude Code is stronger for complex reasoning, large refactors, and multi-agent orchestration. Many teams use both: Codex for velocity, Claude Code for depth.</p>
+
+          <h3>Is OpenAI Codex free?</h3>
+          <p>The Codex CLI is open source under the Apache 2.0 license, but you need either a ChatGPT Plus subscription ($20/month) or an OpenAI API key to use it. The CLI itself is free to install and modify, but the AI models it calls are not.</p>
+
+          <h3>Does Claude Code support MCP?</h3>
+          <p>Yes. Claude Code has native MCP (Model Context Protocol) support, including both stdio and HTTP transports with OAuth authentication. Anthropic created the MCP standard, so Claude Code is the reference implementation. <a href="/browse">Browse MCP-powered skills</a> on PolySkill.</p>
+
+          <h3>Can Codex use Claude models?</h3>
+          <p>No. Codex CLI only supports OpenAI's own models (the GPT-5 series, including the Codex-tuned variants). Similarly, Claude Code only uses Anthropic's Claude models (Opus 4.6, Sonnet 4.6). Each tool is locked to its maker's model family.</p>
+
+          <h3>What is the difference between Codex and Claude Code?</h3>
+          <p>The biggest differences are: Codex is open source (Apache 2.0) while Claude Code is proprietary. Codex is built in Rust for speed while Claude Code focuses on deep reasoning via extended thinking. Codex has native GitHub integration (Actions, Cloud, PRs) while Claude Code has the deeper MCP ecosystem (Anthropic created the standard) plus hooks and skills. Both support MCP with stdio, HTTP, and OAuth, but Claude Code is the reference implementation. Codex uses OpenAI models; Claude Code uses Anthropic models.</p>
+        </div>
+
+        <a href="/blog" class="blog-back">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>

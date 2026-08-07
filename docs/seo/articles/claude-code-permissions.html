@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Permissions (2026): Every Mode, Auto Mode &amp; Skip-Permissions | PolySkill</title>
+  <meta name="description" content="All six Claude Code permission modes ranked by risk: Manual, acceptEdits, plan, auto, dontAsk, and bypassPermissions. What --dangerously-skip-permissions really does, how allow/ask/deny rules layer on, and which paths no mode auto-approves.">
+  <meta property="og:title" content="Claude Code Permissions (2026): Every Mode, Auto Mode &amp; Skip-Permissions">
+  <meta property="og:description" content="Six permission modes ranked by risk, what --dangerously-skip-permissions really does, how allow/ask/deny rules layer on top, and the paths no mode auto-approves.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://polyskill.ai/blog/claude-code-permissions">
+  <meta property="og:image" content="https://polyskill.ai/img/og/claude-code-permissions.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="669">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude Code Permissions (2026): Every Mode, Auto Mode &amp; Skip-Permissions">
+  <meta name="twitter:description" content="Six permission modes ranked by risk, what --dangerously-skip-permissions really does, how allow/ask/deny rules layer on top, and the paths no mode auto-approves.">
+  <meta name="twitter:image" content="https://polyskill.ai/img/og/claude-code-permissions.jpg">
+  <link rel="canonical" href="https://polyskill.ai/blog/claude-code-permissions">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Claude Code Permissions: Six Modes, One Decision (2026)",
+    "description": "All six Claude Code permission modes ranked by risk: Manual, acceptEdits, plan, auto, dontAsk, and bypassPermissions. What --dangerously-skip-permissions really does, how allow/ask/deny rules layer on, and which paths no mode auto-approves.",
+    "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
+    "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
+    "datePublished": "2026-08-07",
+    "dateModified": "2026-08-07",
+    "image": "https://polyskill.ai/img/og/claude-code-permissions.jpg",
+    "mainEntityOfPage": "https://polyskill.ai/blog/claude-code-permissions"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyskill.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://polyskill.ai/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Code Permissions" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What are Claude Code permission modes?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Claude Code has six permission modes that decide how often the agent pauses to ask you before acting. Manual, whose config value is default, approves reads only. acceptEdits adds file edits and common filesystem commands. plan allows exploration but blocks source edits. auto runs everything behind a safety classifier. dontAsk allows only pre-approved tools and auto-denies the rest. bypassPermissions skips checks entirely."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What does --dangerously-skip-permissions do?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It starts Claude Code in bypassPermissions mode, where tool calls execute immediately with no permission prompts and no safety checks, including writes to protected paths. It is equivalent to --permission-mode bypassPermissions. Anthropic recommends it only in isolated containers or VMs. Claude Code refuses to start in this mode as root or under sudo on Linux and macOS, and removals targeting the filesystem root or home directory still prompt as a circuit breaker."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Claude Code auto mode safe?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Auto mode is safer than bypassPermissions and less safe than approving each action yourself. A separate classifier model reviews each action before it runs and blocks things like curl-piped-to-bash, force pushes, production deploys, and sending secrets to external endpoints. Anthropic states plainly that it reduces prompts but does not guarantee safety. If the classifier blocks three actions in a row or twenty in total, auto mode pauses and prompting resumes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I stop Claude Code asking for permission every time?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Add permissions.allow rules in settings.json for the specific commands you trust, such as Bash(npm test), rather than loosening the whole mode. That keeps prompts targeted at genuinely new actions. If you want fewer prompts across the board, acceptEdits auto-approves edits inside your working directory, and auto mode routes the rest through a classifier instead of asking you."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can Claude Code edit files outside my project?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Auto-approval of edits applies only to paths inside your working directory or your configured additionalDirectories. Anything outside that scope still prompts. A separate list of protected paths, including .git, .claude, .vscode, shell rc files such as .zshrc, and package-manager configs like .npmrc, is never auto-approved in any mode except bypassPermissions, and allow rules in settings files do not override that."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <article class="blog-article">
+      <header class="blog-article-header">
+        <h1 class="blog-article-title">Claude Code Permissions: Six Modes, One Decision (2026)</h1>
+        <div class="blog-article-meta">Published August 7, 2026 · Updated August 7, 2026</div>
+      </header>
+
+      <img src="/img/og/claude-code-permissions.jpg"
+           srcset="/img/og/claude-code-permissions-600w.jpg 600w, /img/og/claude-code-permissions-1000w.jpg 1000w, /img/og/claude-code-permissions.jpg 1200w"
+           sizes="(max-width: 768px) calc(100vw - 2rem), 720px"
+           alt="Claude Code permissions — a dial running from manual approval through auto mode to bypass, guarding a terminal" class="blog-hero-img" width="1200" height="669" fetchpriority="high">
+
+      <div class="blog-article-body">
+        <div class="blog-tldr">
+          <div class="blog-tldr-label">In one line</div>
+          <p><strong>Claude Code permissions</strong> come down to picking one of six modes, from <code>default</code> (Manual, reads only) through <code>acceptEdits</code>, <code>plan</code>, <code>auto</code>, and <code>dontAsk</code> to <code>bypassPermissions</code>, then layering <code>allow</code>, <code>ask</code>, and <code>deny</code> rules on top so the mode handles the boring cases and the rules handle the dangerous ones.</p>
+        </div>
+
+        <p>The flag is called <code>--dangerously-skip-permissions</code> on purpose. Somebody at Anthropic decided the friction of typing that word was worth more than a shorter name, and after you understand what the mode actually turns off, that seems like the right call. Most guides to <strong>Claude Code permissions</strong> stop at "press Shift+Tab to stop the prompts," which answers the wrong question. The real question is how much of the safety machinery you're switching off at each step, and what still protects you afterwards. Six modes, three rule types, and one list of files that no mode will auto-approve: that's the whole system, and it takes about ten minutes to hold in your head.</p>
+
+        <h2 id="six-modes">The Six Modes, Ranked by How Much They Trust the Agent</h2>
+
+        <p>Each mode is a different trade between convenience and oversight. The column that matters is what runs <em>without asking you</em>.</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Mode</th>
+              <th scope="col">Runs without asking</th>
+              <th scope="col">Built for</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>default</strong> (Manual)</td>
+              <td>Reads only</td>
+              <td>Getting started, sensitive work</td>
+            </tr>
+            <tr>
+              <td><strong>acceptEdits</strong></td>
+              <td>Reads, file edits, common filesystem commands</td>
+              <td>Iterating on code you're reviewing</td>
+            </tr>
+            <tr>
+              <td><strong>plan</strong></td>
+              <td>Reads, plus classifier-approved commands when auto mode is available</td>
+              <td>Exploring before changing anything</td>
+            </tr>
+            <tr>
+              <td><strong>auto</strong></td>
+              <td>Everything, with background safety checks</td>
+              <td>Long tasks, fewer interruptions</td>
+            </tr>
+            <tr>
+              <td><strong>dontAsk</strong></td>
+              <td>Only pre-approved tools</td>
+              <td>Locked-down CI and scripts</td>
+            </tr>
+            <tr>
+              <td><strong>bypassPermissions</strong></td>
+              <td>Everything</td>
+              <td>Isolated containers and VMs only</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>One naming quirk causes a lot of confusion, so it's worth getting straight early. The mode that reviews every action is labeled <strong>Manual</strong> in the CLI, in <code>claude --help</code>, in the VS Code and JetBrains extensions, and in the desktop app. Its config value is <code>default</code>, which is what hooks and SDK integrations use. The CLI accepts <code>manual</code> as an alias wherever you type the value, so <code>claude --permission-mode manual</code> and <code>"defaultMode": "manual"</code> both work.</p>
+
+        <h2 id="the-cycle">Manual, acceptEdits, and the Shift+Tab Cycle</h2>
+
+        <p>Pressing <code>Shift+Tab</code> mid-session cycles <code>default</code> → <code>acceptEdits</code> → <code>plan</code>. The status bar tells you where you are: <code>⏸ manual mode on</code> in gray, <code>⏵⏵ accept edits on</code>, <code>⏸ plan mode on</code>, <code>⏵⏵ auto mode on</code>, <code>⏵⏵ don't ask on</code>, or <code>⏵⏵ bypass permissions on</code>.</p>
+
+        <p>Not everything is in that cycle. <code>auto</code> shows up only when your account qualifies for it. <code>bypassPermissions</code> appears only after you start with an enabling flag. <code>dontAsk</code> never appears in the cycle at all and has to be set with <code>--permission-mode dontAsk</code>. When optional modes are enabled they slot in after <code>plan</code>, with <code>bypassPermissions</code> first and <code>auto</code> last.</p>
+
+        <p><code>acceptEdits</code> is the one most people settle into, and it's more generous than the name suggests. Beyond file edits, it auto-approves the common filesystem commands <code>mkdir</code>, <code>touch</code>, <code>rm</code>, <code>rmdir</code>, <code>mv</code>, <code>cp</code>, and <code>sed</code>, including when they're wrapped in <code>timeout</code>, <code>nice</code>, or <code>nohup</code>. Crucially, that auto-approval only applies to paths inside your working directory or your configured <code>additionalDirectories</code>. Everything outside that scope still prompts.</p>
+
+        <p>To start in a mode rather than cycling into it, pass the flag, or set a default in a settings file:</p>
+
+        <pre><code>{
+  "permissions": {
+    "defaultMode": "acceptEdits"
+  }
+}</code></pre>
+
+        <p>If you want the read-only end of the spectrum for a specific piece of work, <a href="/blog/claude-code-plan-mode">plan mode</a> is the mode designed for it, and it deserves its own treatment.</p>
+
+        <h2 id="auto-mode">Auto Mode: A Second Model Watching the First</h2>
+
+        <p>Auto mode is the genuinely new idea in this list, and it's worth understanding rather than just enabling. Instead of asking you, a separate classifier model reviews each action before it runs and blocks anything that escalates beyond what you asked for, targets infrastructure it doesn't recognize, or looks driven by hostile content Claude just read.</p>
+
+        <p>What it blocks by default is a useful list even if you never turn the mode on, because it's essentially a curated inventory of ways an agent can ruin your afternoon: downloading and executing code such as <code>curl | bash</code>, sending sensitive data to external endpoints, production deploys and migrations, mass deletion on cloud storage, granting IAM or repo permissions, force pushes, <code>terraform destroy</code> and its equivalents, and destructive git commands like <code>git reset --hard</code>, <code>git clean -fd</code>, or <code>git stash drop</code> that would throw away uncommitted work.</p>
+
+        <p>What it allows by default is equally telling: local file operations in your working directory, installing dependencies declared in your lock files, reading <code>.env</code> and sending credentials to their matching API, read-only HTTP requests, and pushing to branches of the repository you're already working in.</p>
+
+        <p>Three details make auto mode behave differently from what people expect. First, boundaries you state in conversation are treated as block signals: tell Claude "don't push until I review" and the classifier blocks matching actions even where the default rules would allow them. Those boundaries aren't stored as rules, though; the classifier re-reads them from the transcript each time, so a boundary can be lost when context compaction removes the message that stated it. For a hard guarantee, use a deny rule. Second, on entering auto mode, broad allow rules that grant arbitrary code execution get dropped, including blanket <code>Bash(*)</code>, wildcarded interpreters like <code>Bash(python*)</code>, and package-manager run commands; narrow rules like <code>Bash(npm test)</code> carry over and the dropped ones come back when you leave. Third, if the classifier blocks three actions in a row or twenty in total, auto mode pauses and normal prompting resumes.</p>
+
+        <p>The classifier also costs something. It runs on Claude Sonnet 5 by default rather than your <code>/model</code> selection, each check sends part of the transcript plus the pending action, and those calls count toward your token usage. Reads and working-directory edits skip the classifier, so the overhead comes mainly from shell commands and network operations. Whether that's a rounding error or a real line item depends on your workload; the <a href="/blog/claude-code-pricing">pricing breakdown</a> is the place to work that out.</p>
+
+        <h2 id="skip-permissions">--dangerously-skip-permissions: Read This Before You Type It</h2>
+
+        <p><code>bypassPermissions</code> disables permission prompts and safety checks so tool calls execute immediately, including writes to protected paths. These two commands are equivalent:</p>
+
+        <pre><code>claude --permission-mode bypassPermissions
+claude --dangerously-skip-permissions</code></pre>
+
+        <p>Anthropic's guidance is unambiguous: use it only in isolated environments such as containers, VMs, or dev containers without internet access, where Claude Code can't damage your host. The documentation states plainly that it offers no protection against prompt injection or unintended actions.</p>
+
+        <p>A few guardrails survive even here. Explicit <code>ask</code> rules still force a prompt. Removals targeting the filesystem root or home directory, such as <code>rm -rf /</code> and <code>rm -rf ~</code>, still prompt as a circuit breaker against model error, including when the removal hides inside command substitution like <code>echo "$(rm -rf ~)"</code>. On Linux and macOS, Claude Code refuses to start in this mode as root or under <code>sudo</code>, printing <code>--dangerously-skip-permissions cannot be used with root/sudo privileges for security reasons</code>; the check is skipped inside a recognized sandbox, which is why the dev container configuration runs Claude Code as a non-root user.</p>
+
+        <p>Two behaviors surprise people. You can't enter <code>bypassPermissions</code> from a session that didn't start with it enabled, which is a deliberate one-way door. And in a session where bypass permissions are available, plan mode's blocks aren't enforced either: Claude is still told to plan without editing, but an edit it attempts during planning runs without prompting. Administrators can remove the option entirely by setting <code>permissions.disableBypassPermissionsMode</code> to <code>"disable"</code> in managed settings.</p>
+
+        <p>Dev, a contractor who ships infra changes for three clients, keeps one alias that starts a container and runs Claude Code inside it with bypass on, and never types the flag outside that alias. It took him one incident, a <code>git checkout -- .</code> over four hours of uncommitted work, to build the habit. Auto mode blocks that exact command by default now; bypass mode does not.</p>
+
+        <h2 id="rules">Allow, Ask, and Deny Rules</h2>
+
+        <p>Modes set the baseline. Rules are how you get precision, and they're the answer to "how do I stop the prompts" that doesn't involve loosening everything. Three rule types layer on top of whatever mode you're in:</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Rule</th>
+              <th scope="col">Effect</th>
+              <th scope="col">Works in bypassPermissions?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>allow</strong></td>
+              <td>Pre-approves a specific tool or command</td>
+              <td>No effect, everything is already approved</td>
+            </tr>
+            <tr>
+              <td><strong>ask</strong></td>
+              <td>Forces a prompt even where the mode wouldn't</td>
+              <td>Yes, still prompts</td>
+            </tr>
+            <tr>
+              <td><strong>deny</strong></td>
+              <td>Blocks outright</td>
+              <td>Yes, still blocks</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>The practical pattern is narrow allows plus a few hard denies. Allow <code>Bash(npm test)</code> and <code>Bash(git status)</code> so the routine loop stops interrupting you; deny writes to your production config path so no mode and no prompt-injection can reach it. That combination gets you fewer prompts and a higher floor at the same time, which is strictly better than moving one notch down the mode ladder. If you want programmable logic rather than static rules, <a href="/blog/claude-code-hooks">a PreToolUse hook</a> can inspect the actual command and decide.</p>
+
+        <h2 id="protected-paths">Protected Paths: The Files No Mode Auto-Approves</h2>
+
+        <p>There's a list of paths Claude Code will not auto-approve writes to in any mode except <code>bypassPermissions</code>, and, importantly, <strong>allow rules in settings files don't override it.</strong> The safety check runs before Claude Code evaluates your settings, so an entry like <code>Edit(.claude/**)</code> in your settings file changes nothing.</p>
+
+        <p>Protected directories include <code>.git</code>, <code>.config/git</code>, <code>.vscode</code>, <code>.idea</code>, <code>.husky</code>, <code>.cargo</code>, <code>.devcontainer</code>, <code>.yarn</code>, <code>.mvn</code>, and <code>.claude</code> (except <code>.claude/worktrees</code>). Protected files include <code>.gitconfig</code> and <code>.gitmodules</code>, every shell startup file from <code>.bashrc</code> to <code>.zshenv</code> to <code>.envrc</code>, package-manager configs such as <code>.npmrc</code>, <code>.yarnrc</code>, and <code>bunfig.toml</code>, pre-commit and hook configs, and <code>.mcp.json</code> and <code>.claude.json</code>.</p>
+
+        <p>Read that list as a threat model rather than an inventory. Every entry is a file that changes what runs later: a shell rc file, a git hook config, a package-manager registry setting, an MCP server definition. Those are the files an attacker would target precisely because editing them is quiet and the payoff arrives on your next command. In modes that prompt, the prompt for a <code>.claude/</code> write offers "Yes, and allow Claude to edit its own settings for this session," which approves later writes in that session without asking again.</p>
+
+        <h2 id="real-risk">Where the Real Risk Actually Lives</h2>
+
+        <p>Here's the part that argues against the framing of this entire article. Permission modes govern what the agent does with the instructions it has. They say nothing about where those instructions came from.</p>
+
+        <p>A hook config, an MCP server, a plugin, or a skill you installed from a gist can all shape agent behavior before any permission check runs, and several of them execute code with your privileges by design. A malicious hook that exfiltrates an environment variable on every tool call looks almost identical to a benign logging hook, and it doesn't need a permission prompt because you already approved it at install time. Tightening from <code>acceptEdits</code> to Manual does nothing about that; you'd just be approving the exfiltration one call at a time.</p>
+
+        <p>So the honest ranking of what to spend attention on is: read what you install, then pick a mode. Prefer sources that scan what they publish. On PolySkill every skill is security-scanned before it's listed, which is the same instinct as verifying an installer's GPG signature rather than trusting the download page. Neither replaces reading the thing, but both change the base rate.</p>
+
+        <h2 id="pick-a-mode">Pick the Loosest Mode You Could Defend Afterwards</h2>
+
+        <p>There's no correct mode, only a correct question: if this session did something you didn't intend, would you be able to explain the mode you chose without wincing? Manual for anything near auth, payments, or production. <code>acceptEdits</code> for the ordinary loop of writing and reviewing code, with a couple of narrow allow rules so the prompts stay meaningful. Auto mode when the task is long and you trust the direction, understanding it's a probabilistic safety net rather than a wall. <code>dontAsk</code> in CI, where nobody is there to answer. And <code>bypassPermissions</code> only where the blast radius is a container you can throw away. Whatever you land on, add two deny rules for the paths you'd hate to lose, because those keep working in every mode, including the one named after the danger.</p>
+
+        <p>Browse next: <a href="/blog/claude-code-plan-mode">Claude Code Plan Mode (2026)</a> | <a href="/blog/claude-code-hooks">Claude Code Hooks (2026)</a> | <a href="/blog/claude-code-install">How to Install Claude Code (2026)</a> | <a href="/blog/claude-code-mcp">Claude Code MCP (2026)</a></p>
+
+        <div class="blog-faq-section">
+          <h2 id="faq">Permission Questions, Answered</h2>
+
+          <h3>What are Claude Code permission modes?</h3>
+          <p>Six modes decide how often the agent pauses before acting. <code>default</code> (labeled Manual) approves reads only. <code>acceptEdits</code> adds file edits and common filesystem commands. <code>plan</code> allows exploration but blocks source edits. <code>auto</code> runs everything behind a safety classifier. <code>dontAsk</code> allows only pre-approved tools and auto-denies the rest. <code>bypassPermissions</code> skips checks entirely.</p>
+
+          <h3>What does --dangerously-skip-permissions do?</h3>
+          <p>It starts Claude Code in <code>bypassPermissions</code> mode, where tool calls execute immediately with no prompts and no safety checks, including writes to protected paths. It's equivalent to <code>--permission-mode bypassPermissions</code>. Use it only in isolated containers or VMs. Claude Code refuses to start this way as root or under <code>sudo</code>, and <code>rm -rf /</code> or <code>rm -rf ~</code> still prompt as a circuit breaker.</p>
+
+          <h3>Is Claude Code auto mode safe?</h3>
+          <p>Safer than <code>bypassPermissions</code>, less safe than approving each action yourself. A classifier model reviews each action and blocks things like <code>curl | bash</code>, force pushes, production deploys, and sending secrets to external endpoints. Anthropic states it reduces prompts but doesn't guarantee safety. Three consecutive blocks, or twenty total, pause auto mode and resume prompting.</p>
+
+          <h3>How do I stop Claude Code asking for permission every time?</h3>
+          <p>Add narrow <code>permissions.allow</code> rules for commands you trust, such as <code>Bash(npm test)</code>, rather than loosening the mode. That keeps prompts pointed at genuinely new actions. For fewer prompts across the board, <code>acceptEdits</code> auto-approves edits inside your working directory, and auto mode routes the rest through a classifier instead of asking you.</p>
+
+          <h3>Can Claude Code edit files outside my project?</h3>
+          <p>Auto-approval applies only inside your working directory or configured <code>additionalDirectories</code>; anything outside still prompts. A separate protected-path list, including <code>.git</code>, <code>.claude</code>, <code>.vscode</code>, shell rc files like <code>.zshrc</code>, and configs like <code>.npmrc</code>, is never auto-approved in any mode except <code>bypassPermissions</code>, and allow rules in settings files don't override it.</p>
+        </div>
+
+        <a href="/blog" class="blog-back">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>

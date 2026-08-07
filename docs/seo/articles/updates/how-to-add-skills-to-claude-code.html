@@ -37,7 +37,7 @@
     "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
     "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
     "datePublished": "2026-02-28",
-    "dateModified": "2026-05-30",
+    "dateModified": "2026-08-07",
     "image": "https://polyskill.ai/img/og/how-to-add-skills-to-claude-code.jpg",
     "speakable": { "@type": "SpeakableSpecification", "cssSelector": ["h1.blog-article-title", ".blog-tldr"] },
     "mainEntityOfPage": "https://polyskill.ai/blog/how-to-add-skills-to-claude-code"
@@ -139,7 +139,7 @@
     <article class="blog-article">
       <header class="blog-article-header">
         <h1 class="blog-article-title">How to Install Claude Code Skills &amp; Plugins: 3 Methods (2026)</h1>
-        <div class="blog-article-meta">Published February 28, 2026 · Updated May 30, 2026</div>
+        <div class="blog-article-meta">Published February 28, 2026 · Updated August 7, 2026</div>
       </header>
 
       <img src="/img/og/how-to-add-skills-to-claude-code.jpg"
@@ -196,7 +196,7 @@
           <li><strong>Coding standards</strong>: enforce naming conventions, file structure, or review checklists across a team</li>
           <li><strong>Workflow automation</strong>: define multi-step processes like "run tests, lint, then commit with a conventional message"</li>
           <li><strong>Domain expertise</strong>: give Claude specialized knowledge about your stack, your API, or a specific framework</li>
-          <li><strong>Custom commands</strong>: create <a href="/blog/claude-code-commands">slash commands</a> like <code>/deploy</code> or <code>/review-pr</code> that trigger specific behavior</li>
+          <li><strong>Custom commands</strong>: create slash commands like <code>/deploy</code> or <code>/review-pr</code> that trigger specific behavior</li>
         </ul>
 
         <p>Skills live in one of two places: <code>~/.claude/skills/</code> for personal skills that apply everywhere, or <code>.claude/skills/</code> inside a project for repo-scoped skills that travel with the codebase. Claude Code detects them automatically; no restart required. Once you understand how to use Claude Code skills, they become one of the fastest ways to standardize workflows across a team.</p>
@@ -205,7 +205,7 @@
 
         <p>You'll see both terms, "skills" and "plugins," used when talking about extending Claude Code. They overlap significantly, but there's a technical distinction worth understanding.</p>
 
-        <p>A <strong>skill</strong> is a single <code>SKILL.md</code> file: YAML frontmatter plus markdown instructions that tell Claude how to behave in specific situations. Skills are the atomic unit — one file, one capability. A <strong>plugin</strong> is a bundle that can package one or more skills alongside other extensions like <a href="/blog/claude-code-hooks">hooks</a> (shell commands triggered by events), MCP server configurations, and settings overrides. Plugins are how Claude Code's built-in marketplace distributes packages.</p>
+        <p>A <strong>skill</strong> is a single <code>SKILL.md</code> file: YAML frontmatter plus markdown instructions that tell Claude how to behave in specific situations. Skills are the atomic unit — one file, one capability. A <strong>plugin</strong> is a bundle that can package one or more skills alongside other extensions like hooks (shell commands triggered by events), MCP server configurations, and settings overrides. Plugins are how Claude Code's built-in marketplace distributes packages.</p>
 
         <p>In practice, most plugins contain a single skill. The distinction matters mainly when you're building your own extensions; if you just need to add instructions, create a skill. If you need to bundle instructions with hooks or MCP configs, create a plugin.</p>
 
@@ -384,7 +384,7 @@ When writing or reviewing TypeScript code, follow these rules:
             </tr>
             <tr>
               <td><code>context</code></td>
-              <td>Set to <code>fork</code> to run the skill in an isolated <a href="/blog/claude-code-subagents">subagent</a> instead of the main conversation.</td>
+              <td>Set to <code>fork</code> to run the skill in an isolated subagent instead of the main conversation.</td>
             </tr>
           </tbody>
         </table>
@@ -509,14 +509,12 @@ When writing or reviewing TypeScript code, follow these rules:
         <p>The frontmatter must start and end with exactly <code>---</code> on its own line. Common mistakes: indentation with tabs instead of spaces, missing quotes around strings that contain colons, or forgetting the closing <code>---</code>.</p>
 
         <h3>Third-party CLI install fails</h3>
-        <p>Requires Node.js 18 or later. If you see <code>EACCES</code> permission errors on macOS or Linux, either use a Node version manager like <code>nvm</code> (recommended) or fix npm's global directory permissions instead of using <code>sudo</code>.</p>
+        <p>Requires Node.js 18 or later, and a working Claude Code install underneath it (see <a href="/blog/claude-code-install">how to install Claude Code</a> if <code>claude --version</code> disagrees with what you installed). If you see <code>EACCES</code> permission errors on macOS or Linux, either use a Node version manager like <code>nvm</code> (recommended) or fix npm's global directory permissions instead of using <code>sudo</code>.</p>
 
         <h3>Two skills with the same name</h3>
-        <p>If a personal skill (<code>~/.claude/skills/</code>) and a project skill (<code>.claude/skills/</code>) share the same name, the project-scoped skill takes precedence. Rename one of them to avoid confusion.</p>
+        <p>If a personal skill (<code>~/.claude/skills/</code>) and a project skill (<code>.claude/skills/</code>) share the same name, the project-scoped skill takes precedence. Rename one of them to avoid confusion. If a skill runs a command you did not expect, your <a href="/blog/claude-code-permissions">permission mode</a> decides whether Claude asks you first.</p>
 
-        <p>Related: <a href="/blog/claude-code-router">Claude Code Router: Complete Guide (2026)</a> | <a href="/blog/codex-vs-claude-code">Codex vs Claude Code: Full Comparison (2026)</a> | <a href="/blog/claude-code-vs-cursor">Claude Code vs Cursor: Full Comparison (2026)</a> | <a href="/blog/claude-code-vs-gemini-cli">Claude Code vs Gemini CLI (2026)</a></p>
-
-        <p>Browse next: <a href="/blog/claude-code-subagents">Claude Code Subagents (2026)</a> | <a href="/blog/claude-code-hooks">Claude Code Hooks (2026)</a> | <a href="/blog/claude-code-commands">Claude Code Commands (2026)</a> | <a href="/blog/claude-code-memory">Claude Code Memory (CLAUDE.md) (2026)</a></p>
+        <p>Related: <a href="/blog/claude-code-router">Claude Code Router: Complete Guide (2026)</a> | <a href="/blog/codex-vs-claude-code">Codex vs Claude Code: Full Comparison (2026)</a> | <a href="/blog/claude-code-vs-cursor">Claude Code vs Cursor: Full Comparison (2026)</a> | <a href="/blog/claude-code-vs-gemini-cli">Claude Code vs Gemini CLI (2026)</a> | <a href="/blog/claude-code-plugins">Claude Code Plugins (2026)</a> | <a href="/blog/claude-code-subagents">Claude Code Subagents (2026)</a> | <a href="/blog/claude-code-hooks">Claude Code Hooks (2026)</a> | <a href="/blog/claude-code-commands">Claude Code Commands (2026)</a> | <a href="/blog/claude-code-memory">Claude Code Memory (2026)</a></p>
 
         <div class="blog-faq-section">
           <h2 id="faq">Troubleshooting & FAQs</h2>

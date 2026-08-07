@@ -146,3 +146,41 @@ commands have been merged into skills" (`.claude/commands/*.md` still works).
 Source: https://code.claude.com/docs/en/slash-commands. A draft got all three
 wrong; the analyzer caught it. Verify against that page before writing about
 command syntax.
+
+## Publishing the blog: the `updates/` folder is load-bearing
+<!-- added: 2026-08-07 -->
+A staged batch in `docs/seo/articles/` has three parts that must ALL be copied:
+the new `*.html`, the images, **and `updates/*.html`** (rebuilt existing posts +
+`index.html`). On 2026-06-16 only the first two shipped. Result: 6 articles with
+zero inbound links from any indexed page, and **7 weeks later Google had still
+never crawled them** (`URL is unknown to Google` on all six, verified via the GSC
+URL Inspection API 2026-08-07).
+**Why:** on this domain, discovery happens article-to-article — GSC `referringUrls`
+shows e.g. `/blog/claude-code-marketplace` was found via `/blog/claude-code-mcp`.
+The blog hub can't carry it: `/blog/` is "Crawled – currently not indexed" and the
+sitemap was last downloaded by Google on **2026-03-11**. A new post with no inbound
+link from an indexed page is invisible no matter how good it is.
+**Rule:** after publishing, every new slug must have ≥2 inbound links from an
+already-indexed post, and the sitemap must be re-submitted in Search Console by
+hand (the gcloud ADC token is `webmasters.readonly`; `PUT .../sitemaps/{feed}`
+returns 403). Verification snippet is in `docs/seo/articles/_HANDOFF_HOW_TO_PUBLISH.md`.
+
+## "Published" ≠ "indexed" — check coverage, not just deploy
+<!-- added: 2026-08-07 -->
+GSC's per-page impressions report **silently omits** pages Google has never
+crawled — they don't show as zero, they just aren't rows. So a batch can look
+"fine, just early" when it is actually invisible. The only definitive check is the
+URL Inspection API `indexStatusResult.coverageState`.
+**Why:** "URL is unknown to Google" (never fetched) reads very differently from
+"Crawled – currently not indexed" (fetched, judged not worth indexing) and the
+fixes are opposite — the first needs discovery (links/sitemap), the second needs
+content quality or authority. Diagnosing from impressions alone can't tell them apart.
+
+## Blog article word counts: measure prose, not raw HTML
+<!-- added: 2026-08-07 -->
+`docs/seo/articles/published-2026-06-16/_PROGRESS.md` claims the June articles are
+"2.7–3.5k words". Stripping tags puts them at **1,857–2,242**. The larger figure
+counted raw HTML tokens.
+**Why:** it matters when judging whether a new draft is thin. Compare like for
+like — strip tags from the `<div class="blog-article-body">` block before counting,
+or a perfectly normal 2,200-word post looks 40% short of a phantom target.

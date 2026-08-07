@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>How to Install Claude Code (2026): macOS, Windows, Linux &amp; WSL | PolySkill</title>
+  <meta name="description" content="Install Claude Code the right way: the one-line native installer, Homebrew, WinGet, apt/dnf/apk, and npm compared, Windows vs WSL, verifying with claude doctor, and fixing a broken install.">
+  <meta property="og:title" content="How to Install Claude Code (2026): macOS, Windows, Linux &amp; WSL">
+  <meta property="og:description" content="The one-line installer, Homebrew, WinGet, apt/dnf/apk and npm compared, Windows vs WSL, and how to verify the install actually worked.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://polyskill.ai/blog/claude-code-install">
+  <meta property="og:image" content="https://polyskill.ai/img/og/claude-code-install.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="669">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="How to Install Claude Code (2026): macOS, Windows, Linux &amp; WSL">
+  <meta name="twitter:description" content="The one-line installer, Homebrew, WinGet, apt/dnf/apk and npm compared, Windows vs WSL, and how to verify the install actually worked.">
+  <meta name="twitter:image" content="https://polyskill.ai/img/og/claude-code-install.jpg">
+  <link rel="canonical" href="https://polyskill.ai/blog/claude-code-install">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "How to Install Claude Code: macOS, Windows, Linux, and WSL (2026)",
+    "description": "Install Claude Code the right way: the one-line native installer, Homebrew, WinGet, apt/dnf/apk, and npm compared, Windows vs WSL, verifying with claude doctor, and fixing a broken install.",
+    "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
+    "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
+    "datePublished": "2026-08-07",
+    "dateModified": "2026-08-07",
+    "image": "https://polyskill.ai/img/og/claude-code-install.jpg",
+    "mainEntityOfPage": "https://polyskill.ai/blog/claude-code-install"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyskill.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://polyskill.ai/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "How to Install Claude Code" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "How do I install Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "On macOS, Linux, or WSL, run curl -fsSL https://claude.ai/install.sh | bash. On Windows PowerShell, run irm https://claude.ai/install.ps1 | iex. That native installer is the recommended path because it keeps itself updated in the background. Then open a terminal in your project and type claude to start a session. Homebrew, WinGet, apt, dnf, apk, and npm all work too, but none of them auto-update by default."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need a paid plan to install Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The installer itself costs nothing and takes seconds, but running Claude Code requires a paid account: Pro, Max, Team, Enterprise, or a Claude Console API account. The free Claude.ai plan does not include Claude Code access. You can also authenticate through Amazon Bedrock, Google Cloud's Agent Platform, or Microsoft Foundry if your company routes inference through its own cloud."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I install Claude Code on Windows?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Run irm https://claude.ai/install.ps1 | iex in PowerShell, or the curl install.cmd one-liner in CMD. You do not need Administrator rights. Installing Git for Windows is optional but recommended, because it gives Claude Code Git Bash for its Bash tool; without it, Claude Code uses the PowerShell tool instead. If you need sandboxed command execution, install into WSL 2 instead of native Windows."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do I need Node.js to run Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. Claude Code ships as a native binary, and the installed claude command does not invoke Node at runtime. Node.js 22 or later is only required if you choose the npm install path, because npm itself needs it to place the package. Even then, npm just downloads the same native binary through a per-platform optional dependency."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I update Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Native installations update themselves in the background and apply the new version on next launch. To force an update immediately, run claude update. Homebrew, WinGet, apt, dnf, and apk installs do not auto-update: run brew upgrade claude-code, winget upgrade Anthropic.ClaudeCode, or your package manager's upgrade command. For npm, run npm install -g @anthropic-ai/claude-code@latest rather than npm update -g."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <article class="blog-article">
+      <header class="blog-article-header">
+        <h1 class="blog-article-title">How to Install Claude Code: macOS, Windows, Linux, and WSL (2026)</h1>
+        <div class="blog-article-meta">Published August 7, 2026 · Updated August 7, 2026</div>
+      </header>
+
+      <img src="/img/og/claude-code-install.jpg"
+           srcset="/img/og/claude-code-install-600w.jpg 600w, /img/og/claude-code-install-1000w.jpg 1000w, /img/og/claude-code-install.jpg 1200w"
+           sizes="(max-width: 768px) calc(100vw - 2rem), 720px"
+           alt="Installing Claude Code — a terminal running the one-line installer alongside macOS, Windows, and Linux install paths" class="blog-hero-img" width="1200" height="669" fetchpriority="high">
+
+      <div class="blog-article-body">
+        <div class="blog-tldr">
+          <div class="blog-tldr-label">In one line</div>
+          <p>To <strong>install Claude Code</strong>, run <code>curl -fsSL https://claude.ai/install.sh | bash</code> on macOS, Linux, or WSL, or <code>irm https://claude.ai/install.ps1 | iex</code> in Windows PowerShell, then type <code>claude</code> in your project folder and log in with a Pro, Max, Team, Enterprise, or Console account.</p>
+        </div>
+
+        <p>Priya had Claude Code installed three times before she noticed. She'd started with npm in March, added the Homebrew cask when a tutorial suggested it, then ran the official installer in June after an update failed silently. For six weeks she was running a version two months behind whatever <code>claude --version</code> told her, because her shell was resolving a stale binary first. One <code>claude doctor</code> would have caught it on day one. You already know installing a CLI is supposed to be the easy part, so here's the version that stays easy: the single command that covers most people, the five install methods and what each one costs you in maintenance, the Windows fork in the road, and the four checks that prove the thing actually works before you waste an afternoon on a phantom bug.</p>
+
+        <h2 id="one-line-install">The One-Line Install (and What It Actually Does)</h2>
+
+        <p>The recommended way to install Claude Code is the native installer, a single command that downloads a self-contained binary for your platform. On macOS, Linux, and WSL:</p>
+
+        <pre><code>curl -fsSL https://claude.ai/install.sh | bash</code></pre>
+
+        <p>On Windows PowerShell:</p>
+
+        <pre><code>irm https://claude.ai/install.ps1 | iex</code></pre>
+
+        <p>On Windows CMD:</p>
+
+        <pre><code>curl -fsSL https://claude.ai/install.cmd -o install.cmd &amp;&amp; install.cmd &amp;&amp; del install.cmd</code></pre>
+
+        <p>On macOS and Linux this puts a launcher at <code>~/.local/bin/claude</code> that symlinks into <code>~/.local/share/claude/versions/</code>. That layout is the reason native installs can update themselves: new versions land in the <code>versions/</code> directory and the launcher points at the current one. Nothing is installed system-wide, and you never need <code>sudo</code>.</p>
+
+        <p>Then open a terminal inside the project you want to work in and start it:</p>
+
+        <pre><code>claude</code></pre>
+
+        <p>System requirements are modest: macOS 13.0 or later, Windows 10 build 1809 or later, Ubuntu 20.04+, Debian 10+, or Alpine 3.19+, with 4 GB of RAM and an x64 or ARM64 processor. If your first session works, the next thing worth doing is <a href="/browse">browsing the skill registry</a> to see what capabilities you can drop into it, since a fresh install ships with none of your team's conventions in it yet.</p>
+
+        <h2 id="pick-a-method">Pick Your Install Method</h2>
+
+        <p>Five install paths are supported, and they differ in exactly one way that matters after installation day: whether they keep themselves current. Claude Code ships changes constantly, and a version four weeks stale can be missing flags that tutorials assume you have.</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Method</th>
+              <th scope="col">Command</th>
+              <th scope="col">Auto-updates?</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Native installer</strong></td>
+              <td><code>curl -fsSL https://claude.ai/install.sh | bash</code></td>
+              <td>Yes, in the background</td>
+            </tr>
+            <tr>
+              <td><strong>Homebrew</strong></td>
+              <td><code>brew install --cask claude-code</code></td>
+              <td>No, run <code>brew upgrade claude-code</code></td>
+            </tr>
+            <tr>
+              <td><strong>WinGet</strong></td>
+              <td><code>winget install Anthropic.ClaudeCode</code></td>
+              <td>No, run <code>winget upgrade Anthropic.ClaudeCode</code></td>
+            </tr>
+            <tr>
+              <td><strong>apt / dnf / apk</strong></td>
+              <td>Signed Anthropic repositories</td>
+              <td>No, via your normal system upgrade</td>
+            </tr>
+            <tr>
+              <td><strong>npm</strong></td>
+              <td><code>npm install -g @anthropic-ai/claude-code</code></td>
+              <td>No, reinstall with <code>@latest</code></td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>Homebrew publishes two casks, and the distinction trips people up. <code>claude-code</code> follows the stable channel, which runs roughly a week behind and skips releases with major regressions. <code>claude-code@latest</code> takes every release the day it ships. Your upgrade command has to match the cask you installed, so <code>brew upgrade claude-code</code> does nothing for someone on the <code>@latest</code> cask.</p>
+
+        <p>The npm path deserves one clarification, because it causes more confusion than the other four combined. Installing through npm does <em>not</em> mean Claude Code runs on Node. npm pulls in a per-platform optional dependency such as <code>@anthropic-ai/claude-code-darwin-arm64</code> and links the native binary into place; the resulting <code>claude</code> never invokes Node at runtime. Node.js 22 or later is needed only for npm itself to do the install. On an older Node you'll see an <code>EBADENGINE</code> warning, the install completes anyway, and <code>claude</code> still runs. Never install it with <code>sudo npm install -g</code>, which creates permission problems that outlive the install.</p>
+
+        <p>Linux users who want package-manager governance can add Anthropic's signed apt, dnf, or apk repositories. Each offers a <code>stable</code> and a <code>latest</code> channel, and all are signed with the release key whose fingerprint is <code>31DDDE24DDFAB679F42D7BD2BAA929FF1A7ECACE</code>. Verify that fingerprint before trusting the key; it takes one <code>gpg --show-keys</code> and it's the difference between a signed supply chain and a hopeful one.</p>
+
+        <h2 id="windows">Windows: Native or WSL?</h2>
+
+        <p>Windows is the only platform where you have to make a real decision, and picking wrong costs you a feature rather than an afternoon.</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Option</th>
+              <th scope="col">Sandboxing</th>
+              <th scope="col">Choose it when</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Native Windows</strong></td>
+              <td>Not supported</td>
+              <td>Your projects and toolchain are Windows-native</td>
+            </tr>
+            <tr>
+              <td><strong>WSL 2</strong></td>
+              <td>Supported</td>
+              <td>You use Linux toolchains or want sandboxed command execution</td>
+            </tr>
+            <tr>
+              <td><strong>WSL 1</strong></td>
+              <td>Not supported</td>
+              <td>WSL 2 isn't available on your machine</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>Sandboxing is the deciding factor. It isolates the filesystem and network for shell commands, and it only exists under WSL 2. If you plan to let the agent run commands with any autonomy, that isolation is worth relocating your project for. The <a href="/blog/claude-code-permissions">permission modes guide</a> covers how sandboxing interacts with the mode you run in.</p>
+
+        <p>On native Windows, run the installer from PowerShell or CMD without Administrator rights. Installing <a href="https://git-scm.com/downloads/win" target="_blank" rel="noopener">Git for Windows</a> is optional but changes what Claude Code can do: with it, the agent uses Git Bash for its Bash tool; without it, it falls back to the PowerShell tool. If Git Bash is installed somewhere unusual, point at it in <code>settings.json</code>:</p>
+
+        <pre><code>{
+  "env": {
+    "CLAUDE_CODE_GIT_BASH_PATH": "C:\\Program Files\\Git\\bin\\bash.exe"
+  }
+}</code></pre>
+
+        <p>One error message tells you which shell you're actually in. If the CMD one-liner returns <code>The token '&amp;&amp;' is not a valid statement separator</code>, you're in PowerShell. If <code>irm</code> comes back as "not recognized as an internal or external command," you're in CMD. Your prompt shows <code>PS C:\</code> in PowerShell and <code>C:\</code> without it in CMD.</p>
+
+        <h2 id="verify">Prove the Install Worked</h2>
+
+        <p>Two commands separate "installed" from "working," and skipping them is how Priya lost six weeks. Start with the version:</p>
+
+        <pre><code>claude --version</code></pre>
+
+        <p>A working install prints something like <code>2.1.211 (Claude Code)</code>. Then run the diagnostic:</p>
+
+        <pre><code>claude doctor</code></pre>
+
+        <p><code>claude doctor</code> prints read-only diagnostics without starting a session: install health, settings-file validation errors, the result of the most recent update attempt, and warnings with suggested fixes. It also reports a launcher that the native installer didn't create, which is exactly the signal that catches a competing installation. Run it once after installing and again any time the CLI behaves in a way that doesn't match the docs.</p>
+
+        <h2 id="log-in">Log In: What Plan You Actually Need</h2>
+
+        <p>Here's the part the install guides bury, and it's the single most common reason a successful install still can't run: <strong>the free Claude.ai plan does not include Claude Code.</strong> You need a Pro, Max, Team, or Enterprise subscription, or a Claude Console API account. Companies routing inference through their own cloud can authenticate via Amazon Bedrock, Google Cloud's Agent Platform, or Microsoft Foundry instead.</p>
+
+        <p>Logging in is just running <code>claude</code> and following the browser prompt. If the <code>ANTHROPIC_API_KEY</code> environment variable is already set, Claude Code prompts once to approve that key rather than opening a browser. Which route is cheaper depends entirely on how much you use it, and the <a href="/blog/claude-code-pricing">Claude Code pricing breakdown</a> walks through the subscription-versus-API math with real monthly numbers.</p>
+
+        <h2 id="updates">Staying Updated, or Deliberately Not</h2>
+
+        <p>Native installs check for updates at startup and periodically while running, download in the background, and apply the new version the next time you launch. To pull one immediately:</p>
+
+        <pre><code>claude update</code></pre>
+
+        <p>You can also choose how aggressive updates are. The <code>autoUpdatesChannel</code> setting takes <code>"latest"</code> (the default, new features the day they ship) or <code>"stable"</code> (about a week behind, skipping releases with major regressions):</p>
+
+        <pre><code>{
+  "autoUpdatesChannel": "stable",
+  "minimumVersion": "2.1.100"
+}</code></pre>
+
+        <p><code>minimumVersion</code> sets a floor, so moving to the stable channel can't quietly downgrade a machine that's already ahead of it. In managed settings, an administrator can enforce that floor across an organization.</p>
+
+        <p>Marcus, who runs platform tooling for a 40-engineer team, pinned everyone to <code>"stable"</code> after a mid-sprint release changed a flag his CI scripts depended on. His rule now is that individual developers run <code>latest</code> and anything automated runs <code>stable</code>, which costs one settings file and has held for four months. If you distribute Claude Code through your own channels and need versions frozen entirely, set <code>DISABLE_AUTOUPDATER</code> to <code>"1"</code> in the <code>env</code> key of <code>settings.json</code>, or <code>DISABLE_UPDATES</code> to block manual updates too. Once you're pinning versions, it's worth pinning behavior as well, and <a href="/blog/how-to-add-skills-to-claude-code">installing your team's skills</a> from a scanned registry is the same instinct applied one layer up.</p>
+
+        <h2 id="troubleshooting">When the Install Goes Wrong</h2>
+
+        <p>Four failures cover almost everything people hit, and each has a specific fix rather than a reinstall.</p>
+
+        <p><strong>Multiple installations fighting.</strong> This is Priya's bug, and it's the one that wastes the most time because everything appears to work. If <code>claude --version</code> disagrees with what you just installed, you have a second copy or a leftover shell alias from an older installer earlier in your <code>PATH</code>. <code>claude doctor</code> flags a launcher it didn't create. Remove the duplicate rather than reinstalling on top of it.</p>
+
+        <p><strong>The npm global directory isn't writable.</strong> Claude Code shows a one-time startup notice when it can't auto-update for this reason, and <code>claude doctor</code> lists the fixes. Resist the urge to reach for <code>sudo</code>, which converts a small problem into a permissions mess.</p>
+
+        <p><strong>Alpine and other musl distributions.</strong> Alpine ships without <code>bash</code> or <code>curl</code>, so the documented install command fails with a <code>not found</code> error until you add them. Install the runtime dependencies, then turn off the bundled ripgrep:</p>
+
+        <pre><code>apk add bash curl libgcc libstdc++ ripgrep</code></pre>
+
+        <p>Then set <code>USE_BUILTIN_RIPGREP</code> to <code>"0"</code> in the <code>env</code> key of your <code>settings.json</code>. If <code>apk</code> reports ripgrep is missing, it lives in the community repository, which you may need to add first.</p>
+
+        <p><strong>Root or sudo refusal.</strong> On Linux and macOS, Claude Code refuses to start with <code>--dangerously-skip-permissions</code> while running as root, printing <code>--dangerously-skip-permissions cannot be used with root/sudo privileges for security reasons</code>. The check is skipped inside a recognized sandbox. To run autonomously in a container, use the dev container configuration, which runs Claude Code as a non-root user.</p>
+
+        <p>Beyond that, verifying what you installed is a two-minute job worth doing on a work machine. Every release publishes a <code>manifest.json</code> of SHA256 checksums signed with Anthropic's GPG key, so verifying the signature on the manifest transitively verifies every binary it lists. macOS binaries are additionally signed by "Anthropic PBC" and notarized; Windows binaries are signed by "Anthropic, PBC."</p>
+
+        <h2 id="clean-install">A Clean Install Is a Four-Line Checklist</h2>
+
+        <p>You don't need to remember any of this beyond four checks. Run the native installer for your platform. Run <code>claude --version</code> and confirm the number matches what you just installed. Run <code>claude doctor</code> and read what it says instead of skimming it. Then run <code>claude</code> in a real project and log in. If all four pass, your install is genuinely fine, and any weirdness after that belongs to your configuration rather than your binary. If any one of them fails, the failing check names the problem, which is the whole reason to run them in that order rather than debugging a live session at 11pm.</p>
+
+        <p>Browse next: <a href="/blog/claude-code-pricing">Claude Code Pricing (2026)</a> | <a href="/blog/claude-code-permissions">Claude Code Permissions (2026)</a> | <a href="/blog/how-to-add-skills-to-claude-code">How to Add Skills to Claude Code</a> | <a href="/blog/claude-code-plan-mode">Claude Code Plan Mode (2026)</a></p>
+
+        <div class="blog-faq-section">
+          <h2 id="faq">Install Questions, Answered</h2>
+
+          <h3>How do I install Claude Code?</h3>
+          <p>On macOS, Linux, or WSL, run <code>curl -fsSL https://claude.ai/install.sh | bash</code>. On Windows PowerShell, run <code>irm https://claude.ai/install.ps1 | iex</code>. The native installer is the recommended path because it keeps itself updated in the background. Then open a terminal in your project and type <code>claude</code>. Homebrew, WinGet, apt, dnf, apk, and npm all work too, but none of them auto-update by default.</p>
+
+          <h3>Do I need a paid plan to install Claude Code?</h3>
+          <p>The installer itself costs nothing, but running Claude Code requires a paid account: Pro, Max, Team, Enterprise, or a Claude Console API account. The free Claude.ai plan does not include Claude Code access. You can also authenticate through Amazon Bedrock, Google Cloud's Agent Platform, or Microsoft Foundry if your company routes inference through its own cloud. For which route works out cheaper, see the <a href="/blog/claude-code-pricing">pricing breakdown</a>.</p>
+
+          <h3>How do I install Claude Code on Windows?</h3>
+          <p>Run <code>irm https://claude.ai/install.ps1 | iex</code> in PowerShell, or the <code>curl install.cmd</code> one-liner in CMD. Administrator rights aren't needed. Git for Windows is optional but recommended, since it gives Claude Code Git Bash for its Bash tool; without it, the PowerShell tool is used instead. If you want sandboxed command execution, install into WSL 2 rather than native Windows.</p>
+
+          <h3>Do I need Node.js to run Claude Code?</h3>
+          <p>No. Claude Code ships as a native binary and the installed <code>claude</code> command never invokes Node at runtime. Node.js 22 or later is required only for the npm install path, because npm itself needs it to place the package, and even then npm just downloads the same native binary through a per-platform optional dependency.</p>
+
+          <h3>How do I update Claude Code?</h3>
+          <p>Native installations update in the background and apply the change on next launch; run <code>claude update</code> to force one now. Homebrew, WinGet, apt, dnf, and apk installs don't auto-update: use <code>brew upgrade claude-code</code>, <code>winget upgrade Anthropic.ClaudeCode</code>, or your package manager's upgrade command. For npm, run <code>npm install -g @anthropic-ai/claude-code@latest</code> rather than <code>npm update -g</code>, which respects the original semver range.</p>
+        </div>
+
+        <a href="/blog" class="blog-back">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code vs Cursor (2026): Which AI Coding Tool Wins? | PolySkill</title>
+  <meta name="description" content="Terminal agent vs AI IDE — two fundamentally different approaches to AI coding. Real performance data, pricing breakdown, and when to use each (or both).">
+  <meta property="og:title" content="Claude Code vs Cursor (2026): Which AI Coding Tool Wins?">
+  <meta property="og:description" content="Terminal agent vs AI IDE — two fundamentally different approaches to AI coding. Real performance data, pricing breakdown, and when to use each (or both).">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://polyskill.ai/blog/claude-code-vs-cursor">
+  <meta property="og:image" content="https://polyskill.ai/img/og/claude-code-vs-cursor.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="669">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude Code vs Cursor (2026): Which AI Coding Tool Wins?">
+  <meta name="twitter:description" content="Terminal agent vs AI IDE — two fundamentally different approaches to AI coding. Real performance data, pricing breakdown, and when to use each (or both).">
+  <meta name="twitter:image" content="https://polyskill.ai/img/og/claude-code-vs-cursor.jpg">
+  <link rel="canonical" href="https://polyskill.ai/blog/claude-code-vs-cursor">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Claude Code vs Cursor: Which AI Coding Tool Wins in 2026?",
+    "description": "Terminal agent vs AI IDE — two fundamentally different approaches to AI coding. Real performance data, pricing breakdown, and when to use each (or both).",
+    "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
+    "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
+    "datePublished": "2026-02-26",
+    "dateModified": "2026-08-07",
+    "image": "https://polyskill.ai/img/og/claude-code-vs-cursor.jpg",
+    "mainEntityOfPage": "https://polyskill.ai/blog/claude-code-vs-cursor"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyskill.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://polyskill.ai/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Code vs Cursor" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is Claude Code better than Cursor?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "It depends on your workflow. Claude Code excels at large autonomous refactors, framework migrations, and CLI-driven development. Cursor excels at real-time tab completion, interactive editing, and working within a familiar VS Code environment. Many developers use both tools together."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is Claude Code free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Claude's free tier covers chat only — Claude Code requires a Pro subscription ($20/month) or higher. The Pro plan includes rate-limited usage, while Max plans ($100 or $200/month) provide higher rate limits for heavy usage."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can Cursor use Claude models?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Cursor supports multiple AI model providers including Anthropic's Claude, OpenAI's GPT-4, Google's Gemini, and xAI's Grok. You can switch between models depending on the task."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What are Claude Code skills?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Claude Code skills are portable, declarative packages that extend Claude Code with new capabilities — things like coding standards, workflow automations, tool integrations, and specialized prompts. You can browse and install skills from the PolySkill registry at polyskill.ai."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use Claude Code and Cursor together?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, and many power users do exactly that. A common pattern is using Claude Code for planning, large refactors, and autonomous multi-file tasks, then switching to Cursor for hands-on editing, tab completion, and interactive code review."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <article class="blog-article">
+      <header class="blog-article-header">
+        <h1 class="blog-article-title">Claude Code vs Cursor: Which AI Coding Tool Wins in 2026?</h1>
+        <div class="blog-article-meta">Published February 26, 2026 · Updated August 7, 2026</div>
+      </header>
+
+      <img src="/img/og/claude-code-vs-cursor.jpg"
+           srcset="/img/og/claude-code-vs-cursor-600w.jpg 600w, /img/og/claude-code-vs-cursor-1000w.jpg 1000w, /img/og/claude-code-vs-cursor.jpg 1200w"
+           sizes="(max-width: 768px) calc(100vw - 2rem), 720px"
+           alt="Claude Code vs Cursor comparison — scales balancing a terminal agent and an IDE" class="blog-hero-img" width="1200" height="669" fetchpriority="high">
+
+      <div class="blog-article-body">
+        <div class="blog-tldr">
+          <div class="blog-tldr-label">TL;DR</div>
+          <div class="blog-tldr-compare">
+            <div class="blog-tldr-side">
+              <strong>Claude Code</strong><br>
+              Terminal-first, autonomous agent<br>
+              Best for: refactors, migrations, CI/CD<br>
+              From $20/mo (Pro)
+            </div>
+            <div class="blog-tldr-side">
+              <strong>Cursor</strong><br>
+              AI-powered VS Code fork<br>
+              Best for: editing, completion, visual diffs<br>
+              From $20/mo (Pro)
+            </div>
+          </div>
+        </div>
+
+        <p>The <strong>Claude Code vs Cursor</strong> comparison comes down to one question: do you want an autonomous agent or an AI-enhanced editor? Claude Code runs in your terminal, plans multi-file changes, and executes them without hand-holding. Cursor is a VS Code fork where AI is woven into every keystroke: tab completion, inline chat, visual diffs. Both start at $20/month. Both will change how you write code. But the day-to-day experience is fundamentally different, and that's what this guide focuses on.</p>
+
+        <h2 id="core-tradeoff">Claude Code vs Cursor: The Core Tradeoff</h2>
+
+        <p><a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank" rel="noopener">Claude Code</a> is a terminal-native autonomous agent. You describe what you want ("migrate this Express app to Hono" or "add authentication to all API routes") and it plans the approach, makes changes across multiple files, runs commands, and iterates on its own work. It uses Anthropic's Claude models exclusively (Sonnet 4.6, Opus 4.6) with extended thinking that reasons through complex problems step by step. Its context window scales up to 1M tokens (beta). Extensibility comes from MCP servers, hooks, and <a href="/browse">installable skills</a>.</p>
+
+        <p><a href="https://www.cursor.com/" target="_blank" rel="noopener">Cursor</a> is an AI-powered code editor, a fork of VS Code with AI integrated into every part of the editing experience. Tab completion suggests code as you type. Inline chat lets you ask questions about selected code. Composer handles multi-file edits with visual diff previews. Background agents run autonomous tasks in sandboxed environments. Because it's a VS Code fork, your extensions, themes, and keybindings carry over. Cursor supports multiple models (GPT-4, Claude, Gemini, Grok) and you can switch between them per task.</p>
+
+        <p>The core difference: Claude Code asks you to trust an autonomous agent and review results. Cursor keeps you in the editing loop and augments your keystrokes.</p>
+
+        <h2 id="typical-day">What a Typical Day Looks Like in Each Tool</h2>
+
+        <p>Feature tables don't capture what it feels like to use these tools. Here's what a typical development day looks like with each approach.</p>
+
+        <h3>A day with Claude Code</h3>
+
+        <p>You open your terminal. You're adding a notification system to an Express app. You type: "Add email notification support. When a user creates an account, send a welcome email. Use Resend for delivery. Add the route, the email template, and tests." Claude Code reads your codebase, identifies the relevant files, plans the implementation, then starts making changes across 5-6 files. You watch the progress in your terminal, occasionally seeing it run tests and fix its own mistakes. Ten minutes later, you review the diff. Most of it is right. You adjust one template string and move on to the next task.</p>
+
+        <p>The rhythm is: describe → wait → review → adjust. Your hands are off the keyboard for the bulk of the implementation. You're thinking about what to build next while the agent builds the current thing.</p>
+
+        <h3>A day with Cursor</h3>
+
+        <p>You open Cursor (which looks exactly like VS Code). You're adding the same notification system. You open the routes file, select the user creation handler, and press Cmd+K: "Add email notification after account creation using Resend." Cursor shows an inline diff; you accept the route changes. You open Composer for the email template file, describe what you want, and it generates the template with a visual preview. You tab-complete the Resend client setup. You write the test file yourself, but Cursor's autocomplete fills in most of the boilerplate.</p>
+
+        <p>The rhythm is: navigate → select → instruct → accept/reject → type with assistance. Your hands stay on the keyboard. You're making micro-decisions constantly: accept this suggestion, reject that one, modify this diff.</p>
+
+        <h3>The tradeoff</h3>
+
+        <p>Claude Code's approach is more powerful on complex tasks; one prompt produces a complete implementation across multiple files. Cursor's approach gives you more control and faster feedback on each individual change. Neither is better; they optimize for different things.</p>
+
+        <h2 id="side-by-side">Side-by-Side: The Same Task in Both Tools</h2>
+
+        <p>To make the difference concrete, here's the same task ("add rate limiting middleware to an Express API") done in both tools.</p>
+
+        <h3>In Claude Code</h3>
+        <p>You type: "Add rate limiting to all API routes. Use express-rate-limit, 100 requests per 15 minutes per IP. Add a stricter limit of 10/15min on auth routes. Include tests."</p>
+        <p>Claude Code reads your route files, identifies all API routes and the auth routes specifically. It installs <code>express-rate-limit</code>, creates the middleware, applies the general limiter to your router, applies the stricter limiter to auth routes, creates test files, runs the tests, and fixes a failing test where it miscounted the rate limit window. Total time: ~3 minutes. Files touched: 4. Your input: one prompt.</p>
+
+        <h3>In Cursor</h3>
+        <p>You open <code>middleware/</code> and create a new file. Cursor's autocomplete suggests the rate limiter setup as you import <code>express-rate-limit</code>. You accept the tab completion, adjust the window and max values. You open your main router file, select the line where routes are mounted, and Cmd+K: "Apply rateLimiter middleware to all API routes." Cursor shows the diff; you accept. You open the auth router, repeat for the stricter limit. You write the test, with Cursor autocompleting most of the setup/teardown. Total time: ~5 minutes. Files touched: 4. Your input: several interactions across the process.</p>
+
+        <h3>What this reveals</h3>
+        <p>Claude Code was faster and required less input — but you didn't see the implementation until it was done. Cursor took longer but you were in control of every change, and you could catch issues as they happened rather than in review. For a well-defined task like rate limiting, Claude Code's autonomy is an advantage. For exploratory or ambiguous tasks, Cursor's step-by-step approach reduces risk.</p>
+
+        <h2 id="where-claude-code-wins">Where Claude Code Pulls Ahead</h2>
+
+        <p><strong>Large autonomous refactors.</strong> Migrating frameworks, restructuring codebases, updating hundreds of files to a new API. Claude Code's sub-agent architecture handles multi-step changes that would take hours of individual edits in any editor. You describe the end state, and the agent figures out the path.</p>
+
+        <p><strong>Complex reasoning tasks.</strong> Extended thinking lets Claude Code trace dependencies, consider edge cases, and weigh architectural tradeoffs before writing code. On tasks like "refactor this module to eliminate circular dependencies" or "design the data model for this feature," the upfront reasoning produces better results with fewer iterations.</p>
+
+        <p><strong>CI/CD and DevOps workflows.</strong> Claude Code runs natively in the terminal, integrating naturally with scripts, pipelines, and infrastructure tooling. It can run in headless mode for automated workflows.</p>
+
+        <p><strong>Ecosystem extensibility.</strong> MCP servers connect to databases, APIs, and external services. Hooks fire shell commands on agent events. <a href="/blog/how-to-add-skills-to-claude-code">Installable skills</a> add portable capabilities that persist across sessions. This makes Claude Code a platform, not just a tool.</p>
+
+        <h2 id="where-cursor-wins">Where Cursor Pulls Ahead</h2>
+
+        <p><strong>Real-time editing speed.</strong> Tab completion appears as you type; accept or reject with a keystroke. For writing new code from scratch, nothing terminal-based matches this feedback loop. You see suggestions in real time and make split-second decisions about each one.</p>
+
+        <p><strong>Visual code review.</strong> Composer shows multi-file changes as inline diffs you can accept, reject, or modify before they're applied. You see exactly what will change, in the exact files, before anything is written. This visual feedback builds confidence in AI-generated changes.</p>
+
+        <p><strong>Multi-model flexibility.</strong> Switch between Claude, GPT-4, Gemini, and Grok depending on the task. If one model struggles with a particular codebase or language, try another without leaving your editor.</p>
+
+        <p><strong>Zero learning curve.</strong> If you use VS Code, you already know Cursor. Your extensions, themes, keybindings, and muscle memory all transfer. The AI features layer on top of an experience you already have. Claude Code requires learning a new workflow: writing prompts instead of editing code, trusting an agent, reviewing batch changes.</p>
+
+        <h2 id="pricing">Pricing Breakdown: What You Actually Pay</h2>
+
+        <p>Both tools offer tiered pricing, but the billing models differ. Claude Code uses rate limits: you can send as many requests as your plan allows within time windows. Cursor uses a request-based system where different models consume at different rates.</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Price Point</th>
+              <th scope="col">Claude Code</th>
+              <th scope="col">Cursor</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Free</td>
+              <td>Chat only (no Code access)</td>
+              <td>2-week trial with limited features</td>
+            </tr>
+            <tr>
+              <td>~$20/mo</td>
+              <td>Pro — rate-limited Code access</td>
+              <td>Pro — 500 fast premium requests/mo</td>
+            </tr>
+            <tr>
+              <td>~$60/mo</td>
+              <td>—</td>
+              <td>Pro+ — more requests, background agents</td>
+            </tr>
+            <tr>
+              <td>~$100/mo</td>
+              <td>Max (5x) — 5x Pro rate limits</td>
+              <td>—</td>
+            </tr>
+            <tr>
+              <td>~$200/mo</td>
+              <td>Max (20x) — 20x Pro rate limits</td>
+              <td>Ultra — unlimited premium requests</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>At the $20/month entry point, both tools deliver genuine productivity gains. Claude Code's Pro plan gives you the full autonomous agent experience with rate limits that most developers won't hit in casual use. Cursor's Pro plan gives you 500 fast requests per month, enough for moderate daily use, but heavy users will want Pro+ or Ultra. For optimizing Claude Code costs with model routing, see our <a href="/blog/claude-code-router">Claude Code Router guide</a>.</p>
+
+        <h2 id="using-both">Using Claude Code and Cursor Together</h2>
+
+        <p>The tools solve different problems, and many developers run both daily. Here's how the workflow typically looks:</p>
+
+        <ul>
+          <li><strong>Claude Code for planning and scaffolding:</strong> describe a feature and let it architect the approach, create files, and scaffold the implementation across your codebase. Use plan mode (<code>Shift+Tab</code> twice) for the thinking phase, then let it execute.</li>
+          <li><strong>Cursor for refinement and polish:</strong> open the files Claude Code changed, use tab completion and inline edits to polish details, and review diffs visually in Composer. Cursor's visual interface makes it easier to catch subtle issues.</li>
+          <li><strong>Claude Code for automation:</strong> run it in CI to auto-fix lint errors, generate migration files, or update documentation after code changes. Its headless mode is purpose-built for this.</li>
+          <li><strong>Cursor for exploration:</strong> use inline chat to understand unfamiliar code, ask questions about APIs, and navigate large codebases visually. The "explain this code" workflow is faster in an editor than a terminal.</li>
+        </ul>
+
+        <p>Skills persist across sessions. Once installed, capabilities like coding standards enforcement, workflow automations, and tool integrations are available in every Claude Code project without reconfiguration.</p>
+
+        <h2 id="switching">Switching from Cursor to Claude Code (and Back)</h2>
+
+        <p>If you're currently a Cursor user considering Claude Code (or vice versa), here's what the transition looks like:</p>
+
+        <h3>Cursor → Claude Code</h3>
+        <ul>
+          <li><strong>Mindset shift:</strong> You're no longer editing code. You're directing an agent. Write prompts that describe the end state, not the individual steps. "Add authentication middleware to all API routes" instead of editing each file.</li>
+          <li><strong>What transfers:</strong> Your understanding of your codebase, your architectural thinking, your review skills. Claude Code still needs you to know what "good" looks like.</li>
+          <li><strong>What doesn't:</strong> Tab completion muscle memory, inline editing workflows, visual diff review. You'll review changes in your terminal or git diff instead.</li>
+          <li><strong>Start with:</strong> Use Claude Code for one large task (a refactor or migration) to experience the autonomous workflow. Don't try to use it for the small edits you're used to doing in Cursor; that's not where it shines.</li>
+        </ul>
+
+        <h3>Claude Code → Cursor</h3>
+        <ul>
+          <li><strong>Mindset shift:</strong> You're back in the driver's seat. Instead of one big prompt, you'll make many small decisions: accept this completion, reject that one, edit this diff. The feedback loop is tighter but requires more attention.</li>
+          <li><strong>What transfers:</strong> Your prompting skills work in Cursor's inline chat and Composer. Good prompts produce good results regardless of the tool.</li>
+          <li><strong>What doesn't:</strong> Extended thinking, sub-agent architecture, MCP integrations. Cursor has its own strengths (tab completion, visual diffs, multi-model support) but not these specific capabilities.</li>
+          <li><strong>Start with:</strong> Use Cursor for a day of normal editing. Let the tab completion surprise you. It's faster than you expect for writing new code.</li>
+        </ul>
+
+        <h2 id="final-take">Final Take</h2>
+
+        <p>Pick based on where you already live. If your day runs through a terminal and you think in tasks ("migrate this, refactor that"), Claude Code will feel native fast. If you live in an editor and think in keystrokes, Cursor's tab completion will feel like a reflex you didn't know you wanted.</p>
+
+        <p>Run the one that matches your instinct for a full week before judging it. The friction you hit on day one is almost always the learning curve talking, not the tool's ceiling.</p>
+
+        <p>Keep reading: <a href="/blog/how-to-add-skills-to-claude-code">How to Add Skills to Claude Code (2026)</a> | <a href="/blog/codex-vs-claude-code">Codex vs Claude Code: Full Comparison (2026)</a> | <a href="/blog/claude-code-router">Claude Code Router: Complete Guide (2026)</a> | <a href="/blog/claude-code-vs-gemini-cli">Claude Code vs Gemini CLI (2026)</a></p>
+
+        <p>Related: <a href="/blog/claude-code-pricing">Claude Code Pricing (2026)</a> | <a href="/blog/claude-code-plan-mode">Claude Code Plan Mode (2026)</a> | <a href="/blog/claude-code-review">Claude Code Review (2026)</a> | <a href="/blog/claude-code-commands">Claude Code Commands (2026)</a></p>
+
+        <div class="blog-faq-section">
+          <h2 id="faq">Questions Developers Ask</h2>
+
+          <h3>Is Claude Code better than Cursor?</h3>
+          <p>It depends on your workflow. Claude Code excels at large autonomous refactors, framework migrations, and CLI-driven development. Cursor excels at real-time tab completion, interactive editing, and working within a familiar VS Code environment. Many developers use both tools together.</p>
+
+          <h3>Is Claude Code free?</h3>
+          <p>Claude's free tier covers chat only; Claude Code requires a Pro subscription ($20/month) or higher. The Pro plan includes rate-limited usage, while Max plans ($100 or $200/month) provide higher rate limits for heavy usage.</p>
+
+          <h3>Can Cursor use Claude models?</h3>
+          <p>Yes. Cursor supports multiple AI model providers including Anthropic's Claude, OpenAI's GPT-4, Google's Gemini, and xAI's Grok. You can switch between models depending on the task.</p>
+
+          <h3>What are Claude Code skills?</h3>
+          <p>Claude Code skills are portable, declarative packages that extend Claude Code with new capabilities: things like coding standards, workflow automations, tool integrations, and specialized prompts. You can <a href="/browse">browse and install skills</a> from the PolySkill registry at polyskill.ai.</p>
+
+          <h3>Can I use Claude Code and Cursor together?</h3>
+          <p>Yes, and many power users do exactly that. A common pattern is using Claude Code for planning, large refactors, and autonomous multi-file tasks, then switching to Cursor for hands-on editing, tab completion, and interactive code review.</p>
+        </div>
+
+        <a href="/blog" class="blog-back">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>

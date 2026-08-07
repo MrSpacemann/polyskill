@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Router: OpenRouter, DeepSeek & Ollama Setup (2026) | PolySkill</title>
+  <meta name="description" content="Claude Code works with Anthropic models by default. Here's how to route it through OpenRouter to access DeepSeek, Ollama, GPT-4, and 200+ models — with step-by-step setup.">
+  <meta property="og:title" content="Claude Code Router: OpenRouter, DeepSeek & Ollama Setup (2026)">
+  <meta property="og:description" content="Claude Code works with Anthropic models by default. Here's how to route it through OpenRouter to access DeepSeek, Ollama, GPT-4, and 200+ models — with step-by-step setup.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://polyskill.ai/blog/claude-code-router">
+  <meta property="og:image" content="https://polyskill.ai/img/og/claude-code-router.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="669">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude Code Router: OpenRouter, DeepSeek & Ollama Setup (2026)">
+  <meta name="twitter:description" content="Claude Code works with Anthropic models by default. Here's how to route it through OpenRouter to access DeepSeek, Ollama, GPT-4, and 200+ models — with step-by-step setup.">
+  <meta name="twitter:image" content="https://polyskill.ai/img/og/claude-code-router.jpg">
+  <link rel="canonical" href="https://polyskill.ai/blog/claude-code-router">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Claude Code Router: OpenRouter, DeepSeek & Ollama Setup (2026)",
+    "description": "Claude Code works with Anthropic models by default. Here's how to route it through OpenRouter to access DeepSeek, Ollama, GPT-4, and 200+ models — with step-by-step setup.",
+    "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
+    "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
+    "datePublished": "2026-02-27",
+    "dateModified": "2026-08-07",
+    "image": "https://polyskill.ai/img/og/claude-code-router.jpg",
+    "speakable": { "@type": "SpeakableSpecification", "cssSelector": ["h1.blog-article-title", ".blog-tldr"] },
+    "mainEntityOfPage": "https://polyskill.ai/blog/claude-code-router"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyskill.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://polyskill.ai/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Code Router" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Claude Code Router?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Claude Code Router refers to two things: (1) built-in model routing via the opusplan alias, which uses Opus for planning and Sonnet for execution to optimize cost; and (2) the open-source claude-code-router proxy by @musistudio, which lets you route Claude Code requests to alternative providers like OpenRouter, DeepSeek, Ollama, and Gemini."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I switch models in Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Four ways: (1) mid-session with the /model command, (2) at startup with claude --model <alias>, (3) via the ANTHROPIC_MODEL environment variable, (4) in your ~/.claude/settings.json file. Available aliases include sonnet, opus, haiku, and opusplan."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I use Claude Code with OpenRouter?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, via the community claude-code-router project. Install it with npm install -g @musistudio/claude-code-router, configure your OpenRouter API key and models in ~/.claude-code-router/config.json, then run ccr code. The router proxies requests from Claude Code to OpenRouter, giving you access to hundreds of models."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Is opusplan free?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. opusplan uses your Anthropic API credits or Claude subscription. It routes to Opus (more expensive) during plan mode and Sonnet (cheaper) during execution. The cost savings come from using the cheaper model for the bulk of code generation work while reserving the more capable model for planning."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Claude Code Router support local models?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. The community claude-code-router supports Ollama, which runs models locally on your machine. Configure Ollama as a provider in config.json with api_base_url pointing to http://localhost:11434/v1/chat/completions, and you can route Claude Code requests to any local model like Qwen 2.5 Coder or Llama."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <article class="blog-article">
+      <header class="blog-article-header">
+        <h1 class="blog-article-title">Claude Code Router: Set Up OpenRouter, DeepSeek, and Ollama (2026 Guide)</h1>
+        <div class="blog-article-meta">Published February 27, 2026 · Updated August 7, 2026</div>
+      </header>
+
+      <img src="/img/og/claude-code-router.jpg"
+           srcset="/img/og/claude-code-router-600w.jpg 600w, /img/og/claude-code-router-1000w.jpg 1000w, /img/og/claude-code-router.jpg 1200w"
+           sizes="(max-width: 768px) calc(100vw - 2rem), 720px"
+           alt="Claude Code Router — gold router device routing requests from Claude Code terminal to OpenRouter, DeepSeek, Ollama, Gemini, and OpenAI" class="blog-hero-img" width="1200" height="669" fetchpriority="high">
+
+      <div class="blog-article-body">
+        <div class="blog-tldr">
+          <div class="blog-tldr-label">TL;DR</div>
+          <ul class="blog-tldr-list" role="list">
+            <li><strong>Claude Code Router</strong> is a community proxy that lets you use Claude Code with any model: OpenRouter, DeepSeek, Ollama (local), Gemini, and more.</li>
+            <li><strong>Install:</strong> <code>npm install -g @musistudio/claude-code-router</code> then <code>ccr code</code></li>
+            <li><strong>Built-in alternative:</strong> Claude Code's <code>opusplan</code> alias routes between Opus (planning) and Sonnet (execution), no extra tools needed.</li>
+          </ul>
+        </div>
+
+        <p>The <strong>Claude Code Router</strong> is an open-source proxy tool that solves a specific limitation: Claude Code only supports Anthropic models natively. If you want to use Claude Code's interface with DeepSeek, GPT-4, Gemini, local Ollama models, or any of 200+ models available through OpenRouter, you need a router. The community <a href="https://github.com/musistudio/claude-code-router" target="_blank" rel="noopener">claude-code-router</a> project by @musistudio (28k+ GitHub stars, MIT license) does exactly this. It intercepts Claude Code's API requests and forwards them to whatever provider you configure.</p>
+
+        <p>This guide covers how to set up the community router step by step, which providers and models work best, how to troubleshoot common issues, and how Claude Code's built-in <code>opusplan</code> routing compares.</p>
+
+        <h2 id="claude-code-openrouter">Claude Code with OpenRouter: Quick Answer</h2>
+
+        <p>To use Claude Code with OpenRouter, install the community router (<code>npm install -g @musistudio/claude-code-router</code>), add your OpenRouter API key to <code>~/.claude-code-router/config.json</code>, then run <code>ccr code</code>. The router proxies Claude Code through OpenRouter, giving you 200+ models behind a single key. Full setup, provider config, troubleshooting, and the built-in <code>opusplan</code> alternative are covered below.</p>
+
+        <h2 id="what-is-claude-code-router">What Is Claude Code Router?</h2>
+
+        <p>Claude Code Router is a local proxy server that sits between Claude Code and the AI model provider. Instead of sending requests directly to Anthropic's API, Claude Code sends them to the router running on your machine (default port 3456). The router transforms the request format and forwards it to whichever provider you've configured: OpenRouter, DeepSeek, Ollama, Gemini, or others.</p>
+
+        <p>How it works under the hood:</p>
+
+        <ol>
+          <li>The router starts a local Express.js server on port 3456</li>
+          <li>It sets <code>ANTHROPIC_BASE_URL</code> to point at the local server</li>
+          <li>Claude Code sends API requests to the router instead of Anthropic</li>
+          <li>The router transforms the request format and forwards it to your configured provider</li>
+          <li>Responses stream back through the router to Claude Code</li>
+        </ol>
+
+        <p>The result: you get Claude Code's interface, agentic capabilities, and workflow — but with whatever model you choose.</p>
+
+        <h2 id="setup-claude-code-router">How to Set Up Claude Code Router</h2>
+
+        <h3>Step 1: Install</h3>
+
+        <pre><code>npm install -g @musistudio/claude-code-router</code></pre>
+
+        <p>This installs the <code>ccr</code> command globally. You need Claude Code installed first (<code>npm install -g @anthropic-ai/claude-code</code>).</p>
+
+        <h3>Step 2: Configure</h3>
+
+        <p>Create <code>~/.claude-code-router/config.json</code> with your providers and routing rules:</p>
+
+        <pre><code>{
+  "Providers": [
+    {
+      "name": "openrouter",
+      "api_base_url": "https://openrouter.ai/api/v1/chat/completions",
+      "api_key": "$OPENROUTER_API_KEY",
+      "models": ["anthropic/claude-sonnet-4", "google/gemini-2.5-pro"],
+      "transformer": { "use": ["openrouter"] }
+    },
+    {
+      "name": "deepseek",
+      "api_base_url": "https://api.deepseek.com/chat/completions",
+      "api_key": "$DEEPSEEK_API_KEY",
+      "models": ["deepseek-chat", "deepseek-reasoner"],
+      "transformer": { "use": ["deepseek"] }
+    },
+    {
+      "name": "ollama",
+      "api_base_url": "http://localhost:11434/v1/chat/completions",
+      "api_key": "ollama",
+      "models": ["qwen2.5-coder:latest"]
+    }
+  ],
+  "Router": {
+    "default": "deepseek,deepseek-chat",
+    "think": "openrouter,anthropic/claude-sonnet-4",
+    "background": "ollama,qwen2.5-coder:latest"
+  }
+}</code></pre>
+
+        <p>API keys can reference environment variables with <code>$VAR_NAME</code> syntax for secure key management.</p>
+
+        <h3>Step 3: Run</h3>
+
+        <p>The simplest way: start the router and launch Claude Code in one command:</p>
+
+        <pre><code>ccr code</code></pre>
+
+        <p>Or manage the service separately:</p>
+
+        <pre><code># Start the router in the background
+ccr start
+
+# Export environment variables for Claude Code
+eval "$(ccr activate)"
+
+# Run Claude Code normally — requests route through the proxy
+claude</code></pre>
+
+        <h2 id="supported-providers">Supported Providers and Models</h2>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Provider</th>
+              <th scope="col">Notable Models</th>
+              <th scope="col">Best For</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>OpenRouter</strong></td>
+              <td>Claude, GPT-4, Gemini, Llama, Mistral, 200+ more</td>
+              <td>Maximum model variety, single API key</td>
+            </tr>
+            <tr>
+              <td><strong>DeepSeek</strong></td>
+              <td>deepseek-chat, deepseek-reasoner</td>
+              <td>Low-cost reasoning, strong code generation</td>
+            </tr>
+            <tr>
+              <td><strong>Google Gemini</strong></td>
+              <td>gemini-2.5-flash, gemini-2.5-pro</td>
+              <td>Large context windows, multimodal tasks</td>
+            </tr>
+            <tr>
+              <td><strong>Ollama (local)</strong></td>
+              <td>Qwen 2.5 Coder, Llama, Mistral, any GGUF model</td>
+              <td>Privacy, offline use, zero API cost</td>
+            </tr>
+            <tr>
+              <td><strong>Groq</strong></td>
+              <td>Llama, Mistral (fast inference)</td>
+              <td>Speed-critical tasks, low latency</td>
+            </tr>
+            <tr>
+              <td><strong>Anthropic</strong></td>
+              <td>Claude Opus, Sonnet, Haiku</td>
+              <td>Native passthrough (mix with other providers)</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p><strong>Recommendation for most developers:</strong> Start with OpenRouter as your single provider; it gives you access to every major model through one API key. Once you know which models you use most, add direct provider accounts (DeepSeek, Gemini) for lower per-token costs. Add Ollama if you want local/offline capability.</p>
+
+        <h2 id="context-aware-routing">Context-Aware Routing Configuration</h2>
+
+        <p>The <code>Router</code> config supports task-type routing. Each rule maps to a <code>"provider,model"</code> string, letting you automatically use the right model for each type of work:</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Rule</th>
+              <th scope="col">When It Applies</th>
+              <th scope="col">Recommended Model Type</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>default</code></td>
+              <td>All general requests</td>
+              <td>Good all-rounder (DeepSeek Chat, Claude Sonnet)</td>
+            </tr>
+            <tr>
+              <td><code>think</code></td>
+              <td>Extended thinking / complex reasoning</td>
+              <td>Strongest reasoning model (Claude Opus, DeepSeek Reasoner)</td>
+            </tr>
+            <tr>
+              <td><code>background</code></td>
+              <td>Background and lightweight tasks</td>
+              <td>Cheap/fast model (local Ollama, Haiku)</td>
+            </tr>
+            <tr>
+              <td><code>longContext</code></td>
+              <td>When token count exceeds <code>longContextThreshold</code></td>
+              <td>Large context model (Gemini 2.5 Pro)</td>
+            </tr>
+            <tr>
+              <td><code>webSearch</code></td>
+              <td>Web search tasks</td>
+              <td>Model with search capabilities</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>This lets you use a cheap local model for background tasks, a reasoning-focused model for complex thinking, and a large-context model when your session grows, all automatically.</p>
+
+        <h2 id="troubleshooting">Troubleshooting Common Issues</h2>
+
+        <h3>Port 3456 already in use</h3>
+        <p>Another process is using the router's default port. Either stop the conflicting process (<code>lsof -i :3456</code> to find it) or configure a different port in your <code>config.json</code> with <code>"port": 3457</code>.</p>
+
+        <h3>ANTHROPIC_BASE_URL override not working</h3>
+        <p>If Claude Code still hits Anthropic's API after starting the router, check that the environment variable is set in the same shell session: run <code>echo $ANTHROPIC_BASE_URL</code>; it should show <code>http://localhost:3456</code>. Using <code>ccr code</code> (instead of manual <code>ccr start</code> + <code>claude</code>) handles this automatically.</p>
+
+        <h3>Model doesn't support extended thinking</h3>
+        <p>Not all models support Claude Code's extended thinking feature. If you see errors when the agent tries to "think," route <code>think</code> tasks to a model that supports it (Claude Sonnet/Opus via OpenRouter, or DeepSeek Reasoner) and use simpler models for <code>default</code> and <code>background</code> tasks only.</p>
+
+        <h3>Tool use / function calling errors</h3>
+        <p>Claude Code relies heavily on tool use (function calling). Some models have limited or no tool-use support. Stick to models known to handle tools well: Claude (any version), GPT-4+, Gemini Pro, DeepSeek Chat. Smaller local models via Ollama may struggle with complex tool-use patterns.</p>
+
+        <h3>Ollama connection refused</h3>
+        <p>Make sure Ollama is running (<code>ollama serve</code>) and the model is pulled (<code>ollama pull qwen2.5-coder</code>). The <code>api_base_url</code> must include the full path: <code>http://localhost:11434/v1/chat/completions</code>.</p>
+
+        <h2 id="built-in-opusplan">Built-In Alternative: opusplan</h2>
+
+        <p>If you don't need non-Anthropic models, Claude Code has built-in model routing via the <code>opusplan</code> alias. It uses Opus 4.6 for planning and reasoning, then switches to Sonnet 4.6 for code execution, saving money on implementation tokens while keeping the best reasoning for architectural decisions.</p>
+
+        <p>Enable it with any of these methods (highest to lowest priority):</p>
+
+        <ul>
+          <li><strong>Mid-session:</strong> <code>/model opusplan</code></li>
+          <li><strong>At startup:</strong> <code>claude --model opusplan</code></li>
+          <li><strong>Environment variable:</strong> <code>export ANTHROPIC_MODEL=opusplan</code></li>
+          <li><strong>Settings file:</strong> Add <code>"model": "opusplan"</code> to <code>~/.claude/settings.json</code></li>
+        </ul>
+
+        <p>Other available model aliases: <code>sonnet</code>, <code>opus</code>, <code>haiku</code>, <code>sonnet[1m]</code> (1M token context window). Aliases always point to the latest model version.</p>
+
+        <h2 id="configure-model-aliases">How to Configure Model Aliases</h2>
+
+        <p>Beyond <code>opusplan</code>, you can pin what each alias resolves to using environment variables:</p>
+
+        <ul>
+          <li><code>ANTHROPIC_DEFAULT_OPUS_MODEL</code>: what <code>opus</code> and <code>opusplan</code> (plan mode) resolve to</li>
+          <li><code>ANTHROPIC_DEFAULT_SONNET_MODEL</code>: what <code>sonnet</code> and <code>opusplan</code> (execution mode) resolve to</li>
+          <li><code>ANTHROPIC_DEFAULT_HAIKU_MODEL</code>: what <code>haiku</code> and background tasks resolve to</li>
+        </ul>
+
+        <p>To pin a specific model version instead of using the alias, pass the full model ID: <code>claude --model claude-opus-4-6</code>.</p>
+
+        <h2 id="opusplan-vs-community-router">Community Router vs opusplan: Which to Use?</h2>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Criteria</th>
+              <th scope="col">opusplan (built-in)</th>
+              <th scope="col">claude-code-router (community)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Setup</td>
+              <td>Zero, one flag or command</td>
+              <td>Install proxy + configure providers</td>
+            </tr>
+            <tr>
+              <td>Models available</td>
+              <td>Anthropic only (Opus, Sonnet, Haiku)</td>
+              <td>Hundreds (OpenRouter, DeepSeek, Ollama, Gemini, etc.)</td>
+            </tr>
+            <tr>
+              <td>Routing logic</td>
+              <td>Plan mode = Opus, execution = Sonnet</td>
+              <td>Context-aware: default, think, background, longContext</td>
+            </tr>
+            <tr>
+              <td>Reliability</td>
+              <td>Official, supported by Anthropic</td>
+              <td>Community-maintained, MIT license</td>
+            </tr>
+            <tr>
+              <td>Local models</td>
+              <td>No</td>
+              <td>Yes (via Ollama)</td>
+            </tr>
+            <tr>
+              <td>Cost control</td>
+              <td>Saves on execution tokens</td>
+              <td>Full control: use free/cheap models for any task type</td>
+            </tr>
+            <tr>
+              <td>Tool compatibility</td>
+              <td>Full Claude Code feature support</td>
+              <td>Depends on model; some don't support all features</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p><strong>Use <code>opusplan</code> if</strong> you want the simplest path to cost-optimized Claude Code usage with zero setup and full feature compatibility.</p>
+
+        <p><strong>Use the community router if</strong> you want to use non-Anthropic models, run local models via Ollama, or need fine-grained control over which model handles which type of task.</p>
+
+        <h2 id="cost-tips">Cost Tips for Claude Code</h2>
+
+        <ul>
+          <li><strong><code>opusplan</code> for best quality-to-cost ratio</strong>: Opus-quality reasoning on architecture decisions, Sonnet efficiency on implementation. The recommended starting point for most developers.</li>
+          <li><strong>Haiku for quick tasks</strong>: use <code>claude --model haiku</code> for simple questions, quick edits, and boilerplate generation. Significantly cheaper than both Opus and Sonnet.</li>
+          <li><strong>Community router + cheap models for boilerplate</strong>: route background tasks to DeepSeek or local Ollama models. Save Anthropic credits for work that needs Claude's reasoning.</li>
+          <li><strong>Monitor your usage</strong>: use the <code>/cost</code> command in Claude Code to see token consumption and spending for your current session.</li>
+          <li><strong>Plan before executing</strong>: enter plan mode (<code>Shift+Tab</code> twice) to think through your approach before the model starts generating code. Better plans mean fewer wasted iterations.</li>
+        </ul>
+
+        <p>For extending Claude Code's capabilities beyond model routing, <a href="/browse">browse available skills on PolySkill</a>, portable packages that add coding standards, workflow automations, and specialized prompts to your sessions.</p>
+
+        <p>Related: <a href="/blog/how-to-add-skills-to-claude-code">How to Add Skills to Claude Code (2026)</a> | <a href="/blog/codex-vs-claude-code">Codex vs Claude Code: Full Comparison (2026)</a> | <a href="/blog/claude-code-vs-cursor">Claude Code vs Cursor: Full Comparison (2026)</a> | <a href="/blog/claude-code-vs-gemini-cli">Claude Code vs Gemini CLI (2026)</a> | <a href="/blog/claude-code-install">How to Install Claude Code (2026)</a> | <a href="/blog/claude-code-pricing">Claude Code Pricing (2026)</a> | <a href="/blog/claude-code-permissions">Claude Code Permissions (2026)</a> | <a href="/blog/claude-code-memory">Claude Code Memory (2026)</a></p>
+
+        <div class="blog-faq-section">
+          <h2 id="faq">Common Questions About Claude Code Routing</h2>
+
+          <h3>What is Claude Code Router?</h3>
+          <p>Claude Code Router is an open-source proxy tool (<a href="https://github.com/musistudio/claude-code-router" target="_blank" rel="noopener">github.com/musistudio/claude-code-router</a>) that lets you route Claude Code requests to alternative AI providers: OpenRouter, DeepSeek, Ollama (local models), Google Gemini, and more. Claude Code also has built-in model routing via the <code>opusplan</code> alias, which switches between Opus (planning) and Sonnet (execution).</p>
+
+          <h3>How do I switch models in Claude Code?</h3>
+          <p>Four ways, in priority order: (1) mid-session with <code>/model &lt;alias&gt;</code>, (2) at startup with <code>claude --model &lt;alias&gt;</code>, (3) via the <code>ANTHROPIC_MODEL</code> environment variable, (4) in <code>~/.claude/settings.json</code>. Available aliases include <code>sonnet</code>, <code>opus</code>, <code>haiku</code>, and <code>opusplan</code>.</p>
+
+          <h3>Can I use Claude Code with OpenRouter?</h3>
+          <p>Yes, via the community claude-code-router project. Install it with <code>npm install -g @musistudio/claude-code-router</code>, configure your OpenRouter API key and models in <code>~/.claude-code-router/config.json</code>, then run <code>ccr code</code>. The router proxies requests from Claude Code to OpenRouter, giving you access to hundreds of models.</p>
+
+          <h3>Is opusplan free?</h3>
+          <p>No. <code>opusplan</code> uses your Anthropic API credits or Claude subscription. It routes to Opus (more expensive) during plan mode and Sonnet (cheaper) during execution. The cost savings come from using the cheaper model for the bulk of code generation work while reserving the more capable model for planning.</p>
+
+          <h3>Does Claude Code Router support local models?</h3>
+          <p>Yes. The community claude-code-router supports <a href="https://ollama.com/" target="_blank" rel="noopener">Ollama</a>, which runs models locally on your machine. Configure Ollama as a provider in <code>config.json</code> with <code>api_base_url</code> pointing to <code>http://localhost:11434/v1/chat/completions</code>, and you can route Claude Code requests to any local model like Qwen 2.5 Coder or Llama.</p>
+        </div>
+
+        <a href="/blog" class="blog-back">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>

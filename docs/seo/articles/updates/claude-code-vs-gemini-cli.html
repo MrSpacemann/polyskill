@@ -37,7 +37,7 @@
     "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
     "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
     "datePublished": "2026-02-28",
-    "dateModified": "2026-06-29",
+    "dateModified": "2026-08-07",
     "image": "https://polyskill.ai/img/og/claude-code-vs-gemini-cli.jpg",
     "speakable": { "@type": "SpeakableSpecification", "cssSelector": ["h1.blog-article-title", ".blog-tldr"] },
     "mainEntityOfPage": "https://polyskill.ai/blog/claude-code-vs-gemini-cli"
@@ -64,7 +64,7 @@
         "name": "Is Gemini CLI free?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "Yes. Gemini CLI is completely free with any Google account. You get up to 60 requests per minute and 1,000 requests per day with access to Gemini 3 Pro and a 1 million token context window. No credit card required."
+          "text": "Yes. Gemini CLI is completely free with any Google account. You get up to 60 requests per minute and 1,000 requests per day with access to Gemini 2.5 Pro and a 1 million token context window. No credit card required."
         }
       },
       {
@@ -80,7 +80,7 @@
         "name": "How many requests per day do you get free on Gemini CLI?",
         "acceptedAnswer": {
           "@type": "Answer",
-          "text": "About 1,000/day via a Google account login; roughly 1,500/day on the free API tier with Flash models; but only about 50/day if you use Gemini 3 Pro on the free API tier. The login method decides your limit."
+          "text": "About 1,000/day via a Google account login; roughly 1,500/day on the free API tier with Flash models; but only about 50/day if you use Gemini 2.5 Pro on the free API tier. The login method decides your limit."
         }
       },
       {
@@ -163,7 +163,7 @@
     <article class="blog-article">
       <header class="blog-article-header">
         <h1 class="blog-article-title">Claude Code vs Gemini CLI (2026): Pricing, Free Tier & Models</h1>
-        <div class="blog-article-meta">Published February 28, 2026 · Updated June 29, 2026</div>
+        <div class="blog-article-meta">Published February 28, 2026 · Updated August 7, 2026</div>
       </header>
 
       <img src="/img/og/claude-code-vs-gemini-cli.jpg"
@@ -174,10 +174,10 @@
       <div class="blog-article-body">
         <div class="blog-tldr">
           <div class="blog-tldr-label">The short version</div>
-          <p>Gemini CLI is free with any Google account (Gemini 3 Pro, a 1M-token context window, 60 requests/min, no trial gate). Claude Code costs $20–$200/mo and buys extended-thinking reasoning, a native VS Code extension, and sub-agent orchestration. Run Gemini CLI for free daily velocity; bring in Claude Code when a task needs real planning depth.</p>
+          <p>Gemini CLI is free with any Google account (Gemini 2.5 Pro, a 1M-token context window, 60 requests/min, no trial gate). Claude Code costs $20–$200/mo and buys extended-thinking reasoning, a native VS Code extension, and sub-agent orchestration. Run Gemini CLI for free daily velocity; bring in Claude Code when a task needs real planning depth.</p>
         </div>
 
-        <p>Gemini CLI went from obscurity to 95,900 GitHub stars in eight months. Google's open-source terminal agent gives developers free access to Gemini 3 Pro with a million-token context window, no subscription required. <a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank" rel="noopener">Claude Code</a>, Anthropic's proprietary agent, counters with deeper reasoning, VS Code integration, and the most autonomous multi-file editing in the market. This guide compares both tools across pricing, capabilities, extensibility, and real-world use cases.</p>
+        <p>Gemini CLI went from obscurity to 95,900 GitHub stars in eight months. Google's open-source terminal agent gives developers free access to Gemini 2.5 Pro with a million-token context window, no subscription required. <a href="https://docs.anthropic.com/en/docs/claude-code/overview" target="_blank" rel="noopener">Claude Code</a>, Anthropic's proprietary agent, counters with deeper reasoning, VS Code integration, and the most autonomous multi-file editing in the market. This guide compares both tools across pricing, capabilities, extensibility, and real-world use cases.</p>
 
         <h2 id="two-terminal-agents">Two Terminal Agents, Two Business Models</h2>
 
@@ -191,9 +191,9 @@
 
         <h2 id="pricing">Gemini CLI Pricing vs Claude Code: Free Tier and Beyond</h2>
 
-        <p>The biggest practical difference between these tools is cost. Gemini CLI is free — genuinely free, not freemium. Sign in with any Google account and you get access to Gemini 3 Pro with 60 requests per minute and 1,000 requests per day. No credit card. No trial period. No feature gating.</p>
+        <p>The biggest practical difference between these tools is cost. Gemini CLI is free — genuinely free, not freemium. Sign in with any Google account and you get access to Gemini 2.5 Pro with 60 requests per minute and 1,000 requests per day. No credit card. No trial period. No feature gating.</p>
 
-        <p>Claude Code requires a paid subscription. The Pro plan at $20/month gives you rate-limited access to the full agentic experience. Max plans at $100/month (5x limits) or $200/month (20x limits) are for heavy users who need higher throughput. For a full plan-by-plan breakdown, see our <a href="/blog/claude-code-pricing">Claude Code pricing</a> guide.</p>
+        <p>Claude Code requires a paid subscription. The Pro plan at $20/month gives you rate-limited access to the full agentic experience. Max plans at $100/month (5x limits) or $200/month (20x limits) are for heavy users who need higher throughput.</p>
 
         <div class="table-wrap">
         <table>
@@ -260,7 +260,7 @@
               <td>Scripts, automation, high request counts</td>
             </tr>
             <tr>
-              <td>API key — Gemini 3 Pro (free)</td>
+              <td>API key — Gemini 2.5 Pro (free)</td>
               <td><strong>~5 req/min, 50 req/day</strong></td>
               <td>Light testing of the Pro model only</td>
             </tr>
@@ -268,15 +268,15 @@
         </table>
         </div>
 
-        <p>The headline trap is <strong>Pro on the free API tier: roughly 50 requests a day.</strong> Wire Gemini 3 Pro into a nightly script via an API key and it dies after 50 calls — the fix usually isn't paying, it's switching that job to Flash, which gives you ~1,500/day for free. To stay on the free tier: log in with your Google account for interactive work, default to Flash for anything scripted, and never put a paid API key behind an automated loop without a budget alert. Quotas shift, so confirm against Google's <a href="https://google-gemini.github.io/gemini-cli/docs/quota-and-pricing.html" target="_blank" rel="noopener">official quota-and-pricing page</a> before relying on a number.</p>
+        <p>The headline trap is <strong>Pro on the free API tier: roughly 50 requests a day.</strong> Wire Gemini 2.5 Pro into a nightly script via an API key and it dies after 50 calls — the fix usually isn't paying, it's switching that job to Flash, which gives you ~1,500/day for free. To stay on the free tier: log in with your Google account for interactive work, default to Flash for anything scripted, and never put a paid API key behind an automated loop without a budget alert. Quotas shift, so confirm against Google's <a href="https://google-gemini.github.io/gemini-cli/docs/quota-and-pricing.html" target="_blank" rel="noopener">official quota-and-pricing page</a> before relying on a number.</p>
 
         <p>You start paying only when you need higher limits (a paid Gemini Code Assist subscription) or production-grade reliability with no daily cap (pay-as-you-go API / Vertex AI, billed per token). Interactive solo coding usually stays free; automated, high-volume, or production workloads eventually pay.</p>
 
         <h2 id="context-models-reasoning">Context, Models, and Reasoning</h2>
 
-        <p>Gemini CLI runs on Gemini 3 Pro with intelligent routing; it automatically switches between Pro and Flash models depending on task complexity. The headline feature is the 1 million token context window available on the free tier. That's enough to hold most entire codebases in a single session. Gemini CLI also has Google Search grounding: it can query Google Search mid-task to pull in current documentation, API references, or Stack Overflow answers without leaving the terminal.</p>
+        <p>Gemini CLI runs on Gemini 2.5 Pro with intelligent routing; it automatically switches between Pro and Flash models depending on task complexity. The headline feature is the 1 million token context window available on the free tier. That's enough to hold most entire codebases in a single session. Gemini CLI also has Google Search grounding: it can query Google Search mid-task to pull in current documentation, API references, or Stack Overflow answers without leaving the terminal.</p>
 
-        <p>Claude Code runs on Anthropic's latest models, Opus 4.8 and Sonnet 4.6, with the ability to switch between them using the <code>/model</code> command. The standard context window is 200K tokens, with 1M available in beta on higher-tier plans. Claude Code's distinctive feature is extended thinking: a deep reasoning mode where the model works through complex problems step by step before generating code. For architectural decisions, tricky debugging, and multi-step refactors, this reasoning depth produces noticeably better results.</p>
+        <p>Claude Code runs on Anthropic's latest models, Opus 4.6 and Sonnet 4.6, with the ability to switch between them using the <code>/model</code> command. The standard context window is 200K tokens, with 1M available in beta on higher-tier plans. Claude Code's distinctive feature is extended thinking: a deep reasoning mode where the model works through complex problems step by step before generating code. For architectural decisions, tricky debugging, and multi-step refactors, this reasoning depth produces noticeably better results.</p>
 
         <p>Consider a developer migrating an Express.js app to Hono. With Gemini CLI, she feeds the entire codebase into the 1M context window and gets route-by-route suggestions pulled from Hono's current docs via Search grounding. With Claude Code, she triggers extended thinking, which maps dependency chains across 40+ files before writing a migration plan that accounts for middleware ordering, error handling, and test coverage. Different strengths for different parts of the same project.</p>
 
@@ -322,8 +322,8 @@
             </tr>
             <tr>
               <td>Models</td>
-              <td>Opus 4.8, Sonnet 4.6</td>
-              <td>Gemini 3 Pro, Flash (auto-routed)</td>
+              <td>Opus 4.6, Sonnet 4.6</td>
+              <td>Gemini 2.5 Pro, Flash (auto-routed)</td>
             </tr>
             <tr>
               <td>Context window</td>
@@ -411,19 +411,21 @@
 
         <p>Bring in Claude Code the first time Gemini CLI stalls on something genuinely hard — a multi-file refactor that needs a real plan, an architectural call with live trade-offs, a bug that wants reasoning instead of retries. That stall is the moment its subscription stops reading as a cost and starts reading as leverage.</p>
 
-        <p>More on this: <a href="/blog/codex-vs-claude-code">Codex vs Claude Code (2026)</a> | <a href="/blog/claude-code-vs-cursor">Claude Code vs Cursor (2026)</a> | <a href="/blog/claude-code-pricing">Claude Code Pricing</a> | <a href="/blog/claude-code-router">Claude Code Router Guide</a> | <a href="/blog/how-to-add-skills-to-claude-code">How to Add Skills to Claude Code</a></p>
+        <p>More on this: <a href="/blog/codex-vs-claude-code">Codex vs Claude Code (2026)</a> | <a href="/blog/claude-code-vs-cursor">Claude Code vs Cursor (2026)</a> | <a href="/blog/claude-code-router">Claude Code Router Guide</a> | <a href="/blog/how-to-add-skills-to-claude-code">How to Add Skills to Claude Code</a></p>
+
+        <p>Related: <a href="/blog/claude-code-pricing">Claude Code Pricing (2026)</a> | <a href="/blog/claude-code-install">How to Install Claude Code (2026)</a> | <a href="/blog/claude-code-agent-teams">Claude Code Agent Teams (2026)</a> | <a href="/blog/claude-code-hooks">Claude Code Hooks (2026)</a></p>
 
         <div class="blog-faq-section">
           <h2 id="faq">Gemini CLI FAQ</h2>
 
           <h3>Is Gemini CLI free?</h3>
-          <p>Yes. Gemini CLI is completely free with any Google account. You get up to 60 requests per minute and 1,000 requests per day with access to Gemini 3 Pro and a 1 million token context window. No credit card required.</p>
+          <p>Yes. Gemini CLI is completely free with any Google account. You get up to 60 requests per minute and 1,000 requests per day with access to Gemini 2.5 Pro and a 1 million token context window. No credit card required.</p>
 
           <h3>How much does Gemini CLI cost compared to Claude Code?</h3>
           <p>Gemini CLI is free with a Google account (60 req/min, 1,000 req/day). Claude Code requires a Pro subscription at $20/month or Max at $100–$200/month. For higher Gemini CLI limits, Google AI Pro costs $19.99/month.</p>
 
           <h3>How many requests per day do you get free on Gemini CLI?</h3>
-          <p>About 1,000/day via a Google account login; roughly 1,500/day on the free API tier with Flash models; but only about 50/day if you use Gemini 3 Pro on the free API tier. The login method decides your limit.</p>
+          <p>About 1,000/day via a Google account login; roughly 1,500/day on the free API tier with Flash models; but only about 50/day if you use Gemini 2.5 Pro on the free API tier. The login method decides your limit.</p>
 
           <h3>Why am I hitting Gemini CLI limits so fast?</h3>
           <p>You're probably on the free API tier using the Pro model, which is capped near 50 requests a day. Switch scripted jobs to Flash (~1,500/day) or log in with your Google account (~1,000/day) for interactive work.</p>

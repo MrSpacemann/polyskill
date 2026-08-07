@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Plan Mode (2026): Shift+Tab, /plan &amp; When to Use It | PolySkill</title>
+  <meta name="description" content="Claude Code plan mode explained: what it blocks, the three ways to enter it, the approval prompt's options, editing a plan with Ctrl+G, setting it as a repo default, and where it leaks.">
+  <meta property="og:title" content="Claude Code Plan Mode (2026): Shift+Tab, /plan &amp; When to Use It">
+  <meta property="og:description" content="What plan mode blocks, three ways to enter it, the approval prompt's options, editing a plan before it runs, and the one case where its blocks don't apply.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://polyskill.ai/blog/claude-code-plan-mode">
+  <meta property="og:image" content="https://polyskill.ai/img/og/claude-code-plan-mode.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="669">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude Code Plan Mode (2026): Shift+Tab, /plan &amp; When to Use It">
+  <meta name="twitter:description" content="What plan mode blocks, three ways to enter it, the approval prompt's options, editing a plan before it runs, and the one case where its blocks don't apply.">
+  <meta name="twitter:image" content="https://polyskill.ai/img/og/claude-code-plan-mode.jpg">
+  <link rel="canonical" href="https://polyskill.ai/blog/claude-code-plan-mode">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Claude Code Plan Mode: Read First, Edit Second (2026)",
+    "description": "Claude Code plan mode explained: what it blocks, the three ways to enter it, the approval prompt's options, editing a plan with Ctrl+G, setting it as a repo default, and where it leaks.",
+    "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
+    "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
+    "datePublished": "2026-08-07",
+    "dateModified": "2026-08-07",
+    "image": "https://polyskill.ai/img/og/claude-code-plan-mode.jpg",
+    "mainEntityOfPage": "https://polyskill.ai/blog/claude-code-plan-mode"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyskill.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://polyskill.ai/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Code Plan Mode" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is plan mode in Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Plan mode is a Claude Code permission mode in which Claude researches and proposes changes without making them. It reads files and runs shell commands to explore, then writes a plan and waits for your approval. Source edits stay blocked until you approve, so you review the approach before any code changes rather than reading a diff afterwards."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I turn on plan mode?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Three ways. Press Shift+Tab in the CLI to cycle default to acceptEdits to plan, watching for the paused plan mode on badge in the status bar. Prefix a single prompt with /plan to plan just that one request. Or start the session in it with claude --permission-mode plan. In VS Code, Desktop, and claude.ai, pick Plan from the mode selector instead."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does plan mode stop Claude from editing files?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes, with one exception. In a normal session, plan mode blocks source edits until you approve the plan. In a session started with bypass permissions available, Claude Code does not enforce plan mode's blocks: Claude is still told to plan without editing, but an edit it attempts during planning runs without a prompt. So plan mode is a real guardrail everywhere except in bypass-permissions sessions."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I exit plan mode?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Press Shift+Tab again to leave plan mode without approving a plan. Approving a plan also exits it and switches the session into whichever mode the approval option describes, so Claude starts editing immediately. To plan again afterwards, cycle back with Shift+Tab or prefix your next prompt with /plan."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I make plan mode the default?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Set permissions.defaultMode to \"plan\" in a settings file. Put it in .claude/settings.json to make planning the default for one repository, or in ~/.claude/settings.json to apply it to every project. In the desktop app, a mode you pick in the selector is remembered per folder, except Plan, which applies to the current session only."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <article class="blog-article">
+      <header class="blog-article-header">
+        <h1 class="blog-article-title">Claude Code Plan Mode: Read First, Edit Second (2026)</h1>
+        <div class="blog-article-meta">Published August 7, 2026 · Updated August 7, 2026</div>
+      </header>
+
+      <img src="/img/og/claude-code-plan-mode.jpg"
+           srcset="/img/og/claude-code-plan-mode-600w.jpg 600w, /img/og/claude-code-plan-mode-1000w.jpg 1000w, /img/og/claude-code-plan-mode.jpg 1200w"
+           sizes="(max-width: 768px) calc(100vw - 2rem), 720px"
+           alt="Claude Code plan mode — a paused agent drafting a written plan before any file gets edited" class="blog-hero-img" width="1200" height="669" fetchpriority="high">
+
+      <div class="blog-article-body">
+        <div class="blog-tldr">
+          <div class="blog-tldr-label">In one line</div>
+          <p><strong>Claude Code plan mode</strong> is a read-only permission mode where Claude explores your codebase and writes a plan without touching your source, entered with <code>Shift+Tab</code>, a <code>/plan</code> prefix, or <code>claude --permission-mode plan</code>, and exited when you approve the plan.</p>
+        </div>
+
+        <p>What if the fastest way to get an agent to finish is to stop it from starting? That sounds backwards until the first time you watch a coding agent confidently refactor the wrong module for eleven minutes. <strong>Claude Code plan mode</strong> exists for exactly that failure: it lets Claude read everything, run whatever exploration it needs, and then hand you a written plan instead of a diff. You approve the approach, not the aftermath. This guide covers precisely what plan mode blocks, the three ways in, what each option on the approval prompt actually does to your session, how to edit a plan before Claude runs it, and the one situation where plan mode's blocks quietly don't apply.</p>
+
+        <h2 id="what-it-blocks">What Plan Mode Actually Blocks</h2>
+
+        <p>Plan mode tells Claude to research and propose changes without making them. Claude reads files, runs shell commands to explore the repository, and writes a plan; it does not edit your source. Edits stay blocked until you approve the plan.</p>
+
+        <p>The important nuance is that plan mode is not "read-only" in the naive sense. Claude can still run commands, which is what makes the plans good: it can check <code>git log</code>, run your test suite, grep for call sites, and inspect what's actually there rather than guessing from filenames. What it can't do is change anything. Commands outside the built-in read-only set prompt for approval, so you stay in the loop on the exploration too.</p>
+
+        <p>There's one modern wrinkle worth knowing. When auto mode is available on your account and the <code>useAutoModeDuringPlan</code> setting is on, which it is by default, a classifier reviews shell commands during planning instead of prompting you. Approved commands run and rejected ones are blocked. That makes planning noticeably less interrupt-heavy on accounts that qualify, and it's the reason two people can describe plan mode's prompting behavior differently and both be right.</p>
+
+        <p>Plan mode is one of six permission modes, and understanding where it sits on that ladder is most of the mental model; the <a href="/blog/claude-code-permissions">full permissions guide</a> lays out all six side by side.</p>
+
+        <h2 id="three-ways-in">Three Ways In: Shift+Tab, /plan, and the Flag</h2>
+
+        <p>Pick the one that matches how long you want to stay there.</p>
+
+        <p><strong>Mid-session, for a while:</strong> press <code>Shift+Tab</code>. That cycles <code>default</code> to <code>acceptEdits</code> to <code>plan</code>. The status bar tells you where you landed: <code>⏸ plan mode on</code> for plan, <code>⏵⏵ accept edits on</code> for acceptEdits, and a gray <code>⏸ manual mode on</code> for the default mode. That gray badge trips people up, because the mode whose config value is <code>default</code> is labeled <strong>Manual</strong> in the CLI and the extensions. Same mode, two names.</p>
+
+        <p><strong>For exactly one prompt:</strong> prefix it with <code>/plan</code>. This is the underrated option. You don't change the session's mode, you just make this one request go through planning, which fits the common case where 90% of your session is fine on autopilot and one request is scary.</p>
+
+        <p><strong>From the start:</strong> launch with the flag.</p>
+
+        <pre><code>claude --permission-mode plan</code></pre>
+
+        <p>Outside the terminal, the mechanics change but the mode doesn't. In VS Code you click the mode indicator at the bottom of the prompt box and choose <strong>Plan</strong>. The JetBrains plugin runs Claude Code in the IDE terminal, so <code>Shift+Tab</code> works exactly as it does in a normal shell. The desktop app and claude.ai use a mode selector next to the send button.</p>
+
+        <p>To leave without approving anything, press <code>Shift+Tab</code> again. Nothing you explored is lost; you just stop being blocked.</p>
+
+        <h2 id="approval-prompt">The Approval Prompt: Your Three Options</h2>
+
+        <p>When the plan is ready, Claude presents it and asks how to proceed. The three choices aren't cosmetic. Each one drops your session into a different permission mode, which is the part people miss.</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Option</th>
+              <th scope="col">What happens next</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Yes, and use auto mode</strong></td>
+              <td>Approves and continues in auto mode, where a classifier reviews actions instead of prompting you. Reads <strong>Yes, auto-accept edits</strong> when auto mode isn't available, and <strong>Yes, and bypass permissions</strong> in sessions started with that enabled.</td>
+            </tr>
+            <tr>
+              <td><strong>Yes, manually approve edits</strong></td>
+              <td>Approves the plan and reviews every edit individually. The cautious path.</td>
+            </tr>
+            <tr>
+              <td><strong>No, keep planning</strong></td>
+              <td>Stays in plan mode. Tell Claude what to change and it revises.</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>"No, keep planning" is the option that earns plan mode its reputation. Sofia, an engineer on a payments team, uses it as a deliberate two-round ritual: the first plan is always too broad, she names the two things she doesn't want touched, and the second plan is the one she approves. She reckons it costs her ninety seconds and has twice caught a proposed schema change she'd never have spotted in a 400-line diff.</p>
+
+        <p>Approving a plan also names the session from the plan's content automatically, unless you already set a name with <code>--name</code> or <code>/rename</code>. Small thing, genuinely useful when you're four sessions deep.</p>
+
+        <h2 id="edit-the-plan">Editing the Plan Before Claude Runs It</h2>
+
+        <p>Press <code>Ctrl+G</code> at the approval prompt to open the proposed plan in your default text editor and change it directly. This is the feature most plan-mode write-ups skip, and it changes the ergonomics completely. Instead of describing an amendment in prose and hoping Claude interprets it the way you meant, you delete step 4, tighten the wording on step 2, save, and the edited plan is what gets executed.</p>
+
+        <p>If the <code>showClearContextOnPlanAccept</code> setting is enabled, the approval list gains a first option that approves the plan and clears the planning context. On a long exploration that filled the window with file reads, that's the difference between starting implementation with a clean context and starting it with 60,000 tokens of grep output still loaded. Worth knowing about before your <a href="/blog/claude-code-memory">context and memory setup</a> starts fighting you.</p>
+
+        <h2 id="default-for-a-repo">Making Plan Mode the Default for a Repo</h2>
+
+        <p>For a repository where mistakes are expensive, make planning the starting state rather than something you remember to press. Set <code>defaultMode</code> in <code>.claude/settings.json</code>:</p>
+
+        <pre><code>{
+  "permissions": {
+    "defaultMode": "plan"
+  }
+}</code></pre>
+
+        <p>Because that file is checked into git, everyone who opens Claude Code in that repo starts in plan mode. Put the same block in <code>~/.claude/settings.json</code> instead and it applies to every project you work on. The desktop app reads the same settings files and applies the mode to new local sessions.</p>
+
+        <p>One asymmetry to expect: in the desktop app, a mode you pick in the selector is remembered per folder and beats <code>defaultMode</code> for that folder. Plan is the exception, and picking it applies only to the current session. So a checked-in <code>"defaultMode": "plan"</code> keeps working on desktop even after someone picks Plan manually.</p>
+
+        <p>Teams that go this route usually pair it with shared conventions, since a plan is only as good as the context the agent has about your codebase. Setting up <a href="/browse">a few shared skills</a> gives the planner your team's actual patterns to plan against rather than generic ones.</p>
+
+        <h2 id="where-it-leaks">Where Plan Mode Leaks</h2>
+
+        <p>Here's the caveat that belongs in every honest write-up and appears in almost none of them: <strong>in a session where bypass permissions are available, Claude Code does not enforce plan mode's blocks.</strong> Claude is still instructed to plan without editing, but a file edit or shell command it attempts during planning runs without prompting you. Explicit ask rules and the removal circuit breaker still fire, but the guardrail you thought you had is now an instruction rather than a mechanism.</p>
+
+        <p>This matters because of how people actually end up in that state. You start a session with <code>--dangerously-skip-permissions</code> for a throwaway task in a container, keep the session alive, later switch into plan mode for something serious, and reasonably assume plan mode protects you. It doesn't, in that session. Protected-path writes follow the same pattern: normally prompted in plan mode, allowed in sessions with bypass permissions available, and routed to the classifier when auto mode is available during planning.</p>
+
+        <p>The other limitation is more mundane and more common. Plan mode constrains the agent, not the plan's quality. A confident, well-formatted plan built on a wrong assumption about your architecture is still wrong, and plan mode's approval prompt makes it feel reviewed. Read plans for their premises, not their steps. The steps are usually fine; the premise is where the eleven wasted minutes hide.</p>
+
+        <h2 id="worth-doing-today">The Habit Worth Building</h2>
+
+        <p>Set one threshold and stop deciding case by case: anything touching three or more files goes through plan mode. Migrations, auth, payments, and production config go through it regardless of size. Everything else runs however you normally work. That single rule captures most of the value without turning every one-line fix into a ceremony, and it's specific enough that you'll actually follow it on a Friday afternoon. Add <code>/plan</code> to your muscle memory for the one-off scary request, and if a repo keeps burning you, check in a <code>defaultMode</code> of <code>plan</code> so nobody has to remember at all.</p>
+
+        <p>Browse next: <a href="/blog/claude-code-permissions">Claude Code Permissions (2026)</a> | <a href="/blog/claude-code-subagents">Claude Code Subagents (2026)</a> | <a href="/blog/claude-code-hooks">Claude Code Hooks (2026)</a> | <a href="/blog/claude-code-commands">Claude Code Commands (2026)</a></p>
+
+        <div class="blog-faq-section">
+          <h2 id="faq">Plan Mode Questions, Answered</h2>
+
+          <h3>What is plan mode in Claude Code?</h3>
+          <p>Plan mode is a Claude Code permission mode in which Claude researches and proposes changes without making them. It reads files and runs shell commands to explore, then writes a plan and waits for approval. Source edits stay blocked until you approve, so you review the approach before any code changes rather than reading a diff afterwards.</p>
+
+          <h3>How do I turn on plan mode?</h3>
+          <p>Three ways. Press <code>Shift+Tab</code> in the CLI to cycle <code>default</code> → <code>acceptEdits</code> → <code>plan</code>, watching for the <code>⏸ plan mode on</code> badge. Prefix a single prompt with <code>/plan</code> to plan just that request. Or start the session with <code>claude --permission-mode plan</code>. In VS Code, Desktop, and claude.ai, pick <strong>Plan</strong> from the mode selector.</p>
+
+          <h3>Does plan mode stop Claude from editing files?</h3>
+          <p>Yes, with one exception. In a normal session it blocks source edits until you approve the plan. In a session started with bypass permissions available, Claude Code doesn't enforce those blocks: Claude is still told to plan without editing, but an edit it attempts during planning runs without a prompt.</p>
+
+          <h3>How do I exit plan mode?</h3>
+          <p>Press <code>Shift+Tab</code> again to leave without approving. Approving a plan also exits it and switches the session into whichever mode the approval option describes, so Claude starts editing right away. To plan again, cycle back with <code>Shift+Tab</code> or prefix your next prompt with <code>/plan</code>.</p>
+
+          <h3>Can I make plan mode the default?</h3>
+          <p>Yes. Set <code>permissions.defaultMode</code> to <code>"plan"</code> in a settings file: <code>.claude/settings.json</code> for one repository, <code>~/.claude/settings.json</code> for every project. In the desktop app a mode picked in the selector is remembered per folder, except Plan, which applies to the current session only.</p>
+        </div>
+
+        <a href="/blog" class="blog-back">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>
