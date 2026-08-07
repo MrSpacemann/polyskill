@@ -1,5 +1,10 @@
 # PolySkill Regional SEO/GEO Plan — US, Singapore, China
 
+> ⚠️ **Measurements below are from 2026-05-30 and are stale.** The strategy (P1–P5) still holds;
+> the numbers do not. See [`2026-08-07-indexing-audit.md`](./2026-08-07-indexing-audit.md) for
+> current GSC/DataForSEO data — and for the finding that the 6 articles this plan led to were
+> published but never crawled by Google, which caps everything measured here.
+
 **Date:** 2026-05-30 · **v2** (enriched with DataForSEO market data)
 **Data sources:**
 - **Google Search Console** (real own-site data, `sc-domain:polyskill.ai`), last 28d (2026-05-02 → 2026-05-30) vs prior 28d.

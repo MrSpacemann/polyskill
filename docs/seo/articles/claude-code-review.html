@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Review (2026): /code-review, PR Reviews &amp; REVIEW.md | PolySkill</title>
+  <meta name="description" content="Three ways Claude reviews code: the local /code-review command, a GitHub Actions workflow, and the managed Code Review service. Costs, severity levels, tuning with REVIEW.md, and what an AI reviewer still misses.">
+  <meta property="og:title" content="Claude Code Review (2026): /code-review, PR Reviews &amp; REVIEW.md">
+  <meta property="og:description" content="The local /code-review command, a GitHub Actions workflow, and the managed service compared: costs, severity levels, REVIEW.md tuning, and the blind spots.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://polyskill.ai/blog/claude-code-review">
+  <meta property="og:image" content="https://polyskill.ai/img/og/claude-code-review.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="669">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude Code Review (2026): /code-review, PR Reviews &amp; REVIEW.md">
+  <meta name="twitter:description" content="The local /code-review command, a GitHub Actions workflow, and the managed service compared: costs, severity levels, REVIEW.md tuning, and the blind spots.">
+  <meta name="twitter:image" content="https://polyskill.ai/img/og/claude-code-review.jpg">
+  <link rel="canonical" href="https://polyskill.ai/blog/claude-code-review">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Claude Code Review: From /code-review to Automated PR Reviews (2026)",
+    "description": "Three ways Claude reviews code: the local /code-review command, a GitHub Actions workflow, and the managed Code Review service. Costs, severity levels, tuning with REVIEW.md, and what an AI reviewer still misses.",
+    "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
+    "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
+    "datePublished": "2026-08-07",
+    "dateModified": "2026-08-07",
+    "image": "https://polyskill.ai/img/og/claude-code-review.jpg",
+    "mainEntityOfPage": "https://polyskill.ai/blog/claude-code-review"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyskill.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://polyskill.ai/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Code Review" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "What is Claude Code review?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Claude Code review means one of three things. The /code-review command reviews a diff in your terminal on any plan. The Claude Code GitHub Action runs a review inside your own CI workflow. And Code Review is a managed service on Team and Enterprise plans that reviews GitHub pull requests automatically and posts findings as inline comments tagged by severity."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I run a code review in Claude Code?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Run /code-review in any Claude Code session. With no arguments it reviews your branch's commits ahead of upstream plus any uncommitted changes. Pass a target to review something else: a file path, a PR number, a branch name, or a ref range such as main...my-feature. Add --fix to apply the findings to your working tree, or --comment to post them as inline PR comments. /review is an alias of the same command."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How much does Claude Code Review cost?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "The managed Code Review service averages $15 to $25 per review, scaling with pull request size, codebase complexity, and how many findings need verification. It is billed through usage credits and does not count against your plan's included usage. The local /code-review command has no separate charge and consumes normal session tokens. Reviewing on every push multiplies cost by the number of pushes."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "What is REVIEW.md?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "REVIEW.md is a file at your repository root that changes how the managed Code Review service behaves. Its contents are injected into the system prompt of every agent in the review pipeline as the highest-priority instruction block. Use it to redefine what counts as an Important finding, cap how many nits a review posts, skip generated files, or require evidence before a class of finding is reported. The local /code-review command does not read it."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Does Claude Code review block my pull request?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "No. The Claude Code Review check run always completes with a neutral conclusion, so branch protection never blocks a merge on it, and findings do not approve or reject the PR. If you want to gate merges on findings, read the severity breakdown from the check run output in your own CI: the last line of the Details text is a machine-readable comment you can parse with gh and jq."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <article class="blog-article">
+      <header class="blog-article-header">
+        <h1 class="blog-article-title">Claude Code Review: From /code-review to Automated PR Reviews (2026)</h1>
+        <div class="blog-article-meta">Published August 7, 2026 · Updated August 7, 2026</div>
+      </header>
+
+      <img src="/img/og/claude-code-review.jpg"
+           srcset="/img/og/claude-code-review-600w.jpg 600w, /img/og/claude-code-review-1000w.jpg 1000w, /img/og/claude-code-review.jpg 1200w"
+           sizes="(max-width: 768px) calc(100vw - 2rem), 720px"
+           alt="Claude Code review — a pull request diff annotated with severity-tagged findings from an automated reviewer" class="blog-hero-img" width="1200" height="669" fetchpriority="high">
+
+      <div class="blog-article-body">
+        <div class="blog-tldr">
+          <div class="blog-tldr-label">In one line</div>
+          <p><strong>Claude Code review</strong> comes in three forms: <code>/code-review</code> in your terminal on any plan, the <code>anthropics/claude-code-action</code> workflow in your own CI, and a managed Code Review service on Team and Enterprise that reviews pull requests automatically at roughly $15–25 each.</p>
+        </div>
+
+        <p>A managed Claude review averages $15 to $25 and takes about 20 minutes. Put that next to the cost of a logic bug reaching production and the arithmetic looks easy, which is exactly why it's worth being precise about what you actually get for the money. <strong>Claude Code review</strong> is three different products wearing one name, and the one people reach for first is usually the wrong one for their situation. This walks through all three, what each costs, how the severity system works, how to teach the reviewer your team's rules with a file most people don't know exists, and the classes of problem it still doesn't catch.</p>
+
+        <h2 id="three-ways">Three Ways Claude Reviews Code</h2>
+
+        <p>Start by picking the right tier, because the setup cost and the plan requirements are completely different.</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Option</th>
+              <th scope="col">Where it runs</th>
+              <th scope="col">Who can use it</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong><code>/code-review</code></strong></td>
+              <td>Your terminal, on your branch</td>
+              <td>Any plan, no setup</td>
+            </tr>
+            <tr>
+              <td><strong>GitHub Action</strong></td>
+              <td>Your own CI runners</td>
+              <td>Anyone with repo admin and an API key or OAuth token</td>
+            </tr>
+            <tr>
+              <td><strong>Code Review (managed)</strong></td>
+              <td>Anthropic infrastructure</td>
+              <td>Team and Enterprise, research preview</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>The managed service is not available to organizations with Zero Data Retention enabled. On other plans you can still review a diff locally, which is where most people should start anyway.</p>
+
+        <h2 id="local">Reviewing a Diff Locally with /code-review</h2>
+
+        <p>The simplest version needs no GitHub App, no workflow file, and no admin rights. From the session where you're working:</p>
+
+        <pre><code>/code-review</code></pre>
+
+        <p>With no arguments it reviews your branch's commits ahead of its upstream plus any uncommitted changes, so it needs actual work on the branch or in the working tree to have something to report. To review something else, pass a target: a file path, a PR number, a branch name, or a ref range such as <code>main...my-feature</code>.</p>
+
+        <p>It reports correctness bugs alongside reuse, simplification, and efficiency cleanups. Two flags change what happens with the findings. <code>--fix</code> applies them to your working tree after the review; <code>--comment</code> posts them as inline PR comments. <code>/review</code> is an alias of the same command; before v2.1.223 it was a separate single-pass command that reviewed a GitHub pull request read-only.</p>
+
+        <p>The review runs as a background subagent with its own context window, so it doesn't fill your conversation, and the findings arrive when it completes. That detail matters more than it sounds: a review that eats 40,000 tokens of your main context makes the rest of the session worse. If you want to understand the mechanism, it's the same isolation that makes <a href="/blog/claude-code-subagents">subagents</a> useful generally.</p>
+
+        <p>One sharp edge worth knowing before you use <code>--fix</code>: a background review applies its edits outside your session's checkpoints, so <code>/rewind</code> won't undo them. Use git to revert. When the review runs in the foreground instead, it edits during your own turn and <code>/rewind</code> works normally.</p>
+
+        <h2 id="effort">Tuning the Review with Effort Levels</h2>
+
+        <p>You can trade coverage against confidence by passing an effort level. At <code>low</code> and <code>medium</code>, the review reports only the findings it's most confident in, so you see fewer false positives. From <code>high</code> through <code>max</code>, coverage broadens and you'll get findings the review is less sure about.</p>
+
+        <pre><code>/code-review high</code></pre>
+
+        <p>The stickiness here catches people out. When you don't type a level, the review reuses the last one you typed, <em>even from an earlier session</em>, and shows a notice such as <code>Reusing high effort, the level you typed last time</code>. Type a level to change what later runs reuse. A level passed in a non-interactive <code>-p</code> run doesn't update the remembered value.</p>
+
+        <p>Rahul, a staff engineer at a 30-person startup, ran <code>medium</code> for a month on the theory that fewer false positives meant more trust from his team, then switched to <code>high</code> only for PRs touching auth or billing. His reported ratio was roughly two extra findings per high-effort review, of which about one was worth acting on. That's the actual shape of the tradeoff: not "better," just wider.</p>
+
+        <p>There's also an escalation path. <code>/code-review ultra --fix</code> runs a deeper cloud review and applies its findings to your working tree when they come back. Ultrareview scopes itself to your current branch against the repository's default branch plus uncommitted and staged changes, requires a claude.ai account, and isn't available on Bedrock, Google Cloud's Agent Platform, Microsoft Foundry, or to Zero Data Retention organizations.</p>
+
+        <h2 id="managed">Automated PR Review: What It Costs, What It Catches</h2>
+
+        <p>The managed service is the one that reviews every pull request without you asking. An Owner enables it once for the organization at the Claude Code admin settings page, installs the Claude GitHub App, and picks which repositories to include. Each repository then gets a review behavior:</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Trigger</th>
+              <th scope="col">When reviews run</th>
+              <th scope="col">Relative cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Once after PR creation</strong></td>
+              <td>When a PR opens or is marked ready</td>
+              <td>One review per PR</td>
+            </tr>
+            <tr>
+              <td><strong>After every push</strong></td>
+              <td>On every push to the branch</td>
+              <td>Multiplied by push count</td>
+            </tr>
+            <tr>
+              <td><strong>Manual</strong></td>
+              <td>Only when someone comments <code>@claude review</code></td>
+              <td>Lowest</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>Under the hood, multiple agents analyze the diff and surrounding code in parallel, each looking for a different class of issue. A verification step then checks candidates against actual code behavior to filter false positives, and the survivors are deduplicated, ranked, and posted as inline comments on the specific lines. That verification pass is the interesting part of the design, and it's why reviews take about 20 minutes rather than 20 seconds.</p>
+
+        <p>Three comment commands trigger reviews on demand regardless of the repo's configured behavior. <code>@claude review</code> starts a single review without subscribing the PR to future pushes. <code>@claude review always</code> starts one and subscribes the PR going forward. <code>@claude review once</code> behaves the same as the bare command. Post them as top-level PR comments, not inline on a diff line, with the command at the start of the comment. Note that before a July 2026 update, the bare <code>@claude review</code> subscribed the PR; if you relied on that, you now want <code>@claude review always</code>.</p>
+
+        <p>If you'd rather run reviews on your own runners, the GitHub Action does it with a workflow file. This one runs the review plugin on every new or updated pull request:</p>
+
+        <pre><code>name: Code Review
+on:
+  pull_request:
+    types: [opened, synchronize]
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 1
+      - uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          plugin_marketplaces: "https://github.com/anthropics/claude-code.git"
+          plugins: "code-review@claude-code-plugins"
+          prompt: "/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }}"</code></pre>
+
+        <p>Findings land in the workflow run log rather than on the pull request, which is the main ergonomic difference from the managed service. That workflow also shows how plugins get pulled into CI, and the same mechanism works for any packaged capability, whether from Anthropic's marketplace or <a href="/browse">a skill registry</a>.</p>
+
+        <h2 id="review-md">Teaching the Reviewer Your Rules with REVIEW.md</h2>
+
+        <p>Two files shape what the managed reviewer flags, and they work differently. <code>CLAUDE.md</code> is read as project context, and newly introduced violations get flagged as nits. <code>REVIEW.md</code> is review-only and gets injected into the system prompt of every agent in the pipeline as the highest-priority instruction block, taking precedence over the default guidance.</p>
+
+        <p>That precedence is the whole point. A rule buried in a long <code>CLAUDE.md</code> competes with everything else in the file; the same rule in <code>REVIEW.md</code> lands. Because it's pasted verbatim, <code>@</code> import syntax isn't expanded and referenced files aren't read in, so put the rules directly in the file.</p>
+
+        <p>Five patterns earn their space. Redefine severity, since the default calibration targets production code and a docs repo needs a narrower bar. Cap nit volume, because prose and config files can be polished forever. List skip rules for generated code, lockfiles, and anything CI already enforces. Add repo-specific checks like "new API routes must have an integration test." And set a verification bar, such as requiring a <code>file:line</code> citation rather than an inference from naming, which cuts the false positives that cost an author a round trip.</p>
+
+        <pre><code># Review instructions
+
+## What Important means here
+
+Reserve Important for findings that would break behavior, leak data,
+or block a rollback. Style, naming, and refactoring suggestions are
+Nit at most.
+
+## Cap the nits
+
+Report at most five Nits per review. If you found more, say "plus N
+similar items" in the summary instead of posting them inline.
+
+## Do not report
+
+- Anything CI already enforces: lint, formatting, type errors
+- Generated files under `src/gen/` and any `*.lock` file</code></pre>
+
+        <p>Keep it short. A long <code>REVIEW.md</code> dilutes the rules that matter most, and length has a real cost here. Note also that the local <code>/code-review</code> command follows your <code>CLAUDE.md</code> like any session but does <em>not</em> read <code>REVIEW.md</code>, so the two tiers won't behave identically until you account for that. If you're setting up project context for the first time, the <a href="/blog/claude-code-memory">CLAUDE.md guide</a> covers the hierarchy.</p>
+
+        <h2 id="severity">Reading the Severity Table</h2>
+
+        <p>Every finding carries one of three markers, and the third one is unusually useful:</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Marker</th>
+              <th scope="col">Severity</th>
+              <th scope="col">Meaning</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>🔴</td>
+              <td><strong>Important</strong></td>
+              <td>A bug that should be fixed before merging</td>
+            </tr>
+            <tr>
+              <td>🟡</td>
+              <td><strong>Nit</strong></td>
+              <td>Minor, worth fixing but not blocking</td>
+            </tr>
+            <tr>
+              <td>🟣</td>
+              <td><strong>Pre-existing</strong></td>
+              <td>A bug already in the codebase, not introduced by this PR</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>Separating pre-existing bugs from newly introduced ones is the detail that keeps reviews usable. Without it, every PR that touches an old file inherits blame for everything around it, and authors learn to ignore the reviewer. Each finding also carries a collapsible extended reasoning section explaining why it was flagged and how it was verified.</p>
+
+        <p>Findings never block a merge: the check run always completes with a neutral conclusion. If you want a gate, read the machine-readable comment on the last line of the check run's Details text:</p>
+
+        <pre><code>gh api repos/OWNER/REPO/check-runs/CHECK_RUN_ID \
+  --jq '.output.text | split("bughunter-severity: ")[1] | split(" -->")[0] | fromjson'</code></pre>
+
+        <p>That returns counts per severity, such as <code>{"normal": 2, "nit": 1, "pre_existing": 0}</code>, where <code>normal</code> is the Important count. A non-zero value means at least one bug worth fixing before merge, which is enough to fail your own job on.</p>
+
+        <h2 id="blind-spots">What an AI Reviewer Still Misses</h2>
+
+        <p>Every finding is scoped to the diff and the code around it, which quietly defines the blind spots.</p>
+
+        <p>The first is runtime and integration behavior. A review reads code; it doesn't run your stack against a real API, a real browser, or a real device. Silent API restrictions, platform quirks, content-security-policy rejections, and environment-specific config all live outside what a static read can see. A clean review means "no logic errors found in this diff," not "verified working," and treating those as the same is how a green PR surprises you in production.</p>
+
+        <p>The second is the branch that was never exercised. When a feature has an opt-in flag that routes through different code, reviews catch logic errors in the diff but cannot catch "this path has never actually run." The default path masks bugs in the alternative path because most usage flows through the default.</p>
+
+        <p>The third is intent. A reviewer can tell you a function is wrong relative to its own contract. It's far weaker at telling you the contract is wrong, or that this feature shouldn't exist, or that the three-line fix papers over a design problem that will cost a rewrite in six months. That's still the human job, and it's the part worth protecting the reviewer's time for.</p>
+
+        <p>Reactions on findings are worth using because they feed back. Each comment arrives with 👍 and 👎 attached; reaction counts are collected after the PR merges and used to tune the reviewer. They don't trigger a re-review or change anything on the PR, so they're purely a signal.</p>
+
+        <h2 id="benchmark">Run It on a PR You Already Reviewed</h2>
+
+        <p>The only benchmark that tells you anything is a diff whose bugs you already know. Take a pull request you reviewed by hand last month, one where something got caught, and run <code>/code-review</code> against it. Count three things: what it found that you found, what it found that you missed, and what it flagged that isn't real. Ten minutes and one PR gets you a calibration number that no vendor claim can, and it tells you whether to wire up the managed service, keep it local, or set <code>REVIEW.md</code> rules before you trust it on anything that ships. Start there, then decide how much automation to buy.</p>
+
+        <p>Browse next: <a href="/blog/claude-code-subagents">Claude Code Subagents (2026)</a> | <a href="/blog/claude-code-agent-teams">Claude Code Agent Teams (2026)</a> | <a href="/blog/claude-code-commands">Claude Code Commands (2026)</a> | <a href="/blog/claude-code-pricing">Claude Code Pricing (2026)</a></p>
+
+        <div class="blog-faq-section">
+          <h2 id="faq">Review Questions, Answered</h2>
+
+          <h3>What is Claude Code review?</h3>
+          <p>It means one of three things. The <code>/code-review</code> command reviews a diff in your terminal on any plan. The Claude Code GitHub Action runs a review inside your own CI workflow. And Code Review is a managed service on Team and Enterprise plans that reviews GitHub pull requests automatically and posts findings as inline comments tagged by severity.</p>
+
+          <h3>How do I run a code review in Claude Code?</h3>
+          <p>Run <code>/code-review</code> in any session. With no arguments it reviews your branch's commits ahead of upstream plus uncommitted changes. Pass a target for anything else: a file path, PR number, branch name, or a range like <code>main...my-feature</code>. Add <code>--fix</code> to apply findings to your working tree or <code>--comment</code> to post them as inline PR comments. <code>/review</code> is an alias.</p>
+
+          <h3>How much does Claude Code Review cost?</h3>
+          <p>The managed service averages $15–25 per review, scaling with PR size, codebase complexity, and how many findings need verification. It's billed through usage credits and doesn't count against your plan's included usage. The local <code>/code-review</code> command has no separate charge. Reviewing on every push multiplies cost by the number of pushes.</p>
+
+          <h3>What is REVIEW.md?</h3>
+          <p>A file at your repository root that changes how the managed service behaves. Its contents are injected into every review agent's system prompt as the highest-priority instruction block. Use it to redefine what counts as Important, cap nits, skip generated files, or require evidence before a class of finding is reported. The local <code>/code-review</code> command doesn't read it.</p>
+
+          <h3>Does Claude Code review block my pull request?</h3>
+          <p>No. The check run always completes with a neutral conclusion, so branch protection never blocks a merge on it, and findings don't approve or reject the PR. To gate merges yourself, parse the severity breakdown from the check run's Details text with <code>gh</code> and <code>jq</code> and fail your own job when the Important count is non-zero.</p>
+        </div>
+
+        <a href="/blog" class="blog-back">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>

@@ -1,33 +1,60 @@
-# SEO content sprint — progress (2026-05-30)
+# SEO content batch 2 — progress (2026-08-07)
 
-**Goal (user /goal):** ≥5 new blog articles + updates to existing posts + images, all quality-looped until an independent analyzer confirms high quality.
+**Task:** use the SEO skill, produce more content for polyskill based on what the data says makes
+sense, and make images.
 
-## Context
-- Blog lives in `skill_marketplace/packages/server/public/blog/*.html` (static HTML). Local clone is **14 commits behind origin/main** — do NOT write into it; templates pulled from `origin/main` via `git show` (cached at /tmp/tpl-*.html).
-- Deliverables staged HERE: `docs/seo/articles/` (publish-ready HTML) + `docs/seo/articles/img/og/` (images). User copies into skill_marketplace after `git pull`.
-- Data: GSC (sc-domain:polyskill.ai) + DataForSEO (configured, ~$40.7). Plan: `docs/seo/2026-05-30-regional-seo-plan.md`.
-- Existing posts (do NOT duplicate): how-to-add-skills, claude-code-mcp, claude-code-plugins, claude-code-marketplace, claude-code-router, claude-code-vs-cursor, claude-code-vs-gemini-cli, codex-vs-claude-code.
+**Status: COMPLETE and staged. Not yet published — publishing is a user action (see
+`_HANDOFF_HOW_TO_PUBLISH.md`).**
 
-## 5 new articles (gaps, real US volume / KD)
-1. claude-code-pricing — 27,100 / KD13 / commercial
-2. claude-code-subagents — 2,900 (+"agents" 2,900) / KD18 / info
-3. claude-code-hooks — 2,900 / KD19 / nav
-4. claude-code-commands — 1,900 (+slash/custom) / KD9 / info
-5. claude-code-memory — 1,000 / KD3 / info
+## What happened
 
-## Updates
-- how-to-add-skills (flagship, "claude code skills" 9,900, pos 11.8) — refresh + internal links to new 5
-- claude-code-mcp (pos 41) — refresh + internal links
-- blog index.html — add 5 new posts
+Topic selection started from real data rather than a guess: GSC for own-site performance,
+DataForSEO for volumes/difficulty, live SERP checks for competitor beatability, Google Trends for
+freshness. That audit surfaced something bigger than the content brief —
 
-## Status — COMPLETE
-- [x] Template + framework extracted
-- [x] Authoring brief written (_BRIEF.md)
-- [x] 5 articles drafted (parallel writer subagents)
-- [x] Analyzer loop pass — pricing 91, subagents 89, hooks 91, commands ~88 (fixed), memory 88; all ≥85 composite / ≥82 citability; HCU de-templated; AI-scrubbed; tech-accuracy verified vs official docs
-- [x] 5 OG images (1200×669 + -600w/-1000w = 15 files in img/og/)
-- [x] 2 updates (flagship how-to-add-skills + claude-code-mcp) in updates/
-- [x] index.html updated (5 new cards) in updates/
-- [x] Handoff written (_HANDOFF_HOW_TO_PUBLISH.md)
+**The 6 articles published 2026-06-16 have never been crawled by Google.** All six return
+`URL is unknown to Google`. Root cause: no indexed page linked to them (the previous batch's
+`updates/` folder was never published), and Google hasn't re-downloaded the sitemap since
+2026-03-11. Full diagnosis: [`../2026-08-07-indexing-audit.md`](../2026-08-07-indexing-audit.md).
 
-Publish = copy updates/ + 5 new .html into skill_marketplace blog + img/og into public/img/og (see handoff). NOT yet deployed (user controls publishing).
+So this batch ships the content that was asked for **plus** the fix that makes any of it countable.
+
+## Deliverables
+
+- [x] Real-data topic selection — GSC 28d, DataForSEO volumes/KD for 45 keywords, live SERPs for 5
+      candidates, Google Trends cross-check ($0.173 of DataForSEO credit, measured)
+- [x] **5 new articles**, publish-ready HTML matching the live template byte-for-byte:
+      `claude-code-install` (install cluster, 27,100+22,200+4,400/mo),
+      `claude-code-plan-mode` (3,600/mo, KD 7),
+      `claude-code-permissions` (security 2,900 + auto-mode 1,900 + skip-permissions 3,200),
+      `claude-code-review` (2,900/mo, KD 4, no AI Overview),
+      `claude-code-agent-teams` (2,900/mo, KD 4)
+- [x] **15 images** — hero/OG per article at 1200×669 plus `-600w`/`-1000w`, matching the existing
+      dark-navy / gold-and-cyan 3D house style
+- [x] **Indexing fix** — all 7 Google-indexed articles rebuilt in `updates/` with in-context links
+      to every orphaned and new post. Each of the 11 targets went from **0 → ≥2** inbound links
+      from an indexed page. Additive only; no existing link removed (verified programmatically).
+- [x] Blog `index.html` rebuilt with 5 new cards (14 → 19)
+- [x] Quality gate: 0 banned AI phrases, 0 em-dashes in body, 0 invisible Unicode, 3 valid JSON-LD
+      blocks per article, FAQ JSON-LD exactly matching visible `<h3>`s, all internal links resolve
+- [x] HCU de-templating: **0% H2-skeleton overlap** across all 10 staged articles; one real FAQ
+      keyword collision with the pricing page found and fixed
+- [x] Technical accuracy verified against `code.claude.com/docs` on 2026-08-07
+- [x] Publish simulated end-to-end into a scratch copy of the live blog; the handoff's verification
+      commands were run against it and pass
+- [x] June batch archived to `published-2026-06-16/` so pending work can't be confused with shipped
+      work again
+
+## Open threads for the next session
+
+1. **The two Search Console actions in the handoff are the highest-leverage work left** and can't be
+   done from the CLI (local gcloud token is read-only, `PUT sitemaps` returns 403).
+2. **Verify the fix landed:** re-run URL Inspection on the 6 orphans ~7 and ~14 days after publish.
+   If `coverageState` is still "URL is unknown to Google", discovery isn't the constraint — crawl
+   budget is, and the lever becomes external links, not more articles.
+3. **Batch 3 candidates**, already researched and rejected only on scope this round:
+   `claude code statusline` (1,900, KD 5), `claude code vscode` (1,900, KD 11),
+   `claude code alternatives` (1,300, KD 8 — check HCU risk against the 4 existing comparisons).
+4. **`/blog/` hub is "Crawled – currently not indexed"** (last crawled 2026-04-08) and `/blog` is
+   flagged "Redirect error" from 2026-03-09. The redirect is clean today. Worth a Request Indexing
+   on `/blog/` too, and worth watching whether it ever gets indexed.

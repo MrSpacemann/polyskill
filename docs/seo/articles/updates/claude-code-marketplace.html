@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-KQKC3JXW9Y"></script>
+  <script defer src="/js/gtag.js"></script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Claude Code Marketplace: Browse, Install &amp; Discover Skills in 2026 | PolySkill</title>
+  <meta name="description" content="The Claude Code marketplace for skills and plugins. Browse 1,000+ skills across 10 categories, install in one command, and publish your own. Every skill is security-scanned.">
+  <meta property="og:title" content="Claude Code Marketplace: Browse, Install &amp; Discover Skills in 2026">
+  <meta property="og:description" content="The Claude Code marketplace for skills and plugins. Browse 1,000+ skills across 10 categories, install in one command, and publish your own. Every skill is security-scanned.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://polyskill.ai/blog/claude-code-marketplace">
+  <meta property="og:image" content="https://polyskill.ai/img/og/claude-code-marketplace.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="669">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Claude Code Marketplace: Browse, Install &amp; Discover Skills in 2026">
+  <meta name="twitter:description" content="The Claude Code marketplace for skills and plugins. Browse 1,000+ skills across 10 categories, install in one command, and publish your own. Every skill is security-scanned.">
+  <meta name="twitter:image" content="https://polyskill.ai/img/og/claude-code-marketplace.jpg">
+  <link rel="canonical" href="https://polyskill.ai/blog/claude-code-marketplace">
+  <link rel="icon" type="image/png" sizes="32x32" href="/img/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/img/favicon-16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=optional">
+  <script src="/js/theme-init.js"></script>
+  <link rel="stylesheet" href="/css/style.css">
+  <link rel="stylesheet" href="/css/blog.css">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "Claude Code Marketplace: Browse, Install & Discover Skills in 2026",
+    "description": "The Claude Code marketplace for skills and plugins. Browse 1,000+ skills across 10 categories, install in one command, and publish your own. Every skill is security-scanned.",
+    "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
+    "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" } },
+    "datePublished": "2026-02-27",
+    "dateModified": "2026-08-07",
+    "image": "https://polyskill.ai/img/og/claude-code-marketplace.jpg",
+    "mainEntityOfPage": "https://polyskill.ai/blog/claude-code-marketplace"
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://polyskill.ai/" },
+      { "@type": "ListItem", "position": 2, "name": "Blog", "item": "https://polyskill.ai/blog/" },
+      { "@type": "ListItem", "position": 3, "name": "Claude Code Marketplace" }
+    ]
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    "mainEntity": [
+      {
+        "@type": "Question",
+        "name": "Is there a marketplace for Claude Code skills?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. PolySkill is a Claude Code skills marketplace with 1,000+ skills across 10 categories. You can browse and install skills via the web UI, CLI, or REST API. Other directories like SkillsMP and claudemarketplaces.com also exist, though PolySkill is the only one that runs automated security scanning on every published skill."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "How do I install Claude Code plugins?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Install the PolySkill CLI with npm install -g @polyskill/cli, then run polyskill install @author/skill-name. The CLI auto-detects Claude Code and places the skill in ~/.claude/skills/. You can also fetch skills programmatically via the REST API at GET /api/skills/@author/skill-name."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Are Claude Code skills safe to use?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Every skill published to PolySkill goes through automated security scanning at publish time. This includes supply-chain checks (homoglyph detection, edit-distance blocking, description similarity), content analysis with more than 30 regex patterns for common attack vectors, and behavioral scanning. Verification badges are currently in alpha, but all scan results are recorded and reviewed."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Can I publish my own Claude Code skill?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. Run polyskill init my-skill to scaffold a skill.json manifest, write your skill content, then polyskill publish to push it to the registry. Skills need a name, version, description, and at least one instruction or tool definition. The full publishing guide is available at polyskill.ai/docs."
+        }
+      },
+      {
+        "@type": "Question",
+        "name": "Do Claude Code skills work with other AI tools?",
+        "acceptedAnswer": {
+          "@type": "Answer",
+          "text": "Yes. PolySkill skills are LLM-agnostic. The skill.json manifest includes an adapters field that maps instructions and tools to different agent formats. The CLI auto-detects your target agent (Claude Code, Codex, OpenClaw, or others) and installs the skill in the correct format."
+        }
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <a href="/" class="logo">
+        <img src="/img/logo-white.png" alt="PolySkill" class="logo-img" width="400" height="220">
+      </a>
+      <div class="header-right">
+        <nav aria-label="Main navigation">
+          <ul class="nav-links">
+            <li><a href="/browse">Browse Skills</a></li>
+            <li><a href="/docs">Docs</a></li>
+            <li><a href="/blog">Blog</a></li>
+          </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+          <span class="toggle-track">
+            <span class="toggle-thumb"></span>
+          </span>
+        </button>
+        <div id="auth-container"></div>
+      </div>
+    </div>
+  </header>
+
+  <main id="main-content" class="container docs-main">
+    <article class="blog-article">
+      <header class="blog-article-header">
+        <h1 class="blog-article-title">Claude Code Marketplace: Browse, Install &amp; Discover Skills in 2026</h1>
+        <div class="blog-article-meta">Published February 27, 2026 · Updated August 7, 2026</div>
+      </header>
+
+      <img src="/img/og/claude-code-marketplace.jpg"
+           srcset="/img/og/claude-code-marketplace-600w.jpg 600w, /img/og/claude-code-marketplace-1000w.jpg 1000w, /img/og/claude-code-marketplace.jpg 1200w"
+           sizes="(max-width: 768px) calc(100vw - 2rem), 720px"
+           alt="Claude Code Marketplace — browsing and installing skills from a curated registry" class="blog-hero-img" width="1200" height="669" fetchpriority="high">
+
+      <div class="blog-article-body">
+        <div class="blog-tldr">
+          <div class="blog-tldr-label">TL;DR</div>
+          <ol class="blog-tldr-list" role="list">
+            <li>Browse 10 categories and 1,000+ skills, filtering by type, keyword search, or what's trending</li>
+            <li>Install in one command: <code>polyskill install @author/skill-name</code> auto-detects Claude Code and drops the skill into the right directory</li>
+            <li>Every skill is scanned: supply-chain checks, content analysis, and behavioral scanning run at publish time</li>
+          </ol>
+        </div>
+
+        <p>"Claude Code" now draws over 360,000 US searches a month, with single-month spikes approaching a million, according to Google Ads keyword data. As the user base exploded, so did the ecosystem of reusable skills: prompt templates, tool definitions, and multi-step workflows that extend what the agent can do. The problem is finding, evaluating, and installing those skills when they're scattered across GitHub repos, blog posts, and Discord threads. That is what a Claude Code marketplace solves, giving you one place to discover, vet, and install skills in seconds.</p>
+
+        <p>This guide walks through everything a Claude Code skills marketplace offers: what kinds of skills exist, how to find and install them, how they're vetted for safety, and how to publish your own.</p>
+
+        <h2 id="why-skills">Why Skills Are the Next Step for AI Coding Agents</h2>
+
+        <p>Claude Code is powerful out of the box. It reads your codebase, runs commands, edits files, and reasons through multi-step problems. But every team has unique needs (coding conventions, deployment pipelines, domain-specific knowledge, compliance requirements) that no single agent configuration can cover.</p>
+
+        <p>Skills package that reusable expertise into portable units. A skill might encode your team's API design conventions so Claude Code follows them automatically. Another might define a multi-step deployment workflow that checks staging, runs integration tests, and opens a PR. A third might add tool definitions for interacting with an internal service.</p>
+
+        <p>This shift from "one agent, one config" to "one agent, many skills" mirrors what happened with VS Code extensions, Vim plugins, and browser add-ons. The base tool handles the core experience. The ecosystem handles everything specific to your workflow.</p>
+
+        <p>Several Claude Code skill directories have emerged: <a href="https://polyskill.ai/browse">PolySkill</a>, <a href="https://skillsmp.com" target="_blank" rel="noopener">SkillsMP</a>, <a href="https://claudemarketplaces.com" target="_blank" rel="noopener">claudemarketplaces.com</a>, and others. Whether you call it a Claude Code plugin marketplace, a skills registry, or an extension store, the premise is the same: skills are more useful when they're discoverable, installable, and vetted.</p>
+
+        <h2 id="skill-types-categories">What Types of Claude Code Skills Are Available?</h2>
+
+        <p>Skills in the PolySkill registry fall into four types, each serving a different purpose:</p>
+
+        <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">Type</th>
+              <th scope="col">What it contains</th>
+              <th scope="col">Example use case</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Prompt</strong></td>
+              <td>Instructions only, no tool calls</td>
+              <td>Coding standards, review checklists, writing style guides</td>
+            </tr>
+            <tr>
+              <td><strong>Tool</strong></td>
+              <td>Function definitions the agent can call</td>
+              <td>API integrations, database queries, file transformations</td>
+            </tr>
+            <tr>
+              <td><strong>Workflow</strong></td>
+              <td>Multi-step sequences with conditions</td>
+              <td>CI/CD pipelines, migration scripts, onboarding flows</td>
+            </tr>
+            <tr>
+              <td><strong>Composite</strong></td>
+              <td>Composed from other skills</td>
+              <td>Full-stack project setup combining lint + test + deploy skills</td>
+            </tr>
+          </tbody>
+        </table>
+        </div>
+
+        <p>These skills are organized across 10 categories:</p>
+
+        <ul>
+          <li><strong>Productivity</strong>:task management, note-taking, workflow optimization</li>
+          <li><strong>Automation</strong>:CI/CD, infrastructure, DevOps scripts</li>
+          <li><strong>Coding &amp; Data</strong>:linters, formatters, data pipelines, code generation</li>
+          <li><strong>Creative &amp; Media</strong>:content creation, image processing, design tools</li>
+          <li><strong>Research &amp; Learning</strong>:documentation, tutoring, knowledge management</li>
+          <li><strong>Security</strong>:vulnerability scanning, compliance checks, secret detection</li>
+          <li><strong>Marketing &amp; Sales</strong>:SEO, analytics, outreach automation</li>
+          <li><strong>Crypto &amp; Web3</strong>:smart contracts, wallet tools, DeFi integrations</li>
+          <li><strong>Finance</strong>:accounting, reporting, financial modeling</li>
+          <li><strong>Legal</strong>:contract review, compliance, regulatory research</li>
+        </ul>
+
+        <p>Skills are LLM-agnostic by design. The <code>skill.json</code> manifest includes an <code>adapters</code> field that maps instructions and tools to different agent formats, so the same skill works across Claude Code, Codex, OpenClaw, and other agents.</p>
+
+        <h2 id="browsing-searching">How to Browse and Search the Claude Code Skills Marketplace</h2>
+
+        <p>Whether you're looking for the best Claude Code skills in a specific category or exploring what's new, there are three ways to discover them: the web UI, the CLI, and the REST API.</p>
+
+        <h3>Web UI</h3>
+
+        <p>The <a href="/browse">Browse Skills</a> page shows all skills organized by category. The top of the page features a category grid; click any category to filter. A search bar with typeahead suggestions lets you search by name, description, or keyword. You can sort by newest, most relevant, or alphabetical.</p>
+
+        <p>Each skill card shows the name, author, category, type, and a short description. Click through to the detail page for the full manifest, instructions, tool definitions, and scan results.</p>
+
+        <h3>CLI search</h3>
+
+        <p>The PolySkill CLI has a built-in search command:</p>
+
+        <pre><code>polyskill search "deploy"</code></pre>
+
+        <p>Filter results by category, type, or verification status:</p>
+
+        <pre><code>polyskill search "deploy" --category automation --type workflow</code></pre>
+
+        <p>Search results show the skill name, version, description, and category, enough to decide whether to install.</p>
+
+        <h3>REST API</h3>
+
+        <p>For programmatic discovery, hit the skills endpoint directly:</p>
+
+        <pre><code>GET /api/skills?q=deploy&amp;category=automation&amp;type=workflow&amp;sort=newest&amp;limit=20</code></pre>
+
+        <p>The API returns full skill metadata including instructions, tools, and adapters. This is useful for building custom UIs, integrating skill discovery into your own tools, or fetching skills at runtime in an agent pipeline.</p>
+
+        <h2 id="installing-skills">How to Add Skills to Claude Code</h2>
+
+        <p>Once you've found a skill, there are two ways to install it: the CLI for local development, and the API for programmatic/agent use. (Prefer Claude Code's built-in <code>/plugin</code> browser or a manual filesystem install? Our dedicated guide on <a href="/blog/how-to-add-skills-to-claude-code">how to add skills to Claude Code</a> walks through all three approaches.)</p>
+
+        <h3>CLI install (recommended for developers)</h3>
+
+        <p>Three steps:</p>
+
+        <pre><code># 1. Install the CLI (once)
+npm install -g @polyskill/cli
+
+# 2. Find a skill
+polyskill search "weather"
+
+# 3. Install it
+polyskill install @author/weather</code></pre>
+
+        <p>The CLI auto-detects your agent. For Claude Code, it places the skill in <code>~/.claude/skills/</code>. For Codex, OpenClaw, or others, it writes to the appropriate directory. You can also specify an output directory manually:</p>
+
+        <pre><code>polyskill install @author/weather -o ./my-skills/</code></pre>
+
+        <p>After installing, the skill is immediately available in your next Claude Code session, with no restart required.</p>
+
+        <h3>API install (for agents and automation)</h3>
+
+        <p>Fetch a skill's full definition over HTTP:</p>
+
+        <pre><code>GET /api/skills/@author%2Fweather</code></pre>
+
+        <p>The response includes the complete skill manifest: instructions, tool definitions, adapters, metadata. An agent can fetch this at runtime and apply the skill's instructions and tools without writing anything to disk. This is the pattern for skills-as-a-service: discover, fetch, and use in-memory.</p>
+
+        <h2 id="safety-vetting">How Skills Are Vetted for Safety</h2>
+
+        <p>This is the part most marketplace guides skip, but it matters. Running third-party code in an AI agent that has shell access, file system permissions, and network capabilities is a real security concern; the <a href="https://owasp.org/www-project-top-ten/" target="_blank" rel="noopener">OWASP Top 10</a> applies just as much to agent skills as it does to web apps. A skill is just instructions plus tool definitions, and a malicious one can attempt credential theft, data exfiltration, prompt injection, or destructive commands the moment the agent runs it. That is why PolySkill scans every published skill rather than trusting author reputation.</p>
+
+        <p>PolySkill runs a multi-layer scanning pipeline on every skill at publish time:</p>
+
+        <h3>Supply-chain protection</h3>
+
+        <p>Before a skill even reaches the scanner, it goes through name-based checks:</p>
+
+        <ul>
+          <li><strong>Homoglyph detection</strong>:blocks names that use look-alike Unicode characters to impersonate existing skills (e.g., replacing 'o' with Cyrillic 'о')</li>
+          <li><strong>Edit-distance blocking</strong>:rejects names within 1 edit of an existing skill by a different author (catches typosquatting like <code>recat</code> vs <code>react</code>)</li>
+          <li><strong>Description similarity</strong>:flags skills whose descriptions are suspiciously similar to existing ones (Jaccard similarity &gt; 0.50)</li>
+        </ul>
+
+        <h3>Content analysis</h3>
+
+        <p>A static analyzer runs more than 30 regex patterns across the skill's instructions, tool descriptions, parameter schemas, and string fields. It checks for:</p>
+
+        <ul>
+          <li><strong>Pipe-to-shell commands</strong>:<code>curl | bash</code>, <code>wget | sh</code>, and variants (always blocks, with an allowlist for trusted installers like rustup, pnpm, and brew)</li>
+          <li><strong>Credential access</strong>:reading SSH keys, AWS credentials, Docker configs, or browser password stores</li>
+          <li><strong>Data exfiltration</strong>:combining file reads with network calls, encoding data in URLs, posting to external services</li>
+          <li><strong>Prompt injection</strong>:hidden instructions attempting to override the agent's behavior</li>
+          <li><strong>Destructive commands</strong>:<code>rm -rf</code>, <code>DROP TABLE</code>, <code>FORMAT</code>, with exceptions for safe paths</li>
+        </ul>
+
+        <h3>Behavioral scanning</h3>
+
+        <p>Beyond pattern matching, skills are analyzed for behavioral indicators: persistence mechanisms, privilege escalation, obfuscation techniques, and social engineering patterns.</p>
+
+        <h3>Current status</h3>
+
+        <p>Verification badges are currently in alpha. Scanning runs on every published skill and results are recorded, but the verified/unverified badge is not yet displayed publicly. This is intentional; we're tuning false-positive rates before the badge carries weight. All scan results are available for admin review, and skills flagged with HIGH severity findings are manually investigated.</p>
+
+        <h2 id="publishing">How to Publish Your Own Skill</h2>
+
+        <p>Publishing a skill to the PolySkill registry takes three commands:</p>
+
+        <pre><code># 1. Scaffold a new skill
+polyskill init my-skill
+
+# 2. Edit the generated skill.json manifest
+# Add instructions, tools, keywords, category, etc.
+
+# 3. Publish
+polyskill publish</code></pre>
+
+        <p>The <code>skill.json</code> manifest is the core of every skill. Here's a minimal example:</p>
+
+        <pre><code>{
+  "name": "@yourname/my-skill",
+  "version": "1.0.0",
+  "description": "A short description of what this skill does",
+  "keywords": ["keyword1", "keyword2"],
+  "category": "coding-data",
+  "type": "prompt",
+  "license": "MIT",
+  "instructions": "Your skill instructions go here..."
+}</code></pre>
+
+        <p>Key fields:</p>
+
+        <ul>
+          <li><strong>name</strong>:scoped format: <code>@author/skill-name</code></li>
+          <li><strong>version</strong>:semver (publishing a new version overwrites the previous)</li>
+          <li><strong>category</strong>:one of the 10 categories listed above</li>
+          <li><strong>type</strong>:prompt, tool, workflow, or composite</li>
+          <li><strong>instructions</strong>:the natural-language instructions the agent follows</li>
+          <li><strong>tools</strong>:optional array of tool definitions with JSON Schema parameters</li>
+        </ul>
+
+        <p>For automated publishing (CI pipelines, agent-generated skills), PolySkill supports <a href="/docs">agent self-registration</a>: register an agent, get an API key, and publish programmatically without a GitHub account. The agent can be claimed later by a human via GitHub OAuth.</p>
+
+        <p>The full publishing guide, manifest reference, and adapter documentation are at <a href="/docs">polyskill.ai/docs</a>.</p>
+
+        <div class="blog-faq-section">
+          <h2 id="faq">Frequently Asked Questions</h2>
+
+          <h3>Is there a marketplace for Claude Code skills?</h3>
+          <p>Yes. <a href="/browse">PolySkill</a> is a Claude Code skills marketplace with 1,000+ skills across 10 categories. You can browse and install skills via the web UI, CLI, or REST API. Other directories like SkillsMP and claudemarketplaces.com also exist, though PolySkill is the only one that runs automated security scanning on every published skill.</p>
+
+          <h3>How do I install Claude Code plugins?</h3>
+          <p>Install the PolySkill CLI with <code>npm install -g @polyskill/cli</code>, then run <code>polyskill install @author/skill-name</code>. The CLI auto-detects Claude Code and places the skill in <code>~/.claude/skills/</code>. You can also fetch skills programmatically via the REST API at <code>GET /api/skills/@author/skill-name</code>.</p>
+
+          <h3>Are Claude Code skills safe to use?</h3>
+          <p>Every skill published to PolySkill goes through automated security scanning at publish time. This includes supply-chain checks (homoglyph detection, edit-distance blocking, description similarity), content analysis with more than 30 regex patterns for common attack vectors, and behavioral scanning. Verification badges are currently in alpha, but all scan results are recorded and reviewed.</p>
+
+          <h3>Can I publish my own Claude Code skill?</h3>
+          <p>Yes. Run <code>polyskill init my-skill</code> to scaffold a <code>skill.json</code> manifest, write your skill content, then <code>polyskill publish</code> to push it to the registry. Skills need a name, version, description, and at least one instruction or tool definition. The full publishing guide is available at <a href="/docs">polyskill.ai/docs</a>.</p>
+
+          <h3>Do Claude Code skills work with other AI tools?</h3>
+          <p>Yes. PolySkill skills are LLM-agnostic. The <code>skill.json</code> manifest includes an <code>adapters</code> field that maps instructions and tools to different agent formats. The CLI auto-detects your target agent (Claude Code, Codex, OpenClaw, or others) and installs the skill in the correct format.</p>
+        </div>
+
+        <p>Related guides: <a href="/blog/how-to-add-skills-to-claude-code">How to Add Skills to Claude Code (2026)</a> | <a href="/blog/claude-code-router">Claude Code Router: Complete Guide (2026)</a> | <a href="/blog/codex-vs-claude-code">Codex vs Claude Code: Full Comparison (2026)</a> | <a href="/blog/claude-code-vs-cursor">Claude Code vs Cursor (2026)</a> | <a href="/blog/claude-code-vs-gemini-cli">Claude Code vs Gemini CLI (2026)</a> | <a href="/blog/claude-code-plugins">Claude Code Plugins (2026)</a> | <a href="/blog/claude-code-commands">Claude Code Commands (2026)</a> | <a href="/blog/claude-code-memory">Claude Code Memory (2026)</a> | <a href="/blog/claude-code-hooks">Claude Code Hooks (2026)</a></p>
+
+        <a href="/blog" class="blog-back">Back to Blog</a>
+      </div>
+    </article>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      PolySkill — Open source, LLM-agnostic, community-driven.
+      <a href="/terms" class="footer-link">Terms</a>
+      <a href="https://github.com/MrSpacemann/polyskill" target="_blank" rel="noopener" class="footer-github" aria-label="GitHub repository"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    </div>
+  </footer>
+
+  <link rel="stylesheet" href="/css/toggle.css">
+  <link rel="stylesheet" href="/css/auth.css">
+  <script defer src="/js/theme.js"></script>
+  <script defer src="/js/auth.js"></script>
+</body>
+</html>

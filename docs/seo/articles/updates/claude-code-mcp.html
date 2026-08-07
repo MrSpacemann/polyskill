@@ -37,7 +37,7 @@
     "author": { "@type": "Organization", "name": "PolySkill Team", "url": "https://polyskill.ai" },
     "publisher": { "@type": "Organization", "name": "PolySkill", "url": "https://polyskill.ai", "logo": { "@type": "ImageObject", "url": "https://polyskill.ai/img/logo-white.png" }, "sameAs": ["https://github.com/MrSpacemann/polyskill"] },
     "datePublished": "2026-05-18",
-    "dateModified": "2026-05-30",
+    "dateModified": "2026-08-07",
     "image": "https://polyskill.ai/img/og/claude-code-mcp.jpg",
     "mainEntityOfPage": "https://polyskill.ai/blog/claude-code-mcp"
   }
@@ -130,7 +130,7 @@
     <article class="blog-article">
       <header class="blog-article-header">
         <h1 class="blog-article-title">Claude Code MCP: Add &amp; Configure MCP Servers (2026)</h1>
-        <div class="blog-article-meta">Published May 18, 2026 · Updated May 30, 2026</div>
+        <div class="blog-article-meta">Published May 18, 2026 · Updated August 7, 2026</div>
       </header>
 
       <img src="/img/og/claude-code-mcp.jpg"
@@ -152,7 +152,7 @@
 
         <p>The reason this matters: without MCP, every integration would be bespoke glue code. With it, the integration is a reusable server that any MCP-capable agent can use. Anthropic created the protocol, so Claude Code's support is the deepest in the market: stdio, HTTP, and SSE transports, plus OAuth for servers that need authenticated access. The same server you configure today also works with Codex or Gemini CLI tomorrow; the protocol is the contract, not the agent.</p>
 
-        <p>One distinction worth keeping straight early: an MCP server adds <em>tools the agent can call</em>. A <a href="/blog/how-to-add-skills-to-claude-code">skill</a> adds <em>instructions the agent follows</em>, and a <a href="/blog/claude-code-hooks">hook</a> runs a shell command automatically on an event. They solve different problems and are often used together. A skill that says "use the database server to validate the schema before migrating" only works if the MCP server is connected.</p>
+        <p>One distinction worth keeping straight early: an MCP server adds <em>tools the agent can call</em>. A <a href="/blog/how-to-add-skills-to-claude-code">skill</a> adds <em>instructions the agent follows</em>. They solve different problems and are often used together. A skill that says "use the database server to validate the schema before migrating" only works if the MCP server is connected.</p>
 
         <h2 id="add-mcp-server">How to Add an MCP Server to Claude Code</h2>
 
@@ -169,7 +169,7 @@
         <pre><code>claude mcp add postgres -e DATABASE_URL=postgres://localhost/mydb \
   -- npx -y @modelcontextprotocol/server-postgres</code></pre>
 
-        <p>Then start Claude Code and run <code>/mcp</code> — one of the built-in <a href="/blog/claude-code-commands">slash commands</a>. You'll see each server's connection state and, for OAuth servers, a prompt to authenticate in your browser. Once a server shows <em>connected</em>, its tools are live for that session, with no restart needed. To see everything configured without opening Claude Code, use <code>claude mcp list</code>.</p>
+        <p>Then start Claude Code and run <code>/mcp</code>. You'll see each server's connection state and, for OAuth servers, a prompt to authenticate in your browser. Once a server shows <em>connected</em>, its tools are live for that session, with no restart needed. To see everything configured without opening Claude Code, use <code>claude mcp list</code>.</p>
 
         <h2 id="transports">The Three Transports, and When Each One Fits</h2>
 
@@ -233,7 +233,7 @@
 
         <h2 id="when-not-mcp">When MCP Is the Wrong Tool</h2>
 
-        <p>Most guides only sell the upside, so here's the counterweight. MCP is not free: every connected server adds tool definitions to the context window and a connection to maintain. (If a heavy MCP-driven task is bloating your main context, running it inside a <a href="/blog/claude-code-subagents">subagent</a> keeps those tool definitions out of the primary conversation.) Three cases where you should not reach for it:</p>
+        <p>Most guides only sell the upside, so here's the counterweight. MCP is not free: every connected server adds tool definitions to the context window and a connection to maintain. Three cases where you should not reach for it:</p>
 
         <p><strong>One-off tasks.</strong> If you need a value from an API exactly once, asking Claude Code to <code>curl</code> it is faster than standing up a server. MCP earns its cost through repeated use.</p>
 
@@ -259,7 +259,7 @@
 
         <p>Don't wire up ten servers on day one. Add the single one that removes your most repetitive copy-paste (for most people that's GitHub or a database) and use it for a week until reaching for it is reflex. Add the next only when a real task demands it. An over-stuffed MCP config is just context-window tax you pay on every prompt; a lean one is leverage.</p>
 
-        <p>Browse next: <a href="/blog/how-to-add-skills-to-claude-code">How to Add Skills to Claude Code (2026)</a> | <a href="/blog/claude-code-subagents">Claude Code Subagents (2026)</a> | <a href="/blog/claude-code-hooks">Claude Code Hooks (2026)</a> | <a href="/blog/claude-code-commands">Claude Code Commands (2026)</a> | <a href="/blog/claude-code-marketplace">Claude Code Marketplace (2026)</a></p>
+        <p>Browse next: <a href="/blog/how-to-add-skills-to-claude-code">How to Add Skills to Claude Code (2026)</a> | <a href="/blog/claude-code-marketplace">Claude Code Marketplace (2026)</a> | <a href="/blog/codex-vs-claude-code">Codex vs Claude Code (2026)</a> | <a href="/blog/claude-code-router">Claude Code Router (2026)</a> | <a href="/blog/claude-code-plugins">Claude Code Plugins (2026)</a> | <a href="/blog/claude-code-permissions">Claude Code Permissions (2026)</a> | <a href="/blog/claude-code-subagents">Claude Code Subagents (2026)</a> | <a href="/blog/claude-code-install">How to Install Claude Code (2026)</a></p>
 
         <div class="blog-faq-section">
           <h2 id="faq">MCP Questions, Answered</h2>
