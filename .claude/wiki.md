@@ -184,3 +184,40 @@ counted raw HTML tokens.
 **Why:** it matters when judging whether a new draft is thin. Compare like for
 like — strip tags from the `<div class="blog-article-body">` block before counting,
 or a perfectly normal 2,200-word post looks 40% short of a phantom target.
+
+## seo-beast skill source lives in ~/claude-dotfiles, NOT the quarantine copy
+<!-- added: 2026-08-09 -->
+The editable source of `@mrspacemann/seo-beast` is
+`~/claude-dotfiles/skills/mrspacemann-seo-beast/` (its own git repo,
+MrSpacemann/claude-dotfiles). `~/.claude/skills-quarantine/mrspacemann-seo-beast/`
+is an installed copy that lags versions. Ship flow: edit SKILL.md → bump
+`skill.json` with sed (a python json rewrite explodes the compact arrays into a
+noisy diff) → `polyskill validate .` → `polyskill build .` (dist/*.json embed the
+full SKILL.md, so they MUST be rebuilt) → `polyskill publish` → commit+push.
+**Why:** editing the quarantine copy silently does nothing, and skipping build
+ships adapters carrying the previous version's instructions.
+
+## Awesome-list link building: intake rules differ per list and are enforced
+<!-- added: 2026-08-09 -->
+hesreallyhim/awesome-claude-code (52k★) takes recommendations ONLY via its web-UI
+issue form (bot-validated; eligibility: 14 days active dev OR 100★; one resource
+per submission). ComposioHQ/awesome-claude-skills (72k★) accepts actual skill
+folders only — tool-link PRs are auto-rejects. travisvn/karanb192/jqueryscript
+take normal README PRs. 2026-08-09 submissions: PRs #1096/#193/#578 + issue #2472
+(details in docs/seo/outreach/2026-08-09-link-acquisition-field-run.md).
+**Why:** the wrong intake path wastes the one shot a small project gets with a
+maintainer, and a future agent will otherwise re-derive all of this from scratch.
+
+## `polyskill publish` of large skills: client + edge timeouts fire, but the publish often SUCCEEDS
+<!-- added: 2026-08-09 -->
+Publishing seo-beast 1.9.0 (~500KB body: instructions + 5 embedded adapters):
+CLI aborts at 30s (`publish.ts` AbortSignal), and even a direct curl dies at
+~62s with HTTP 000 (edge proxy kill) — yet the registry finished processing
+server-side and the version went live. **After any publish timeout, check
+`polyskill search <name>` (and diff a content marker via
+`/api/skills/%40scope%2Fname` — the @/% must be URL-encoded, the raw path 404s)
+BEFORE retrying.** Blind retries race whichever attempt the server finishes
+first, and you can't tell which payload won without checking content.
+**Why:** the synchronous publish path (validate+scan) outlives both timeouts for
+big skills; the visible failure is a lie. Real fix candidate: async publish
+(202 + status polling) — not implemented as of 2026-08-09.
