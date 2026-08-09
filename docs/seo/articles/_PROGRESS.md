@@ -3,8 +3,9 @@
 **Task:** use the SEO skill, produce more content for polyskill based on what the data says makes
 sense, and make images.
 
-**Status: COMPLETE and staged. Not yet published — publishing is a user action (see
-`_HANDOFF_HOW_TO_PUBLISH.md`).**
+**Status: PUBLISHED AND INDEXED (2026-08-09, agent, end-to-end) — see the final section below.
+4 of 5 articles indexed same-day; only `claude-code-agent-teams`'s Request Indexing remains
+(quota), plus the 7/14-day re-checks.**
 
 ## What happened
 
@@ -58,3 +59,19 @@ So this batch ships the content that was asked for **plus** the fix that makes a
 4. **`/blog/` hub is "Crawled – currently not indexed"** (last crawled 2026-04-08) and `/blog` is
    flagged "Redirect error" from 2026-03-09. The redirect is clean today. Worth a Request Indexing
    on `/blog/` too, and worth watching whether it ever gets indexed.
+
+## PUBLISHED + INDEXED — 2026-08-09 (agent, end-to-end)
+
+Batch 2 shipped to skill_marketplace (commit `dbd0e06`, all three parts copied — new articles,
+`updates/`, images; handoff verification passed: 19 cards, no under-linked slugs). Railway deploy
+live in 81s. GSC actions done via browser automation the same hour:
+
+- Sitemap resubmitted (morning): Google re-downloaded in 1s (was stale since 2026-03-11).
+- **All 6 June orphans: "Submitted and indexed" within 12 minutes** of Request Indexing.
+- **Batch 2: 4 of 5 "Submitted and indexed" within minutes** of deploy + Request Indexing
+  (install, plan-mode, permissions, review — all Measured via URL Inspection API).
+
+Remaining (blocked on the measured 10/day request quota — resets tomorrow):
+1. `claude-code-agent-teams` — live, in sitemap, ≥2 inbound links; needs its Request Indexing.
+2. `/blog/` hub — still "Crawled – currently not indexed"; spend one request on it too.
+Then the 7/14-day coverage re-check from the open-threads list above.
