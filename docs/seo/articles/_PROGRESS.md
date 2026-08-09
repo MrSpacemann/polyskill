@@ -3,8 +3,9 @@
 **Task:** use the SEO skill, produce more content for polyskill based on what the data says makes
 sense, and make images.
 
-**Status: COMPLETE and staged. Not yet published — publishing is a user action (see
-`_HANDOFF_HOW_TO_PUBLISH.md`).**
+**Status: PUBLISHED AND INDEXED (2026-08-09, agent, end-to-end) — see the final section below.
+4 of 5 articles indexed same-day; only `claude-code-agent-teams`'s Request Indexing remains
+(quota), plus the 7/14-day re-checks.**
 
 ## What happened
 
