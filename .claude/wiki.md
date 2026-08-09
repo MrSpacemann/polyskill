@@ -221,3 +221,15 @@ first, and you can't tell which payload won without checking content.
 **Why:** the synchronous publish path (validate+scan) outlives both timeouts for
 big skills; the visible failure is a lie. Real fix candidate: async publish
 (202 + status polling) — not implemented as of 2026-08-09.
+
+## GSC request-indexing quota is exactly 10/day; sitemap resubmit dedupes same-day
+<!-- added: 2026-08-09 -->
+Measured on sc-domain:polyskill.ai: the 11th URL-Inspection "Request Indexing"
+of the day returns "Quota exceeded — try again tomorrow"; re-submitting the same
+sitemap URL a second time the same day is a silent no-op (lastSubmitted
+unmoved, no error, no toast). Both requests worked spectacularly when they
+counted: all 6 June orphans + 4 of 5 batch-2 articles went "Submitted and
+indexed" within ~12 minutes of request (2026-08-09).
+**Why:** budget the 10 requests before starting a batch (highest-value URLs
+first) and make the day's single sitemap submission AFTER the day's last deploy
+— burning it early wastes it.
