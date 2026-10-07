@@ -1,6 +1,6 @@
 {
   "name": "@polyskill/core",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "Core types, validation, and adapters for PolySkill",
   "license": "MIT",
   "homepage": "https://polyskill.ai",
@@ -29,7 +29,8 @@
     "build": "tsc && rm -rf dist/schema && cp -r src/schema dist/schema",
     "test": "vitest run",
     "test:watch": "vitest",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "prepublishOnly": "node ../../scripts/require-pnpm-publish.mjs"
   },
   "dependencies": {
     "ajv": "^8.20.0",
@@ -44,6 +45,6 @@
   "devDependencies": {
     "@types/node": "^22.20.0",
     "typescript": "^5.9.3",
-    "vitest": "^3.2.6"
+    "vitest": "^4.1.11"
   }
 }

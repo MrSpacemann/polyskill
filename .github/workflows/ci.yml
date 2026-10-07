@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node: [20, 22]
+        node: [20, 22, 24]
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
@@ -21,3 +21,19 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - run: pnpm build
       - run: pnpm test
+
+      # The workspace links @polyskill/core for free; a user's `npm install`
+      # does not. Pack both packages and install the tarballs outside the repo
+      # with plain npm, the way users get them.
+      - name: Packed CLI installs and runs outside the workspace
+        run: |
+          pnpm --filter @polyskill/core --filter @polyskill/cli pack --pack-destination "$RUNNER_TEMP/pack"
+          mkdir "$RUNNER_TEMP/smoke" && cd "$RUNNER_TEMP/smoke"
+          npm init -y > /dev/null
+          npm install --no-audit --no-fund "$RUNNER_TEMP"/pack/*.tgz
+          expected=$(node -p "require('$GITHUB_WORKSPACE/packages/cli/package.json').version")
+          actual=$(npx --no-install polyskill --version)
+          [ "$actual" = "$expected" ] || { echo "polyskill --version printed '$actual', expected '$expected'"; exit 1; }
+          cp -r "$GITHUB_WORKSPACE/skills/getting-started" skill
+          npx --no-install polyskill validate skill
+          npx --no-install polyskill build skill

@@ -1,0 +1,24 @@
+name: Published CLI smoke test
+
+# CI proves the repo builds; this proves what users actually get works:
+# install @polyskill/cli from npm, outside any workspace, and use it against
+# the live registry. @polyskill/cli@0.1.13 was uninstallable from 2026-05-19
+# (it shipped a `workspace:*` dependency) and nothing noticed for months.
+# Run it by hand right after every npm publish, too.
+
+on:
+  schedule:
+    - cron: "17 6 * * 1" # Mondays 06:17 UTC
+  workflow_dispatch:
+
+jobs:
+  install-from-npm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install -g @polyskill/cli@latest
+      - run: polyskill --version
+      - run: polyskill search git --limit 1
+      - run: polyskill install @polyskill/getting-started --target local -o "$RUNNER_TEMP/skills"

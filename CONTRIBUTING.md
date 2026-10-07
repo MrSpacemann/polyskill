@@ -4,7 +4,7 @@ Thanks for your interest in contributing to PolySkill!
 
 ## Development Setup
 
-1. **Prerequisites**: Node.js >= 18, pnpm
+1. **Prerequisites**: Node.js >= 20 (the CLI itself runs on >= 18), pnpm
 2. **Clone the repo**:
    ```bash
    git clone https://github.com/MrSpacemann/polyskill.git
@@ -54,18 +54,23 @@ skills/   Example skills
 
 ## Publishing to npm (Maintainers)
 
-Both `@polyskill/core` and `@polyskill/cli` are published to npm. Always use `pnpm publish` (not `npm publish`) — it resolves `workspace:*` dependencies to concrete versions automatically.
+Both `@polyskill/core` and `@polyskill/cli` are published to npm. Always use `pnpm publish` (not `npm publish`) — it resolves `workspace:*` dependencies to concrete versions automatically. A `prepublishOnly` guard refuses `npm publish`: `@polyskill/cli@0.1.13` went out with a literal `workspace:*` dependency and could not be installed by anyone.
 
 ```bash
-# 1. Bump version in the package's package.json (the CLI reads its version from there at runtime)
+# 1. Bump version in the package's package.json (the CLI reads its version from there at runtime).
+#    If the CLI needs unreleased core changes, bump core too — the CLI pins core's exact version.
 # 2. Build and test
 pnpm build && pnpm test
 
-# 3. Publish (from the package directory)
-cd packages/core && pnpm publish --no-git-checks
-cd packages/cli && pnpm publish --no-git-checks
+# 3. Publish core first, then the CLI (from the repo root)
+(cd packages/core && pnpm publish --no-git-checks)
+(cd packages/cli && pnpm publish --no-git-checks)
 
-# 4. Commit, tag, push
+# 4. Verify what users get — from OUTSIDE the repo, where the workspace can't paper over a broken package
+cd /tmp && npx -y @polyskill/cli@latest --version
+#    (or run the "Published CLI smoke test" workflow in GitHub Actions)
+
+# 5. Commit, tag, push
 ```
 
 If you change core, publish core first, then bump the server's dependency in the private repo.
