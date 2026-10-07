@@ -197,7 +197,7 @@ const output = adapter.transpile(skill);
 ## Development
 
 ```bash
-# Prerequisites: Node.js >= 18, pnpm
+# Prerequisites: Node.js >= 20, pnpm
 
 pnpm install
 pnpm build

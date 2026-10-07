@@ -82,7 +82,11 @@ export const searchCommand = new Command("search")
       if (!res.ok) {
         // statusText is empty over HTTP/2 — always include the numeric status
         const reason = res.statusText ? `${res.status} ${res.statusText}` : `HTTP ${res.status}`;
-        console.log(chalk.red(`\nSearch failed: ${reason}\n`));
+        // The registry explains 4xx rejections in `message` (e.g. which --sort
+        // values are valid); a proxy error page is not JSON, so it has none
+        const body = (await res.json().catch(() => null)) as { message?: unknown } | null;
+        const detail = typeof body?.message === "string" ? ` — ${body.message}` : "";
+        console.log(chalk.red(`\nSearch failed: ${reason}${detail}\n`));
         process.exit(1);
       }
 

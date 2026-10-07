@@ -1,2 +1,6 @@
 packages:
   - "packages/*"
+
+# Supply-chain cooldown: never resolve a version published less than 7 days ago
+# (in minutes). Mirrors `min-release-age=7` in ~/.npmrc, which pnpm ignores.
+minimumReleaseAge: 10080

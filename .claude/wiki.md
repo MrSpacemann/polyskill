@@ -1,5 +1,35 @@
 # polyskill Project Wiki
 
+## `@polyskill/cli@0.1.13` on npm is UNINSTALLABLE — it shipped `workspace:*`
+<!-- added: 2026-10-07 -->
+0.1.13 (npm `latest` since 2026-05-19) was published with `npm publish`, so its manifest
+says `"@polyskill/core": "workspace:*"`. `npm i -g`, `npx` and `pnpm dlx` all fail with
+EUNSUPPORTEDPROTOCOL; 0.1.12 and earlier are fine. Nothing noticed for ~4.5 months, and the
+July audit (ef16fde) described 0.1.13's `--version` output yet missed that it doesn't install —
+inside the workspace pnpm links core, so every in-repo check passes. Guards added 2026-10-07: a
+`prepublishOnly` script that refuses non-pnpm publishes, a CI step that installs the packed
+tarballs outside the workspace with plain npm, and a weekly "Published CLI smoke test"
+workflow that installs `@latest` from npm. Fix ships as core 0.1.5 + cli 0.1.14 — core FIRST,
+because pnpm publishes the CLI pinned to core's exact version.
+**Why:** a package's real users are outside the workspace; only an install from outside it
+(packed tarball or the registry) is evidence the package works.
+
+## pnpm ignores `min-release-age` in ~/.npmrc — the 7-day cooldown lives in pnpm-workspace.yaml
+<!-- added: 2026-10-07 -->
+The user's ~/.npmrc sets `min-release-age=7` (supply-chain cooldown), but that is an npm key;
+pnpm silently ignores it and resolved a rollup published 10 hours earlier. `minimumReleaseAge:
+10080` (minutes) in `pnpm-workspace.yaml` applies the same rule to this repo. If an urgent
+security fix is younger than 7 days, add it to `minimumReleaseAgeExclude` rather than
+deleting the setting. The cooldown also bites VERIFICATION: npm 11.14 (nvm default here) honors
+`min-release-age`, so `npx @polyskill/cli@latest` silently resolves to a >7-day-old version
+(measured: `rollup@latest` → 4.63.5 while 4.64.1 was latest) and an exact too-new version fails
+`notarget`. Verify a fresh publish with
+`command npx -y --min-release-age=0 @polyskill/cli@<exact> --version` — on this Mac `npx` is
+aliased to `socket npx`, which eats `--version` ("Unknown flag --version", looks like a broken
+release); `command` skips the alias.
+Note: `pnpm config list` prints the npm `_authToken` — never run it
+(or grep its output for "registry"); query single keys with `pnpm config get <key>`.
+
 ## Core JSON schemas are ALSO the server's validator — loosen client-first only
 
 <!-- added: 2026-07-03 -->
@@ -20,8 +50,9 @@ next core bump.
 `packages/cli/src/index.ts` reads its version via `createRequire(import.meta.url)("../package.json")`.
 Do not reintroduce a hardcoded `.version("x.y.z")` string.
 
-**Why:** the old hardcoded string drifted in production — npm's `@polyskill/cli@0.1.13`
-reports `0.1.12` from `--version` because the publish bumped only package.json.
+**Why:** the old hardcoded string drifted — the published `@polyskill/cli@0.1.13` tarball's
+`dist/index.js` says `.version("0.1.12")` because the publish bumped only package.json.
+(Moot in practice: 0.1.13 can't be installed at all — see the `workspace:*` entry.)
 CONTRIBUTING's "bump in two places" step didn't prevent it; a single source of truth does.
 
 ## getting-started skill: repo is canonical, but published version can run AHEAD of repo
