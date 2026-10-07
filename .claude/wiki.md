@@ -23,7 +23,10 @@ security fix is younger than 7 days, add it to `minimumReleaseAgeExclude` rather
 deleting the setting. The cooldown also bites VERIFICATION: npm 11.14 (nvm default here) honors
 `min-release-age`, so `npx @polyskill/cli@latest` silently resolves to a >7-day-old version
 (measured: `rollup@latest` → 4.63.5 while 4.64.1 was latest) and an exact too-new version fails
-`notarget`. Verify a fresh publish with `npx -y --min-release-age=0 @polyskill/cli@<exact>`.
+`notarget`. Verify a fresh publish with
+`command npx -y --min-release-age=0 @polyskill/cli@<exact> --version` — on this Mac `npx` is
+aliased to `socket npx`, which eats `--version` ("Unknown flag --version", looks like a broken
+release); `command` skips the alias.
 Note: `pnpm config list` prints the npm `_authToken` — never run it
 (or grep its output for "registry"); query single keys with `pnpm config get <key>`.
 
