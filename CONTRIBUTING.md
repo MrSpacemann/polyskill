@@ -67,8 +67,11 @@ pnpm build && pnpm test
 (cd packages/cli && pnpm publish --no-git-checks)
 
 # 4. Verify what users get — from OUTSIDE the repo, where the workspace can't paper over a broken package
-cd /tmp && npx -y @polyskill/cli@latest --version
-#    (or run the "Published CLI smoke test" workflow in GitHub Actions)
+#    Name the exact new version and override any min-release-age cooldown in ~/.npmrc: under a
+#    cooldown, npm 11 silently resolves `@latest` to an OLDER version, so the check would test
+#    the wrong release. It should print the version you just published.
+cd /tmp && npx -y --min-release-age=0 @polyskill/cli@<new-version> --version
+#    (or run the "Published CLI smoke test" workflow in GitHub Actions — runners have no cooldown)
 
 # 5. Commit, tag, push
 ```
