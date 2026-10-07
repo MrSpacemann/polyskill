@@ -157,6 +157,39 @@ describe("search command", () => {
     expect(console.log).toHaveBeenCalledWith(expect.stringContaining("502"));
   });
 
+  it("shows the registry's reason when it rejects the request", async () => {
+    mockFetchResponse(400, {
+      error: "Bad Request",
+      message: "Invalid sort value. Must be one of: relevance, name, recent",
+    });
+
+    await expect(
+      searchCommand.parseAsync(["--sort", "downloads"], { from: "user" })
+    ).rejects.toThrow(ExitError);
+
+    expect(console.log).toHaveBeenCalledWith(
+      expect.stringContaining("Must be one of: relevance, name, recent")
+    );
+    expect(process.exit).toHaveBeenCalledWith(1);
+  });
+
+  it("still fails cleanly when the error body is not JSON", async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: false,
+      status: 502,
+      statusText: "",
+      json: () => Promise.reject(new SyntaxError("Unexpected token <")),
+    } as Response);
+
+    await expect(
+      searchCommand.parseAsync(["weather"], { from: "user" })
+    ).rejects.toThrow(ExitError);
+
+    const failure = vi.mocked(console.log).mock.calls.map((c) => String(c[0])).find((c) => c.includes("Search failed"));
+    expect(failure).toContain("HTTP 502");
+    expect(failure).not.toContain("—");
+  });
+
   it("prints error and exits when the registry returns invalid JSON", async () => {
     vi.mocked(fetch).mockResolvedValue({
       ok: true,
