@@ -75,9 +75,9 @@ git -C <skill_marketplace> fetch -q origin && git -C <skill_marketplace> show or
   back takes several). It passes only when it prints `deployed <commit>` for your commit. If it
   says another deploy is running, wait a minute and run it again. If it fails, times out or the
   connection drops, do NOT run it again: send the owner the output of
-  `ssh command-deck-vps 'tail -3 /opt/polyskill-registry/deploys.log; git -C /opt/polyskill-registry/app log -1 --oneline'`
-  (an interrupted run may have no log line yet; the second line shows which commit is checked
-  out). Otherwise, check each post on the VPS itself, which DNS can't fake:
+  `ssh command-deck-vps 'tail -3 /opt/polyskill-registry/deploys.log; echo "checked out: $(git -C /opt/polyskill-registry/app log -1 --oneline)"'`
+  (an interrupted run may have no log line yet, so the `checked out:` line is the one that says
+  which commit the VPS is on). Otherwise, check each post on the VPS itself, which DNS can't fake:
   `for s in <new-slugs>; do echo "$s $(ssh command-deck-vps curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3210/blog/$s)"; done`
 
 Every post must print `200` before step 5; a `404` means it isn't live.
