@@ -58,20 +58,22 @@ Every one of those 11 slugs must be linked from **at least 2** of the 7 indexed 
 the property that makes them discoverable; if the loop prints anything, the copy was incomplete.
 
 **4. Commit and push to `main`, then deploy.** The registry is moving from Railway to the
-command-deck VPS, which deploys only when told to. Its deploy script reaches skill_marketplace
-`main` the moment polyskill.ai switches to the VPS, so ask git (not DNS: your resolver may still
-point at Railway for hours after the switch):
+command-deck VPS, which deploys only when told to. Its runbook reaches skill_marketplace `main`
+the moment polyskill.ai switches to the VPS and records which server is live, so ask git (not
+DNS: your resolver may still point at Railway for hours after the switch):
 
 ```bash
-git -C <skill_marketplace> fetch -q origin && git -C <skill_marketplace> ls-tree --name-only origin/main deploy/vps/deploy.sh
+git -C <skill_marketplace> fetch -q origin && git -C <skill_marketplace> show origin/main:deploy/vps/README.md 2>/dev/null | grep '^Current state'
 ```
 
-- **Prints nothing:** Railway serves polyskill.ai and auto-deploys the push. After a few minutes,
-  each new post must answer `200`:
+- **Prints nothing, or a state containing `FALLBACK`:** Railway serves polyskill.ai and
+  auto-deploys the push. After a few minutes, each new post must answer `200`:
   `for s in <new-slugs>; do echo "$s $(curl -s -o /dev/null -w '%{http_code}' https://polyskill.ai/blog/$s)"; done`
-- **Prints `deploy/vps/deploy.sh`:** the VPS serves. Run
-  `ssh command-deck-vps /opt/polyskill-registry/app/deploy/vps/deploy.sh` (deploys `origin/main`,
-  prints `deployed <commit>`), then check each post on the VPS itself, which DNS can't fake:
+- **Prints any other state (S5, S6):** the VPS serves. Run
+  `ssh command-deck-vps /opt/polyskill-registry/app/deploy/vps/deploy.sh` with a timeout of a few
+  minutes (it takes ~15 s, about a minute when the scanner is rebuilt). It passes only when it
+  prints `deployed <commit>` for your commit; if it says another deploy is running, wait a minute
+  and run it again. Then check each post on the VPS itself, which DNS can't fake:
   `for s in <new-slugs>; do echo "$s $(ssh command-deck-vps curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3210/blog/$s)"; done`
 
 Every post must print `200` before step 5; a `404` means it isn't live.
