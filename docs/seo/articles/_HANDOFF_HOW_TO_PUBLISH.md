@@ -58,24 +58,23 @@ Every one of those 11 slugs must be linked from **at least 2** of the 7 indexed 
 the property that makes them discoverable; if the loop prints anything, the copy was incomplete.
 
 **4. Commit and push to `main`, then deploy.** The registry is moving from Railway to the
-command-deck VPS, which deploys only when told to. Ask the live site which server answers:
+command-deck VPS, which deploys only when told to. Its deploy script reaches skill_marketplace
+`main` the moment polyskill.ai switches to the VPS, so ask git (not DNS: your resolver may still
+point at Railway for hours after the switch):
 
 ```bash
-curl -sI https://polyskill.ai | grep -i -E '^(server|x-railway-edge|cf-ray):'
+git -C <skill_marketplace> fetch -q origin && git -C <skill_marketplace> ls-tree --name-only origin/main deploy/vps/deploy.sh
 ```
 
-- **`x-railway-edge` in the answer** (e.g. `server: railway-hikari`): Railway serves polyskill.ai
-  and auto-deploys the push; wait a few minutes.
-- **`server: cloudflare` + `cf-ray`, no `x-railway-edge`:** the VPS serves it. Also run
-  `ssh command-deck-vps /opt/polyskill-registry/app/deploy/vps/deploy.sh` after pushing, or the post
-  never goes live. It deploys `origin/main` and prints `deployed <commit>` when done.
+- **Prints nothing:** Railway serves polyskill.ai and auto-deploys the push. After a few minutes,
+  each new post must answer `200`:
+  `for s in <new-slugs>; do echo "$s $(curl -s -o /dev/null -w '%{http_code}' https://polyskill.ai/blog/$s)"; done`
+- **Prints `deploy/vps/deploy.sh`:** the VPS serves. Run
+  `ssh command-deck-vps /opt/polyskill-registry/app/deploy/vps/deploy.sh` (deploys `origin/main`,
+  prints `deployed <commit>`), then check each post on the VPS itself, which DNS can't fake:
+  `for s in <new-slugs>; do echo "$s $(ssh command-deck-vps curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3210/blog/$s)"; done`
 
-Then confirm every new post is live before step 5 (each must print `200`; a `404` means the
-deploy didn't happen):
-
-```bash
-for s in <new-slugs>; do echo "$s $(curl -s -o /dev/null -w '%{http_code}' https://polyskill.ai/blog/$s)"; done
-```
+Every post must print `200` before step 5; a `404` means it isn't live.
 
 ## 5. Then do the two things that can't be automated from here
 
