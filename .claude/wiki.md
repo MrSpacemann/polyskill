@@ -165,8 +165,9 @@ post as the template):
 - New posts must be added as cards to `blog/index.html` (match existing card markup).
 
 Publishing = copy files into skill_marketplace + push to `main` + deploy (Railway auto-deploys
-until the VPS cutover; once `deploy/vps/README.md` is on skill_marketplace `main`, also run its
-`deploy/vps/deploy.sh` on the VPS; see `_HANDOFF_HOW_TO_PUBLISH.md` step 4); the agent
+while `curl -sI https://polyskill.ai` shows `x-railway-edge`; once it shows `server: cloudflare`
+instead, the VPS serves and needs `deploy/vps/deploy.sh` run there; then check each new post
+returns 200 — see `_HANDOFF_HOW_TO_PUBLISH.md` step 4); the agent
 stages drafts in `polyskill/docs/seo/articles/` (see that folder's
 `_HANDOFF_HOW_TO_PUBLISH.md`). **Always `git pull` skill_marketplace first** —
 the local clone is often many commits behind origin/main, and the live blog has

@@ -58,12 +58,24 @@ Every one of those 11 slugs must be linked from **at least 2** of the 7 indexed 
 the property that makes them discoverable; if the loop prints anything, the copy was incomplete.
 
 **4. Commit and push to `main`, then deploy.** The registry is moving from Railway to the
-command-deck VPS, which deploys only when told to. Check skill_marketplace's `main` after your pull:
-- **No `deploy/vps/README.md` on `main`:** the cutover hasn't happened. Railway still serves
-  polyskill.ai and auto-deploys the push; nothing more to do.
-- **`deploy/vps/README.md` on `main`** (it lands there at the cutover): also run
+command-deck VPS, which deploys only when told to. Ask the live site which server answers:
+
+```bash
+curl -sI https://polyskill.ai | grep -i -E '^(server|x-railway-edge|cf-ray):'
+```
+
+- **`x-railway-edge` in the answer** (e.g. `server: railway-hikari`): Railway serves polyskill.ai
+  and auto-deploys the push; wait a few minutes.
+- **`server: cloudflare` + `cf-ray`, no `x-railway-edge`:** the VPS serves it. Also run
   `ssh command-deck-vps /opt/polyskill-registry/app/deploy/vps/deploy.sh` after pushing, or the post
-  stays unpublished. It deploys `origin/main` and prints `deployed <commit>` when done.
+  never goes live. It deploys `origin/main` and prints `deployed <commit>` when done.
+
+Then confirm every new post is live before step 5 (each must print `200`; a `404` means the
+deploy didn't happen):
+
+```bash
+for s in <new-slugs>; do echo "$s $(curl -s -o /dev/null -w '%{http_code}' https://polyskill.ai/blog/$s)"; done
+```
 
 ## 5. Then do the two things that can't be automated from here
 
