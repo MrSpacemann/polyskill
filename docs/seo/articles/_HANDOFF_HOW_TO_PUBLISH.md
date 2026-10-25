@@ -70,10 +70,12 @@ git -C <skill_marketplace> fetch -q origin && git -C <skill_marketplace> show or
   auto-deploys the push. After a few minutes, each new post must answer `200`:
   `for s in <new-slugs>; do echo "$s $(curl -s -o /dev/null -w '%{http_code}' https://polyskill.ai/blog/$s)"; done`
 - **Prints any other state (S5, S6):** the VPS serves. Run
-  `ssh command-deck-vps /opt/polyskill-registry/app/deploy/vps/deploy.sh` with a timeout of a few
-  minutes (it takes ~15 s, about a minute when the scanner is rebuilt). It passes only when it
-  prints `deployed <commit>` for your commit; if it says another deploy is running, wait a minute
-  and run it again. Then check each post on the VPS itself, which DNS can't fake:
+  `ssh command-deck-vps /opt/polyskill-registry/app/deploy/vps/deploy.sh` with a 10-minute
+  timeout (it takes ~15 s, about a minute when the scanner is rebuilt; a failing deploy that rolls
+  back takes several). It passes only when it prints `deployed <commit>` for your commit. If it
+  says another deploy is running, wait a minute and run it again. If it fails, times out or the
+  connection drops, do NOT run it again: read `ssh command-deck-vps tail -3 /opt/polyskill-registry/deploys.log`
+  and tell the owner. Then check each post on the VPS itself, which DNS can't fake:
   `for s in <new-slugs>; do echo "$s $(ssh command-deck-vps curl -s -o /dev/null -w '%{http_code}' http://127.0.0.1:3210/blog/$s)"; done`
 
 Every post must print `200` before step 5; a `404` means it isn't live.
