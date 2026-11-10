@@ -297,10 +297,12 @@ Daily impressions ≈800 (early Sep) → ≈70 (Nov), average position ~7 → 15
 clicks ROSE (Aug 42 → Oct 239) on brand spikes (the query "polyskill" alone: 243 clicks).
 Top losers stayed indexed but fell (how-to-add-skills article: 5,404 → 419 impressions,
 pos 7.2 → 22.3) — Anthropic's own docs, help center, guide and course now hold
-4 of the top 6. Also: 515 of 539 sitemap URLs are thin `/skill/*` auto-imports, of a 39-URL
+4 of the top 6. Also: 515 of 539 sitemap URLs are auto-imported `/skill/*` listings (one sampled
+page ~170 words), of a 39-URL
 sample 21 crawled-and-rejected and 8 never crawled; all 128 external links (GSC Links) point at the homepage; `/blog/`
 is now "URL is unknown to Google". No core update after May 2026. Full numbers, inferred
 causes and recommendations: docs/seo/2026-11-10-seo-skill-review-and-traffic-drop.md.
-**Why:** judge this site on total impressions + average position and on non-brand clicks (GSC
-query filter `notContains polyskill`; most impressions here carry no query), never on total clicks; and a "how to use X" page rarely holds #1 once the vendor
+**Why:** judge this site on total impressions + average position and on non-brand clicks = total − brand
+(brand = query filter `contains polyskill`; a `notContains` filter drops the ~90% of impressions
+that carry no query — it showed 1,006 of 8,904 non-brand impressions), never on total clicks; and a "how to use X" page rarely holds #1 once the vendor
 publishes its own (inferred from this case) — new articles need an angle the official docs don't cover.

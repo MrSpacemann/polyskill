@@ -40,6 +40,9 @@ measured table and the "host DR is the wrong number" rule.
   Steps around Sep 16–18, Oct 1 and Oct 19–23.
 - Monthly clicks still rose (Aug 42 → Sep 159 → Oct 239) because of brand spikes (Sep 28–30,
   Oct 9–11): the query "polyskill" alone has 243 clicks in 3 months. Watching clicks hid the loss.
+- Non-brand = unfiltered total − `contains polyskill` rows, Sep 1–14 vs Oct 26 – Nov 8:
+  impressions 8,904 → 1,056 (−88%), clicks 40 → 8. (A `notContains polyskill` filter would have
+  shown only 1,006 of the 8,904 — it drops every impression that carries no query.)
 - Concentrated: `/blog/how-to-add-skills-to-claude-code` 5,404 → 419 impressions (pos 7.2 → 22.3),
   `/blog/claude-code-router` pos 8.7 → 33.5; dozens of `/skill/*` pages went to 0.
 - That article's queries (impressions before → after in brackets; per-query rows are small, so
@@ -71,7 +74,7 @@ measured table and the "host DR is the wrong number" rule.
 1. **Outranked by the official source.** Anthropic now covers "how to install skills" with docs, a
    help-center article, a guide and a course. A third-party how-to rarely beats the vendor once it
    exists. Fits: the page is still indexed and fell 7.2 → 22.3 at page level.
-2. **Site-wide quality drag from the thin `/skill/*` template.** 96% of sitemap URLs; in the sample,
+2. **Site-wide quality drag from the auto-imported `/skill/*` template** (one sampled page ~170 words). 96% of sitemap URLs; in the sample,
    54% crawled and rejected by Google, a further 21% never crawled. This is the scaled-content pattern Google's site-wide quality signals weigh.
    Would be disproved if noindexing the template leaves the good pages unchanged after 4–8 weeks.
 3. **No external links to any article** — nothing outside the site vouches for the content pages.
@@ -79,11 +82,11 @@ measured table and the "host DR is the wrong number" rule.
 ## 3. Recommendations for the site (skill_marketplace — not changed here)
 
 <recommendation>
-**What:** Noindex the `/skill/*` pages that are thin auto-imports (or drop them from the sitemap) and keep indexable only listings with real unique content — this also stops spending crawl on the ~21% Google hasn't even fetched; then watch the blog's non-brand impressions for 4–8 weeks.
+**What:** Noindex the `/skill/*` pages that are thin auto-imports (or drop them from the sitemap) and keep indexable only listings with real unique content; then watch the indexed articles' unfiltered per-page impressions and positions for 4–8 weeks.
 **Confidence:** Medium on direction (the pattern is measured: 515/539 URLs; 54% of a 39-page sample crawled-and-rejected, 21% never crawled); Low on how much it recovers (the site-wide drag is inferred, not measured).
 **Evidence:** sitemap count; 39-URL URL Inspection sample; ~170-word sample page.
 **Could be wrong if:** the drop is purely competitive (cause 1) — then the good pages won't move.
-**To raise confidence:** run it as the experiment above; compare non-brand impressions of the 15 indexed articles before/after.
+**To raise confidence:** run it as the experiment above; compare unfiltered per-page impressions and positions of the 15 indexed articles before/after (a query filter would drop the ~90% of impressions that carry no query).
 </recommendation>
 
 <recommendation>
