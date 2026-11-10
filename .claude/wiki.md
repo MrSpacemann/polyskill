@@ -136,7 +136,9 @@ SERP); balance ~$40. Two landmines hit while setting up:
    creds being sent*, e.g. a grep that didn't match the `export ` prefix.)
 
 **Key SEO finding:** polyskill.ai is a near-zero-authority new domain (no
-indexed backlinks/organic footprint in DataForSEO) — strategy must favor
+indexed backlinks/organic footprint in DataForSEO — as of 2026-05-30; superseded: the
+2026-08-09 baseline had 25 backlinks / 6 referring domains, and GSC Links on 2026-11-10
+showed 128 links from 12 sites, all to the homepage) — strategy must favor
 low-KD keywords. Real US volumes reordered the plan: the prizes are
 `claude code skills` (9,900/KD32), `claude code plugins` (4,400/KD12),
 `claude code pricing` (27,100/KD13 but AI-Overview-capped) — NOT the
@@ -194,8 +196,10 @@ never crawled them** (`URL is unknown to Google` on all six, verified via the GS
 URL Inspection API 2026-08-07).
 **Why:** on this domain, discovery happens article-to-article — GSC `referringUrls`
 shows e.g. `/blog/claude-code-marketplace` was found via `/blog/claude-code-mcp`.
-The blog hub can't carry it: `/blog/` is "Crawled – currently not indexed" and the
-sitemap was last downloaded by Google on **2026-03-11**. A new post with no inbound
+The blog hub can't carry it: `/blog/` was "Crawled – currently not indexed" and the
+sitemap was last downloaded by Google on **2026-03-11** (both as of 2026-08-07; on 2026-11-10
+`/blog/` was "URL is unknown to Google" and the sitemap, resubmitted 2026-08-09, was last
+downloaded 2026-11-04). A new post with no inbound
 link from an indexed page is invisible no matter how good it is.
 **Rule:** after publishing, every new slug must have ≥2 inbound links from an
 already-indexed post, and the sitemap must be re-submitted in Search Console by
@@ -291,12 +295,12 @@ using `polyskill search` or curl: `install` passes even with the tunnel down, vi
 <!-- added: 2026-11-10 -->
 Daily impressions ≈800 (early Sep) → ≈70 (Nov), average position ~7 → 15-25, while monthly
 clicks ROSE (Aug 42 → Oct 239) on brand spikes (the query "polyskill" alone: 243 clicks).
-Top losers stayed indexed but fell (how-to-add-skills article: "how to install skills in
-claude code" pos 1.7 → 38) — Anthropic's own docs, help center, guide and course now hold
-4 of the top 6. Also: 515 of 539 sitemap URLs are thin `/skill/*` auto-imports, ~74% of a
-39-URL sample not indexed; all 128 external links (GSC Links) point at the homepage; `/blog/`
+Top losers stayed indexed but fell (how-to-add-skills article: 5,404 → 419 impressions,
+pos 7.2 → 22.3) — Anthropic's own docs, help center, guide and course now hold
+4 of the top 6. Also: 515 of 539 sitemap URLs are thin `/skill/*` auto-imports, of a 39-URL
+sample 21 crawled-and-rejected and 8 never crawled; all 128 external links (GSC Links) point at the homepage; `/blog/`
 is now "URL is unknown to Google". No core update after May 2026. Full numbers, inferred
 causes and recommendations: docs/seo/2026-11-10-seo-skill-review-and-traffic-drop.md.
-**Why:** judge this site on non-brand impressions + position (GSC query filter `notContains
-polyskill`), never on total clicks; and a "how to use X" page rarely holds #1 once the vendor
+**Why:** judge this site on total impressions + average position and on non-brand clicks (GSC
+query filter `notContains polyskill`; most impressions here carry no query), never on total clicks; and a "how to use X" page rarely holds #1 once the vendor
 publishes its own (inferred from this case) — new articles need an angle the official docs don't cover.

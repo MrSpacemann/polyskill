@@ -42,8 +42,10 @@ measured table and the "host DR is the wrong number" rule.
   Oct 9–11): the query "polyskill" alone has 243 clicks in 3 months. Watching clicks hid the loss.
 - Concentrated: `/blog/how-to-add-skills-to-claude-code` 5,404 → 419 impressions (pos 7.2 → 22.3),
   `/blog/claude-code-router` pos 8.7 → 33.5; dozens of `/skill/*` pages went to 0.
-- That article's queries: "how to install skills in claude code" pos 1.7 → 38; "add skills to
-  claude code" 3.1 → not ranking; "how to add skills to claude code" 9.1 → 54.3.
+- That article's queries (impressions before → after in brackets; per-query rows are small, so
+  these only corroborate the page-level fall): "how to install skills in claude code" pos 1.7 (34)
+  → 38 (1); "add skills to claude code" 3.1 (13) → not ranking; "how to add skills to claude code"
+  9.1 (36) → 54.3 (7).
 - Both big articles are still "Submitted and indexed" (URL Inspection) → demoted/outranked, not removed.
 - Search Console's Generative AI report: ~230 AI-feature impressions/day late Aug → ~5/day now;
   3,141 of 4,540 (3 months) came from that one article.
@@ -55,7 +57,8 @@ measured table and the "host DR is the wrong number" rule.
   "URL is unknown to Google" although it is in the sitemap and 200s with a correct canonical.
 - Sitemap: 539 URLs, of which 515 are `/skill/*` (auto-imported listings; a sampled page has
   ~170 visible words, mostly the listed repo's own CLAUDE.md). URL Inspection sample of 39:
-  10 indexed, 21 crawled-not-indexed, 2 discovered-not-indexed, 6 unknown → **74% not indexed**.
+  10 indexed, **21 crawled-not-indexed (54%, a quality verdict)**, 8 never crawled (2 discovered,
+  6 unknown — 21%, a discovery problem; opposite fix).
 - Search Console Links: 128 external links from 12 sites, **all to the homepage**; no article has
   an external link Google knows of.
 - Google's data-anomalies page lists no Search-impressions issue for Sep–Nov 2026 → not a
@@ -67,17 +70,17 @@ measured table and the "host DR is the wrong number" rule.
 **Inferred causes (not proven):**
 1. **Outranked by the official source.** Anthropic now covers "how to install skills" with docs, a
    help-center article, a guide and a course. A third-party how-to rarely beats the vendor once it
-   exists. Fits: the page is still indexed, its head queries fell 1.7 → 38.
-2. **Site-wide quality drag from the thin `/skill/*` template.** 96% of sitemap URLs, ~74% of them
-   rejected by Google. This is the scaled-content pattern Google's site-wide quality signals weigh.
+   exists. Fits: the page is still indexed and fell 7.2 → 22.3 at page level.
+2. **Site-wide quality drag from the thin `/skill/*` template.** 96% of sitemap URLs; in the sample,
+   54% crawled and rejected by Google, a further 21% never crawled. This is the scaled-content pattern Google's site-wide quality signals weigh.
    Would be disproved if noindexing the template leaves the good pages unchanged after 4–8 weeks.
 3. **No external links to any article** — nothing outside the site vouches for the content pages.
 
 ## 3. Recommendations for the site (skill_marketplace — not changed here)
 
 <recommendation>
-**What:** Noindex the `/skill/*` pages that are thin auto-imports (or drop them from the sitemap) and keep indexable only listings with real unique content; then watch the blog's non-brand impressions for 4–8 weeks.
-**Confidence:** Medium on direction (the pattern is measured: 515/539 URLs, ~74% of a sample rejected); Low on how much it recovers (the site-wide drag is inferred, not measured).
+**What:** Noindex the `/skill/*` pages that are thin auto-imports (or drop them from the sitemap) and keep indexable only listings with real unique content — this also stops spending crawl on the ~21% Google hasn't even fetched; then watch the blog's non-brand impressions for 4–8 weeks.
+**Confidence:** Medium on direction (the pattern is measured: 515/539 URLs; 54% of a 39-page sample crawled-and-rejected, 21% never crawled); Low on how much it recovers (the site-wide drag is inferred, not measured).
 **Evidence:** sitemap count; 39-URL URL Inspection sample; ~170-word sample page.
 **Could be wrong if:** the drop is purely competitive (cause 1) — then the good pages won't move.
 **To raise confidence:** run it as the experiment above; compare non-brand impressions of the 15 indexed articles before/after.
@@ -86,7 +89,7 @@ measured table and the "host DR is the wrong number" rule.
 <recommendation>
 **What:** Re-angle `/blog/how-to-add-skills-to-claude-code` toward what Anthropic's docs don't cover (installing skills across tools/agents, finding and vetting third-party skills, troubleshooting), instead of competing on the generic how-to.
 **Confidence:** Medium.
-**Evidence:** SERP measured today (4 of top 6 are Anthropic); the article's head-query positions fell 1.7 → 38 while it stayed indexed.
+**Evidence:** SERP measured today (4 of top 6 are Anthropic); the article fell 7.2 → 22.3 (page level, 5,404 → 419 impressions) while it stayed indexed.
 **Could be wrong if:** Google's ranking of the official pages is temporary (unconfirmed volatility).
 **To raise confidence:** check the same SERP again in 2 weeks; GSC queries for the new angle after the rewrite.
 </recommendation>
@@ -110,9 +113,10 @@ measured table and the "host DR is the wrong number" rule.
 ## 4. Skill changes (seo-beast 1.11.0, ~/claude-dotfiles)
 
 See its CHANGELOG. Main ones: removed correlation numbers the cited study never published
-(Reddit ~0.65 etc.); rewrote the AI-crawler table from the vendors' docs (GPTBot/ClaudeBot/
-Google-Extended are training-only — blocking them costs no search visibility); FAQ rich results
-retired 2026-05-07; DataForSEO LLM Mentions endpoint + 2026-07 price rise; new Traffic-Drop Triage
+(Reddit ~0.65 etc.); rewrote the AI-crawler table from the vendors' docs (blocking GPTBot/ClaudeBot
+costs no search visibility; Google-Extended costs nothing in Google Search/AI Overviews but does
+opt out of Gemini-app grounding); FAQ rich results
+retired 2026-05-07; DataForSEO LLM Mentions endpoint + pricing + 2026-07 price rise; new Traffic-Drop Triage
 section built from section 2; measured Tier-4 table; GSC Links + Generative AI report as free checks.
 
 ## 5. Not done / not verified
