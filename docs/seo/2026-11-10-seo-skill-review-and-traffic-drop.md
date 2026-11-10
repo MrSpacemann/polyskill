@@ -25,8 +25,8 @@ platform (raw HTML via a script; Chrome rendered DOM for bot-walled or JavaScrip
   noindexes a post until its score reaches `index_minimum_score` (quality reactions from trusted
   users) or it is featured. A fresh cross-post passes nothing at first. The profile "website"
   link is `rel="noopener me ugc"` unless the account is staff-marked trusted (Forem
-  `users/show.html.erb`: `"ugc" unless @user.trusted?`; 7 of 8 ordinary profiles sampled had `ugc` —
-  the first sample, `dev.to/ben`, is a co-founder's trusted account).
+  `users/show.html.erb`: `"ugc" unless @user.trusted?`; 7 of 8 recent posters sampled had `ugc`,
+  the 8th is staff-trusted; the first sample, `dev.to/ben`, is a co-founder's trusted account).
 - **polyskill.ai is already on Product Hunt** (7 linking pages in Search Console).
 - **What actually correlates with AI visibility is brand mentions, not links (Relayed, primary
   source re-read):** Ahrefs 2025-12-12, 75K brands: YouTube mentions ~0.737, branded web mentions
