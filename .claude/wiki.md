@@ -152,7 +152,9 @@ build step generates them). Conventions every post follows (copy an existing
 post as the template):
 - `<head>`: GTM, full meta+OG+Twitter, canonical `https://polyskill.ai/blog/<slug>`,
   and **three JSON-LD blocks** — `Article`, `BreadcrumbList`, `FAQPage` (the
-  FAQPage `name`s MUST match the visible `<h3>` FAQ questions verbatim).
+  FAQPage `name`s MUST match the visible `<h3>` FAQ questions verbatim). Since
+  2026-05-07 Google shows FAQ rich results for no site, so FAQPage earns nothing
+  visible — keep it for consistency, never count it as an SEO win.
 - OG/hero image at `/img/og/<slug>.jpg` (1200×669) **plus** `-600w.jpg` and
   `-1000w.jpg` responsive variants, referenced via `srcset` on the hero `<img>`.
   Files live in `packages/server/public/img/og/`.
@@ -240,6 +242,8 @@ per submission). ComposioHQ/awesome-claude-skills (72k★) accepts actual skill
 folders only — tool-link PRs are auto-rejects. travisvn/karanb192/jqueryscript
 take normal README PRs. 2026-08-09 submissions: PRs #1096/#193/#578 + issue #2472
 (details in docs/seo/outreach/2026-08-09-link-acquisition-field-run.md).
+Outcome at 2026-11-10: only #193 (karanb192, 473★) merged, on 2026-10-02; the other
+three had no maintainer response at all. Budget months, and count only merged entries.
 **Why:** the wrong intake path wastes the one shot a small project gets with a
 maintainer, and a future agent will otherwise re-derive all of this from scratch.
 
@@ -282,3 +286,17 @@ including `@polyskill/cli` and `@polyskill/core`.
 Test a staged registry with `POLYSKILL_REGISTRY=http://127.0.0.1:<port>` through an SSH tunnel,
 using `polyskill search` or curl: `install` passes even with the tunnel down, via the npm mirror.
 **Why:** both failures look like success from the CLI's side.
+
+## polyskill.ai lost ~90% of its non-brand search visibility Sep → Nov 2026, and rising clicks hid it
+<!-- added: 2026-11-10 -->
+Daily impressions ≈800 (early Sep) → ≈70 (Nov), average position ~7 → 15-25, while monthly
+clicks ROSE (Aug 42 → Oct 239) on brand spikes (the query "polyskill" alone: 243 clicks).
+Top losers stayed indexed but fell (how-to-add-skills article: "how to install skills in
+claude code" pos 1.7 → 38) — Anthropic's own docs, help center, guide and course now hold
+4 of the top 6. Also: 515 of 539 sitemap URLs are thin `/skill/*` auto-imports, ~74% of a
+39-URL sample not indexed; all 128 external links (GSC Links) point at the homepage; `/blog/`
+is now "URL is unknown to Google". No core update after May 2026. Full numbers, inferred
+causes and recommendations: docs/seo/2026-11-10-seo-skill-review-and-traffic-drop.md.
+**Why:** judge this site on non-brand impressions + position (GSC query filter `notContains
+polyskill`), never on total clicks; and a "how to use X" page rarely holds #1 once the vendor
+publishes its own (inferred from this case) — new articles need an angle the official docs don't cover.
