@@ -15,15 +15,18 @@ platform (raw HTML via a script; Chrome rendered DOM for bot-walled or JavaScrip
 
 | Result | Platforms |
 |---|---|
-| Followed (9) | linktr.ee, indiepa.ge, dev.to profile link, carrd (own subdomain), GitHub Pages (own subdomain, by construction), Substack post body, viralmarketinglab, mssg.me (JS-only), Gumroad (JS-only) |
+| Followed (8) | linktr.ee, indiepa.ge, carrd (own subdomain), GitHub Pages (own subdomain, by construction), Substack post body, viralmarketinglab, mssg.me (JS-only), Gumroad (JS-only) |
 | Mixed (1) | TrustMRR (one listing nofollow, one followed; needs Stripe-verified revenue) |
-| nofollow / ugc (10) | Product Hunt (`ugc`), Behance (`ugc`), Chrome Web Store (`ugc nofollow`), Stripe Climate (`ugc nofollow`), Medium articles (`ugc nofollow`), Hashnode (`nofollow ugc`), Crunchbase, about.me, Dribbble, Taplink (`nofollow`) |
+| nofollow / ugc (11) | dev.to profile link (`ugc` unless dev.to staff mark the account trusted), Product Hunt (`ugc`), Behance (`ugc`), Chrome Web Store (`ugc nofollow`), Stripe Climate (`ugc nofollow`), Medium articles (`ugc nofollow`), Hashnode (`nofollow ugc`), Crunchbase, about.me, Dribbble, Taplink (`nofollow`) |
 | No link (1) | G2 / Capterra (no `<a>` to the vendor in the rendered product page) |
 
 - **dev.to trap (Measured):** 24 of 24 brand-new posts sampled from `/api/articles/latest` were served
   `<meta name="robots" content="noindex">` + `nofollow`. Forem's source (`Article#skip_indexing?`)
   noindexes a post until its score reaches `index_minimum_score` (quality reactions from trusted
-  users) or it is featured. A fresh cross-post passes nothing at first.
+  users) or it is featured. A fresh cross-post passes nothing at first. The profile "website"
+  link is `rel="noopener me ugc"` unless the account is staff-marked trusted (Forem
+  `users/show.html.erb`: `"ugc" unless @user.trusted?`; 7 of 8 ordinary profiles sampled had `ugc` —
+  the first sample, `dev.to/ben`, is a co-founder's trusted account).
 - **polyskill.ai is already on Product Hunt** (7 linking pages in Search Console).
 - **What actually correlates with AI visibility is brand mentions, not links (Relayed, primary
   source re-read):** Ahrefs 2025-12-12, 75K brands: YouTube mentions ~0.737, branded web mentions
@@ -40,10 +43,14 @@ measured table and the "host DR is the wrong number" rule.
   Steps around Sep 16–18, Oct 1 and Oct 19–23.
 - Monthly clicks still rose (Aug 42 → Sep 159 → Oct 239) because of brand spikes (Sep 28–30,
   Oct 9–11): the query "polyskill" alone has 243 clicks in 3 months. Watching clicks hid the loss.
-- Non-brand = unfiltered total − `contains polyskill` rows, Sep 1–14 vs Oct 26 – Nov 8:
-  impressions 8,904 → 1,056 (−88%), clicks 40 → 8. (A `notContains polyskill` filter would have
-  shown only 1,006 of the 8,904 — it drops every impression that carries no query.)
-- Concentrated: `/blog/how-to-add-skills-to-claude-code` 5,404 → 419 impressions (pos 7.2 → 22.3),
+- Non-brand = unfiltered total − brand rows, where brand = query filter `includingRegex (?i)pol+y\s*skil+`
+  (it must catch misspellings: in October "poly skill" alone had 40 clicks, plus "pollyskill" 3 and
+  "poly skills" 1). Sep 1–14 vs Oct 26 – Nov 8: non-brand impressions 8,882 → 1,027 (−88%), clicks
+  34 → 7. Monthly non-brand clicks Aug 39 → Sep 54 → Oct 40. (A plain `contains polyskill` brand
+  filter made non-brand clicks look like they ROSE, 39 → 73 → 84; a `notContains` filter for
+  non-brand shows only ~1,000 of the ~8,900 impressions — it drops every impression without a query.)
+- Concentrated (3-week windows Aug 25 – Sep 14 vs Oct 19 – Nov 8; this section's per-page and
+  per-query numbers all use them): `/blog/how-to-add-skills-to-claude-code` 5,404 → 419 impressions (pos 7.2 → 22.3),
   `/blog/claude-code-router` pos 8.7 → 33.5; dozens of `/skill/*` pages went to 0.
 - That article's queries (impressions before → after in brackets; per-query rows are small, so
   these only corroborate the page-level fall): "how to install skills in claude code" pos 1.7 (34)
@@ -73,7 +80,8 @@ measured table and the "host DR is the wrong number" rule.
 **Inferred causes (not proven):**
 1. **Outranked by the official source.** Anthropic now covers "how to install skills" with docs, a
    help-center article, a guide and a course. A third-party how-to rarely beats the vendor once it
-   exists. Fits: the page is still indexed and fell 7.2 → 22.3 at page level.
+   exists. Fits: the page is still indexed and fell 7.2 → 22.3 at page level (Aug 25 – Sep 14 vs
+   Oct 19 – Nov 8).
 2. **Site-wide quality drag from the auto-imported `/skill/*` template** (one sampled page ~170 words). 96% of sitemap URLs; in the sample,
    54% crawled and rejected by Google, a further 21% never crawled. This is the scaled-content pattern Google's site-wide quality signals weigh.
    Would be disproved if noindexing the template leaves the good pages unchanged after 4–8 weeks.
@@ -92,7 +100,7 @@ measured table and the "host DR is the wrong number" rule.
 <recommendation>
 **What:** Re-angle `/blog/how-to-add-skills-to-claude-code` toward what Anthropic's docs don't cover (installing skills across tools/agents, finding and vetting third-party skills, troubleshooting), instead of competing on the generic how-to.
 **Confidence:** Medium.
-**Evidence:** SERP measured today (4 of top 6 are Anthropic); the article fell 7.2 → 22.3 (page level, 5,404 → 419 impressions) while it stayed indexed.
+**Evidence:** SERP measured today (4 of top 6 are Anthropic); the article fell 7.2 → 22.3 (page level, 5,404 → 419 impressions, Aug 25 – Sep 14 vs Oct 19 – Nov 8) while it stayed indexed.
 **Could be wrong if:** Google's ranking of the official pages is temporary (unconfirmed volatility).
 **To raise confidence:** check the same SERP again in 2 weeks; GSC queries for the new angle after the rewrite.
 </recommendation>
