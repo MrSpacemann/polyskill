@@ -22,8 +22,11 @@ platform (raw HTML via a script; Chrome rendered DOM for bot-walled or JavaScrip
 
 - **dev.to trap (Measured):** 24 of 24 brand-new posts sampled from `/api/articles/latest` were served
   `<meta name="robots" content="noindex">` + `nofollow`. Forem's source (`Article#skip_indexing?`)
-  noindexes a post until its score reaches `index_minimum_score` (quality reactions from trusted
-  users) or it is featured. A fresh cross-post passes nothing at first. The profile "website"
+  noindexes a post until its score reaches `index_minimum_score` or it is featured. The score is not
+  only reactions: `Article#update_score` also adds automatic bonuses (moderation label, badges, an
+  established-author bonus, organisation baseline). Of 15 zero-reaction posts aged 11–47 h, 6 were
+  already indexable and 9 still hidden. So a fresh cross-post passes nothing at first, and whether a
+  new account's post ever gets indexed without reactions is untested. The profile "website"
   link is `rel="noopener me ugc"` unless the account is staff-marked trusted (Forem
   `users/show.html.erb`: `"ugc" unless @user.trusted?`; 7 of 8 recent posters sampled had `ugc`,
   the 8th is staff-trusted; the first sample, `dev.to/ben`, is a co-founder's trusted account).
@@ -73,7 +76,8 @@ measured table and the "host DR is the wrong number" rule.
   an external link Google knows of.
 - Google's data-anomalies page lists no Search-impressions issue for Sep–Nov 2026 → not a
   reporting glitch (Relayed from support.google.com/webmasters/answer/6211453, re-read).
-- Google Search Status Dashboard: no core update after May 2026; the September 2026 spam update ran
+- Google Search Status Dashboard: no core update between May 2026 and the drop; the **November 2026
+  core update began 2026-11-10** (after all data in this doc). The September 2026 spam update ran
   Sep 24 for 13 days 16 hours, i.e. to ~Oct 8 (overlaps only the Oct 1 step) (Relayed, re-read on
   status.search.google.com 2026-11-10).
 
@@ -90,7 +94,7 @@ measured table and the "host DR is the wrong number" rule.
 ## 3. Recommendations for the site (skill_marketplace — not changed here)
 
 <recommendation>
-**What:** Noindex the `/skill/*` pages that are thin auto-imports (or drop them from the sitemap) and keep indexable only listings with real unique content; then watch the indexed articles' unfiltered per-page impressions and positions for 4–8 weeks.
+**What:** Noindex the `/skill/*` pages that are thin auto-imports (or drop them from the sitemap) and keep indexable only listings with real unique content; then watch the indexed articles' unfiltered per-page impressions and positions for 4–8 weeks. Take the "before" numbers from before 2026-11-10 and judge only after Google marks the November 2026 core update complete — otherwise the core update and the noindex change can't be told apart.
 **Confidence:** Medium on direction (the pattern is measured: 515/539 URLs; 54% of a 39-page sample crawled-and-rejected, 21% never crawled); Low on how much it recovers (the site-wide drag is inferred, not measured).
 **Evidence:** sitemap count; 39-URL URL Inspection sample; ~170-word sample page.
 **Could be wrong if:** the drop is purely competitive (cause 1) — then the good pages won't move.
@@ -102,7 +106,7 @@ measured table and the "host DR is the wrong number" rule.
 **Confidence:** Medium.
 **Evidence:** SERP measured today (4 of top 6 are Anthropic); the article fell 7.2 → 22.3 (page level, 5,404 → 419 impressions, Aug 25 – Sep 14 vs Oct 19 – Nov 8) while it stayed indexed.
 **Could be wrong if:** Google's ranking of the official pages is temporary (unconfirmed volatility).
-**To raise confidence:** check the same SERP again in 2 weeks; GSC queries for the new angle after the rewrite.
+**To raise confidence:** check the same SERP again once the November 2026 core update (began 2026-11-10) is marked complete; GSC queries for the new angle after the rewrite.
 </recommendation>
 
 <recommendation>

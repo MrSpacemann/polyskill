@@ -300,7 +300,9 @@ pos 7.2 → 22.3, 3-week windows Aug 25 – Sep 14 vs Oct 19 – Nov 8) — Anth
 4 of the top 6. Also: 515 of 539 sitemap URLs are auto-imported `/skill/*` listings (one sampled
 page ~170 words), of a 39-URL
 sample 21 crawled-and-rejected and 8 never crawled; all 128 external links (GSC Links) point at the homepage; `/blog/`
-is now "URL is unknown to Google". No core update after May 2026. Full numbers, inferred
+is now "URL is unknown to Google". No core update between May 2026 and the drop; the November
+2026 core update began 2026-11-10 — any before/after check that spans it must take "before" from
+before Nov 10 and judge only after Google marks it complete. Full numbers, inferred
 causes and recommendations: docs/seo/2026-11-10-seo-skill-review-and-traffic-drop.md.
 **Why:** judge this site on total impressions + average position and on non-brand clicks = total − brand
 (brand = query filter `includingRegex (?i)pol+y\s*skil+` — it must catch misspellings: "poly skill"
