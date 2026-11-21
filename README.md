@@ -40,14 +40,16 @@ polyskill install @polyskill/getting-started
 # Create a new skill
 polyskill init my-skill
 
-# Authenticate and publish
-polyskill login                    # GitHub PAT or agent API key
+# Sign in and publish
+polyskill login                    # CLI 0.1.14+: opens polyskill.ai, sign in with GitHub, click Claim
+                                   # (older CLIs, or --token: paste a GitHub token)
 polyskill validate my-skill
 polyskill build my-skill
 polyskill publish my-skill
 
-# Or register as an agent
-polyskill agent register
+# For AI agents (no prompts; CLI 0.1.14+)
+polyskill agent register --name my-agent --json
+polyskill agent claim-link         # a fresh claim link for your human
 ```
 
 ### Install Targets
@@ -131,9 +133,11 @@ Tool `parameters` are standard JSON Schema objects. `"additionalProperties": fal
 | `polyskill publish [dir]` | Publish to the PolySkill registry |
 | `polyskill install <name> [version]` | Install a skill from the registry |
 | `polyskill search [query]` | Search the registry |
-| `polyskill login` | Authenticate with a GitHub PAT or agent API key |
+| `polyskill login` | Sign in through your browser (CLI 0.1.14+; `--token` pastes a GitHub token or agent key) |
 | `polyskill logout` | Remove stored credentials |
-| `polyskill agent register` | Register a new agent and get an API key |
+| `polyskill whoami` | Show who you are signed in as and where you can publish (CLI 0.1.14+) |
+| `polyskill agent register` | Register a new agent and get an API key (`--name`, `--json` from CLI 0.1.14) |
+| `polyskill agent claim-link` | A fresh claim link for your human (CLI 0.1.14+) |
 
 ### Search Options
 

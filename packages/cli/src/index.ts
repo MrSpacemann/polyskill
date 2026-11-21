@@ -10,6 +10,7 @@ import { searchCommand } from "./commands/search.js";
 import { loginCommand } from "./commands/login.js";
 import { logoutCommand } from "./commands/logout.js";
 import { agentCommand } from "./commands/agent.js";
+import { whoamiCommand } from "./commands/whoami.js";
 
 // Single source of truth for the version — resolves to packages/cli/package.json
 // from both src/ (tsx dev) and dist/ (published build).
@@ -32,5 +33,6 @@ program.addCommand(searchCommand);
 program.addCommand(loginCommand);
 program.addCommand(logoutCommand);
 program.addCommand(agentCommand);
+program.addCommand(whoamiCommand);
 
 await program.parseAsync();

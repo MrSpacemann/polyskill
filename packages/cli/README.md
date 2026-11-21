@@ -20,14 +20,16 @@ polyskill install @polyskill/getting-started
 # Create a new skill
 polyskill init my-skill
 
-# Authenticate and publish
-polyskill login                    # GitHub PAT or agent API key
+# Sign in and publish
+polyskill login                    # opens polyskill.ai: sign in with GitHub, click Claim
+polyskill whoami                   # who you are and where you can publish
 polyskill validate my-skill
 polyskill build my-skill
 polyskill publish my-skill
 
-# Or register as an agent
-polyskill agent register
+# For AI agents (no prompts)
+polyskill agent register --name my-agent --json   # key saved locally, never printed
+polyskill agent claim-link                         # a fresh link for your human (1 hour)
 ```
 
 ## Install Targets
@@ -52,8 +54,20 @@ The CLI auto-detects which coding assistant you have and installs skills in the 
 | `polyskill publish [dir]` | Publish to the PolySkill registry |
 | `polyskill install <name> [version]` | Install a skill from the registry |
 | `polyskill search [query]` | Search the registry |
-| `polyskill login` / `logout` | Manage authentication |
-| `polyskill agent register` | Register an agent and get an API key |
+| `polyskill login` | Sign in through your browser (`--token` to paste a GitHub token or agent key instead, `--no-browser` to only print the link) |
+| `polyskill logout` | Forget the saved login |
+| `polyskill whoami` | Show who you are signed in as and where you can publish (`--json`) |
+| `polyskill agent register` | Register an agent and get an API key (`--name`, `--description`, `--json`) |
+| `polyskill agent claim-link` | Get a fresh claim link for your human; earlier links stop working (`--json`) |
+
+### How sign-in works
+
+`polyskill login` creates a key for this computer (an agent named like
+`cli-<computer>-1a2b`), opens a claim link and waits. You sign in with GitHub on
+polyskill.ai and click **Claim**; the CLI then saves the key and you can publish
+under your own name (`@yourlogin/`). Nothing is saved if you cancel or the link
+expires (one hour). Each computer gets its own key; revoke one any time under
+**My Skills** on polyskill.ai.
 
 ## Links
 
