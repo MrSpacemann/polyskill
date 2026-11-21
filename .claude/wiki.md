@@ -169,7 +169,8 @@ post as the template):
 - New posts must be added as cards to `blog/index.html` (match existing card markup).
 
 Publishing = copy files into skill_marketplace + push to `main` + deploy (since the 2026-11-21
-cutover nothing auto-deploys: run its `deploy.sh` on the VPS, pass only on
+cutover nothing auto-deploys: unless the runbook's "Current state" says FALLBACK (publishing
+paused), run its `deploy.sh` on the VPS, pass only on
 `deployed <commit>`, and check each new post returns 200 on the VPS itself, not through DNS —
 see `_HANDOFF_HOW_TO_PUBLISH.md` step 4); the agent
 stages drafts in `polyskill/docs/seo/articles/` (see that folder's
@@ -286,8 +287,9 @@ as "egress-blocked sandbox" and falls back to the npm mirror, announced only by 
 scoped to a path) and Browser Integrity Check OFF for `/api/*`, or installs quietly leave the
 registry; (2) the server's `NPM_TOKEN` (npm mirror) can publish anything under `@polyskill`,
 including `@polyskill/cli` and `@polyskill/core`.
-Test a staged registry with `POLYSKILL_REGISTRY=http://127.0.0.1:<port>` through an SSH tunnel,
-using `polyskill search` or curl: `install` passes even with the tunnel down, via the npm mirror.
+Compare registries the runbook's way (the script runs on the VPS, fed over stdin: the VPS refuses SSH
+port forwarding), and test with `polyskill search` or curl: `install` passes even when the registry is
+unreachable, via the npm mirror.
 **Why:** both failures look like success from the CLI's side.
 
 ## polyskill.ai lost ~90% of its non-brand search visibility Sep → Nov 2026, and rising clicks hid it

@@ -57,18 +57,19 @@ done
 Every one of those 11 slugs must be linked from **at least 2** of the 7 indexed articles. That is
 the property that makes them discoverable; if the loop prints anything, the copy was incomplete.
 
-**4. Commit and push to `main`, then deploy.** The registry moved from Railway to the
+**4. Check the state, then commit, push to `main` and deploy.** The registry moved from Railway to the
 command-deck VPS on 2026-11-21, and the VPS deploys only when told to. Its runbook in
 skill_marketplace `main` records which server is live, so ask git (not DNS: a stale resolver can
-still point at Railway's old address):
+still point at Railway's old address). Before pushing, run:
 
 ```bash
 git -C <skill_marketplace> fetch -q origin && git -C <skill_marketplace> show origin/main:deploy/vps/README.md 2>/dev/null | grep '^Current state'
 ```
 
-- **Prints nothing, or a state containing `FALLBACK`:** don't push. Publishing is paused
-  (nothing auto-deploys any more: Railway's GitHub source was disconnected at the cutover); tell
-  the owner.
+- **Prints a state containing `FALLBACK`:** don't push. Publishing is paused (nothing
+  auto-deploys any more: Railway's GitHub source was disconnected at the cutover); tell the owner.
+- **Prints nothing:** the check itself failed (fetch error, wrong path, the line reworded). Don't
+  push; tell the owner the check failed.
 - **Prints any other state (S5, S6):** the VPS serves. Run
   `ssh command-deck-vps /opt/polyskill-registry/app/deploy/vps/deploy.sh` with a 10-minute
   timeout (it takes ~15 s, about a minute when the scanner is rebuilt; a failing deploy that rolls
