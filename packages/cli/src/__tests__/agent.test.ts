@@ -1,4 +1,4 @@
-import { describe, it, expect, vi, beforeEach } from "vitest";
+import { describe, it, expect, vi, beforeEach, afterAll } from "vitest";
 
 vi.mock("@inquirer/prompts", () => ({
   input: vi.fn(),
@@ -6,6 +6,7 @@ vi.mock("@inquirer/prompts", () => ({
 
 vi.mock("../auth.js", () => ({
   setToken: vi.fn(),
+  getToken: vi.fn(),
 }));
 
 vi.mock("../config.js", () => ({
@@ -14,7 +15,7 @@ vi.mock("../config.js", () => ({
 
 import { agentCommand } from "../commands/agent.js";
 import { input } from "@inquirer/prompts";
-import { setToken } from "../auth.js";
+import { setToken, getToken } from "../auth.js";
 
 class ExitError extends Error {
   code: number;
@@ -24,8 +25,12 @@ class ExitError extends Error {
   }
 }
 
+const stdinWasTTY = process.stdin.isTTY;
+
 beforeEach(() => {
   vi.clearAllMocks();
+  // The prompt tests behave like a person at a terminal; the agent tests below set false.
+  Object.defineProperty(process.stdin, "isTTY", { value: true, configurable: true });
   vi.spyOn(console, "log").mockImplementation(() => {});
   vi.spyOn(process, "exit").mockImplementation((code) => {
     throw new ExitError(code as number);
@@ -181,5 +186,106 @@ describe("agent register command", () => {
 
     const calls = vi.mocked(console.log).mock.calls.map((c) => String(c[0]));
     expect(calls.some((c) => c.includes("polyskill.ai/claim?id=uuid-1"))).toBe(true);
+  });
+});
+
+afterAll(() => {
+  Object.defineProperty(process.stdin, "isTTY", { value: stdinWasTTY, configurable: true });
+});
+
+function logged(): string[] {
+  return vi.mocked(console.log).mock.calls.map((c) => String(c[0]));
+}
+
+const REG = {
+  id: "uuid-1",
+  name: "builder-bot",
+  api_key: "psk_agent_secretkey",
+  claim_url: "https://polyskill.ai/claim?id=uuid-1&code=abcdefghijklmnop1234",
+  claim_expires_at: "2099-01-01T00:00:00Z",
+};
+
+describe("agent register for agents (no prompts)", () => {
+  it("--name and --description need no terminal and ask nothing", async () => {
+    Object.defineProperty(process.stdin, "isTTY", { value: false, configurable: true });
+    mockFetchResponse(201, REG);
+    await agentCommand.parseAsync(["register", "--name", "builder-bot", "--description", "Builds things"], { from: "user" });
+    expect(input).not.toHaveBeenCalled();
+    expect(JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]!.body))).toEqual({ name: "builder-bot", description: "Builds things" });
+    expect(setToken).toHaveBeenCalledWith("psk_agent_secretkey");
+    expect(logged().some((c) => c.includes(REG.claim_url))).toBe(true);
+  });
+
+  it("without --name and without a terminal it picks a valid name itself", async () => {
+    Object.defineProperty(process.stdin, "isTTY", { value: false, configurable: true });
+    mockFetchResponse(201, REG);
+    await agentCommand.parseAsync(["register"], { from: "user" });
+    expect(input).not.toHaveBeenCalled();
+    expect(JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]!.body)).name).toMatch(/^agent-[a-z0-9-]+$/);
+  });
+
+  it("--json prints id, name, claim link and namespaces, never the key", async () => {
+    mockFetchResponse(201, REG);
+    await agentCommand.parseAsync(["register", "--name", "builder-bot", "--json"], { from: "user" });
+    expect(input).not.toHaveBeenCalled();
+    const out = JSON.parse(logged().join(""));
+    expect(out).toEqual({
+      id: "uuid-1",
+      name: "builder-bot",
+      claim_url: REG.claim_url,
+      claim_expires_at: "2099-01-01T00:00:00Z",
+      namespaces: ["@builder-bot/"],
+    });
+    expect(logged().join("")).not.toContain("psk_agent_secretkey");
+  });
+
+  it("refuses an invalid --name before calling the registry", async () => {
+    await expect(agentCommand.parseAsync(["register", "--name", "Bad Name"], { from: "user" })).rejects.toThrow(ExitError);
+    expect(fetch).not.toHaveBeenCalled();
+  });
+
+  it("shows the registry's reason on 409 (e.g. a publisher's login)", async () => {
+    mockFetchResponse(409, { message: "That name is a publisher's GitHub username." });
+    await expect(agentCommand.parseAsync(["register", "--name", "alice"], { from: "user" })).rejects.toThrow(ExitError);
+    expect(logged().some((c) => c.includes("publisher's GitHub username"))).toBe(true);
+    expect(setToken).not.toHaveBeenCalled();
+  });
+});
+
+describe("agent claim-link", () => {
+  it("prints a fresh link for the saved agent key", async () => {
+    vi.mocked(getToken).mockReturnValue("psk_agent_saved");
+    mockFetchResponse(200, { claim_url: REG.claim_url, claim_expires_at: "2099-01-01T00:00:00Z" });
+    await agentCommand.parseAsync(["claim-link"], { from: "user" });
+    expect(fetch).toHaveBeenCalledWith(
+      "http://localhost:3000/api/agents/me/claim-link",
+      expect.objectContaining({ method: "POST", headers: expect.objectContaining({ Authorization: "Bearer psk_agent_saved" }) }),
+    );
+    expect(logged().some((c) => c.includes(REG.claim_url))).toBe(true);
+  });
+
+  it("--json prints the link as JSON", async () => {
+    vi.mocked(getToken).mockReturnValue("psk_agent_saved");
+    mockFetchResponse(200, { claim_url: REG.claim_url, claim_expires_at: "2099-01-01T00:00:00Z" });
+    await agentCommand.parseAsync(["claim-link", "--json"], { from: "user" });
+    expect(JSON.parse(logged().join(""))).toEqual({ claimed: false, claim_url: REG.claim_url, claim_expires_at: "2099-01-01T00:00:00Z" });
+  });
+
+  it("an already claimed agent is not an error", async () => {
+    vi.mocked(getToken).mockReturnValue("psk_agent_saved");
+    mockFetchResponse(409, { message: "Agent already claimed" });
+    await agentCommand.parseAsync(["claim-link"], { from: "user" });
+    expect(logged().some((c) => c.includes("already claimed"))).toBe(true);
+  });
+
+  it("needs a saved agent key, and says so for a revoked one", async () => {
+    vi.mocked(getToken).mockReturnValue("ghp_human");
+    await expect(agentCommand.parseAsync(["claim-link"], { from: "user" })).rejects.toThrow(ExitError);
+    expect(fetch).not.toHaveBeenCalled();
+
+    vi.mocked(getToken).mockReturnValue("psk_agent_revoked");
+    mockFetchResponse(401, {});
+    await expect(agentCommand.parseAsync(["claim-link"], { from: "user" })).rejects.toThrow(ExitError);
+    expect(logged().some((c) => c.includes("revoked"))).toBe(true);
   });
 });

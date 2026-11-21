@@ -12,9 +12,14 @@ vi.mock("../config.js", () => ({
   REGISTRY_URL: "http://localhost:3000",
 }));
 
+vi.mock("../browser.js", () => ({ openInBrowser: vi.fn() }));
+vi.mock("../sleep.js", () => ({ sleep: vi.fn(() => Promise.resolve()) }));
+
 import { loginCommand } from "../commands/login.js";
 import { password } from "@inquirer/prompts";
 import { setToken } from "../auth.js";
+import { openInBrowser } from "../browser.js";
+import { sleep } from "../sleep.js";
 
 class ExitError extends Error {
   code: number;
@@ -49,7 +54,7 @@ describe("login with GitHub PAT", () => {
     vi.mocked(password).mockResolvedValue("ghp_validtoken");
     mockFetchResponse(200, { login: "alice" });
 
-    await loginCommand.parseAsync([], { from: "user" });
+    await loginCommand.parseAsync(["--token"], { from: "user" });
 
     expect(fetch).toHaveBeenCalledWith(
       "https://api.github.com/user",
@@ -68,7 +73,7 @@ describe("login with GitHub PAT", () => {
     mockFetchResponse(401, { message: "Bad credentials" });
 
     await expect(
-      loginCommand.parseAsync([], { from: "user" })
+      loginCommand.parseAsync(["--token"], { from: "user" })
     ).rejects.toThrow(ExitError);
 
     expect(console.log).toHaveBeenCalledWith(
@@ -82,7 +87,7 @@ describe("login with GitHub PAT", () => {
     vi.mocked(fetch).mockRejectedValue(new TypeError("fetch failed"));
 
     await expect(
-      loginCommand.parseAsync([], { from: "user" })
+      loginCommand.parseAsync(["--token"], { from: "user" })
     ).rejects.toThrow(ExitError);
 
     expect(console.log).toHaveBeenCalledWith(
@@ -99,7 +104,7 @@ describe("login with agent API key", () => {
     vi.mocked(password).mockResolvedValue("psk_agent_abc123");
     mockFetchResponse(200, { id: "uuid-1", name: "myagent", claimed: false });
 
-    await loginCommand.parseAsync([], { from: "user" });
+    await loginCommand.parseAsync(["--token"], { from: "user" });
 
     expect(fetch).toHaveBeenCalledWith(
       "http://localhost:3000/api/agents/me",
@@ -115,34 +120,37 @@ describe("login with agent API key", () => {
 
   it("logs in successfully with claimed agent", async () => {
     vi.mocked(password).mockResolvedValue("psk_agent_abc123");
-    mockFetchResponse(200, { id: "uuid-1", name: "myagent", claimed: true });
+    mockFetchResponse(200, { id: "uuid-1", name: "myagent", claimed: true, owner_login: "Alice", namespaces: ["@myagent/", "@alice/"] });
 
-    await loginCommand.parseAsync([], { from: "user" });
+    await loginCommand.parseAsync(["--token"], { from: "user" });
 
     expect(setToken).toHaveBeenCalledWith("psk_agent_abc123");
     expect(console.log).toHaveBeenCalledWith(
-      expect.stringContaining("Logged in as agent myagent (Claimed)")
+      expect.stringContaining("Logged in as agent myagent (Claimed by @Alice)")
     );
+    const calls = vi.mocked(console.log).mock.calls.map((c) => String(c[0]));
+    expect(calls.some((c) => c.includes("@alice/"))).toBe(true);
   });
 
-  it("shows claim URL for unclaimed agent", async () => {
+  it("tells an unclaimed agent how to get a claim link (a link without its code wouldn't work)", async () => {
     vi.mocked(password).mockResolvedValue("psk_agent_abc123");
     mockFetchResponse(200, { id: "uuid-1", name: "myagent", claimed: false });
 
-    await loginCommand.parseAsync([], { from: "user" });
+    await loginCommand.parseAsync(["--token"], { from: "user" });
 
     const calls = vi.mocked(console.log).mock.calls.map((c) => String(c[0]));
-    expect(calls.some((c) => c.includes("polyskill.ai/claim?id=uuid-1"))).toBe(true);
+    expect(calls.some((c) => c.includes("polyskill agent claim-link"))).toBe(true);
+    expect(calls.some((c) => c.includes("claim?id="))).toBe(false);
   });
 
   it("does not show claim URL for claimed agent", async () => {
     vi.mocked(password).mockResolvedValue("psk_agent_abc123");
     mockFetchResponse(200, { id: "uuid-1", name: "myagent", claimed: true });
 
-    await loginCommand.parseAsync([], { from: "user" });
+    await loginCommand.parseAsync(["--token"], { from: "user" });
 
     const calls = vi.mocked(console.log).mock.calls.map((c) => String(c[0]));
-    expect(calls.some((c) => c.includes("claim?id="))).toBe(false);
+    expect(calls.some((c) => c.includes("claim-link"))).toBe(false);
   });
 
   it("exits on invalid agent key (401)", async () => {
@@ -150,7 +158,7 @@ describe("login with agent API key", () => {
     mockFetchResponse(401, { error: "Unauthorized", message: "Invalid agent API key" });
 
     await expect(
-      loginCommand.parseAsync([], { from: "user" })
+      loginCommand.parseAsync(["--token"], { from: "user" })
     ).rejects.toThrow(ExitError);
 
     expect(console.log).toHaveBeenCalledWith(
@@ -164,7 +172,7 @@ describe("login with agent API key", () => {
     vi.mocked(fetch).mockRejectedValue(new TypeError("fetch failed"));
 
     await expect(
-      loginCommand.parseAsync([], { from: "user" })
+      loginCommand.parseAsync(["--token"], { from: "user" })
     ).rejects.toThrow(ExitError);
 
     expect(console.log).toHaveBeenCalledWith(
@@ -181,7 +189,7 @@ describe("token validation", () => {
     // Run one flow to capture the validate callback from the password() mock
     vi.mocked(password).mockResolvedValue("ghp_test");
     mockFetchResponse(200, { login: "alice" });
-    await loginCommand.parseAsync([], { from: "user" });
+    await loginCommand.parseAsync(["--token"], { from: "user" });
 
     const validateFn = vi.mocked(password).mock.calls[0][0].validate!;
     expect(validateFn("ghp_valid")).toBe(true);
@@ -192,10 +200,160 @@ describe("token validation", () => {
   it("rejects tokens without recognized prefix", async () => {
     vi.mocked(password).mockResolvedValue("ghp_test");
     mockFetchResponse(200, { login: "alice" });
-    await loginCommand.parseAsync([], { from: "user" });
+    await loginCommand.parseAsync(["--token"], { from: "user" });
 
     const validateFn = vi.mocked(password).mock.calls[0][0].validate!;
     expect(validateFn("random_token")).toBe("Token must start with ghp_, github_pat_, or psk_agent_");
     expect(validateFn("sk_live_something")).toBe("Token must start with ghp_, github_pat_, or psk_agent_");
+  });
+});
+
+// ── Browser sign-in (the default) ───────────────────────────────
+
+const REGISTERED = {
+  id: "00000000-0000-4000-a000-000000000001",
+  name: "cli-test-abcd",
+  api_key: "psk_agent_new",
+  claim_url: "https://polyskill.ai/claim?id=00000000-0000-4000-a000-000000000001&code=SECRETcode_1234567890",
+  claim_expires_at: "2099-01-01T00:00:00Z",
+};
+
+function reply(status: number, body: unknown, headers: Record<string, string> = {}) {
+  return {
+    ok: status >= 200 && status < 300,
+    status,
+    statusText: String(status),
+    headers: new Headers(headers),
+    json: () => Promise.resolve(body),
+  } as Response;
+}
+
+function logged(): string[] {
+  return vi.mocked(console.log).mock.calls.map((c) => String(c[0]));
+}
+
+describe("login in the browser (default)", () => {
+  it("registers, shows the link, waits for the claim, then saves the key", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(reply(201, REGISTERED))
+      .mockResolvedValueOnce(reply(200, { claimed: false, claimable: true }))
+      .mockResolvedValueOnce(reply(200, { claimed: true, claimable: false, owner_login: "Alice" }));
+
+    await loginCommand.parseAsync([], { from: "user" });
+
+    const register = vi.mocked(fetch).mock.calls[0];
+    expect(register[0]).toBe("http://localhost:3000/api/agents/register");
+    expect(JSON.parse(String(register[1]!.body)).name).toMatch(/^cli-[a-z0-9-]+$/);
+    // The link points at the registry we talk to, with the server's code
+    expect(logged().some((c) => c.includes("http://localhost:3000/claim?id=00000000-0000-4000-a000-000000000001&code=SECRETcode_1234567890"))).toBe(true);
+    expect(vi.mocked(fetch).mock.calls[1][0]).toBe("http://localhost:3000/api/agents/me");
+    expect(setToken).toHaveBeenCalledWith("psk_agent_new");
+    expect(setToken).toHaveBeenCalledTimes(1);
+    expect(logged().some((c) => c.includes("Signed in as @Alice"))).toBe(true);
+    // The key itself is never printed
+    expect(logged().some((c) => c.includes("psk_agent_new"))).toBe(false);
+  });
+
+  it("never opens a browser when stdout isn't a terminal or with --no-browser", async () => {
+    for (const args of [[], ["--no-browser"]]) {
+      vi.mocked(fetch)
+        .mockResolvedValueOnce(reply(201, REGISTERED))
+        .mockResolvedValueOnce(reply(200, { claimed: true, owner_login: "Alice" }));
+      await loginCommand.parseAsync(args, { from: "user" });
+    }
+    expect(openInBrowser).not.toHaveBeenCalled(); // vitest's stdout is not a TTY
+  });
+
+  it("opens the browser on a terminal, and not with --no-browser", async () => {
+    const was = process.stdout.isTTY;
+    Object.defineProperty(process.stdout, "isTTY", { value: true, configurable: true });
+    try {
+      vi.mocked(fetch)
+        .mockResolvedValueOnce(reply(201, REGISTERED))
+        .mockResolvedValueOnce(reply(200, { claimed: true, owner_login: "Alice" }));
+      await loginCommand.parseAsync([], { from: "user" });
+      expect(openInBrowser).toHaveBeenCalledWith(expect.stringContaining("/claim?id="));
+
+      vi.mocked(openInBrowser).mockClear();
+      vi.mocked(fetch)
+        .mockResolvedValueOnce(reply(201, REGISTERED))
+        .mockResolvedValueOnce(reply(200, { claimed: true, owner_login: "Alice" }));
+      await loginCommand.parseAsync(["--no-browser"], { from: "user" });
+      expect(openInBrowser).not.toHaveBeenCalled();
+    } finally {
+      Object.defineProperty(process.stdout, "isTTY", { value: was, configurable: true });
+    }
+  });
+
+  it("an expired link exits 1 and saves nothing", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(reply(201, REGISTERED))
+      .mockResolvedValueOnce(reply(200, { claimed: false, claimable: false }));
+    await expect(loginCommand.parseAsync([], { from: "user" })).rejects.toThrow(ExitError);
+    expect(setToken).not.toHaveBeenCalled();
+    expect(logged().some((c) => c.includes("expired"))).toBe(true);
+  });
+
+  it("past the claim deadline it stops waiting, exits 1 and saves nothing", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(reply(201, { ...REGISTERED, claim_expires_at: "2000-01-01T00:00:00Z" }));
+    await expect(loginCommand.parseAsync([], { from: "user" })).rejects.toThrow(ExitError);
+    expect(vi.mocked(fetch)).toHaveBeenCalledTimes(1); // never polled
+    expect(setToken).not.toHaveBeenCalled();
+  });
+
+  it("a name clash (409) retries with a new name, then gives up after 3", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(reply(409, { message: "taken" }))
+      .mockResolvedValueOnce(reply(201, REGISTERED))
+      .mockResolvedValueOnce(reply(200, { claimed: true, owner_login: "Alice" }));
+    await loginCommand.parseAsync([], { from: "user" });
+    expect(setToken).toHaveBeenCalledWith("psk_agent_new");
+
+    vi.mocked(fetch).mockReset();
+    vi.mocked(setToken).mockClear();
+    vi.mocked(fetch).mockResolvedValue(reply(409, { message: "taken" }));
+    await expect(loginCommand.parseAsync([], { from: "user" })).rejects.toThrow(ExitError);
+    expect(vi.mocked(fetch)).toHaveBeenCalledTimes(3);
+    expect(setToken).not.toHaveBeenCalled();
+  });
+
+  it("too many sign-ins (429) exits 1 and points at --token", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(reply(429, {}));
+    await expect(loginCommand.parseAsync([], { from: "user" })).rejects.toThrow(ExitError);
+    expect(logged().some((c) => c.includes("--token"))).toBe(true);
+  });
+
+  it("while waiting: a 429 waits Retry-After, network blips are retried, then the claim lands", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(reply(201, REGISTERED))
+      .mockResolvedValueOnce(reply(429, {}, { "retry-after": "7" }))
+      .mockRejectedValueOnce(new TypeError("fetch failed"))
+      .mockResolvedValueOnce(reply(503, {}))
+      .mockResolvedValueOnce(reply(200, { claimed: true, owner_login: "Alice" }));
+    await loginCommand.parseAsync([], { from: "user" });
+    expect(sleep).toHaveBeenCalledWith(7000);
+    expect(setToken).toHaveBeenCalledWith("psk_agent_new");
+  });
+
+  it("gives up after 12 failures in a row while waiting, saving nothing", async () => {
+    vi.mocked(fetch).mockResolvedValueOnce(reply(201, REGISTERED));
+    for (let i = 0; i < 12; i++) vi.mocked(fetch).mockRejectedValueOnce(new TypeError("fetch failed"));
+    await expect(loginCommand.parseAsync([], { from: "user" })).rejects.toThrow(ExitError);
+    expect(vi.mocked(fetch)).toHaveBeenCalledTimes(13);
+    expect(setToken).not.toHaveBeenCalled();
+  });
+
+  it("a key revoked while waiting (401) exits 1, saving nothing", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(reply(201, REGISTERED))
+      .mockResolvedValueOnce(reply(401, {}));
+    await expect(loginCommand.parseAsync([], { from: "user" })).rejects.toThrow(ExitError);
+    expect(setToken).not.toHaveBeenCalled();
+  });
+
+  it("can't reach the registry to start: exits 1", async () => {
+    vi.mocked(fetch).mockRejectedValueOnce(new TypeError("fetch failed"));
+    await expect(loginCommand.parseAsync([], { from: "user" })).rejects.toThrow(ExitError);
+    expect(setToken).not.toHaveBeenCalled();
   });
 });
