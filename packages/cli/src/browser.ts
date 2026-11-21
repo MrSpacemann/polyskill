@@ -1,4 +1,5 @@
 import { spawn } from "node:child_process";
+import { win32 } from "node:path";
 
 /**
  * How to open a URL on this platform, without a shell. Windows: `cmd /c start`
@@ -7,7 +8,12 @@ import { spawn } from "node:child_process";
  */
 export function browserCommand(url: string, platform: NodeJS.Platform = process.platform): [string, string[]] {
   if (platform === "darwin") return ["open", [url]];
-  if (platform === "win32") return ["rundll32", ["url.dll,FileProtocolHandler", url]];
+  // Full path: Windows looks for a bare name in the current folder first, where
+  // a planted rundll32.exe would run instead.
+  if (platform === "win32") {
+    const rundll32 = win32.join(process.env.SystemRoot ?? "C:\\Windows", "System32", "rundll32.exe");
+    return [rundll32, ["url.dll,FileProtocolHandler", url]];
+  }
   return ["xdg-open", [url]];
 }
 

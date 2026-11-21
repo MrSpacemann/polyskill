@@ -14,7 +14,11 @@ describe("browserCommand", () => {
     expect(browserCommand(LINK, "darwin")).toEqual(["open", [LINK]]);
     expect(browserCommand(LINK, "linux")).toEqual(["xdg-open", [LINK]]);
     // not `cmd /c start`, which cuts the link at & and drops the claim code
-    expect(browserCommand(LINK, "win32")).toEqual(["rundll32", ["url.dll,FileProtocolHandler", LINK]]);
+    const [cmd, args] = browserCommand(LINK, "win32");
+    expect(args).toEqual(["url.dll,FileProtocolHandler", LINK]);
+    // a full System32 path, never a bare name Windows would look up in the current folder
+    expect(cmd).toMatch(/\\System32\\rundll32\.exe$/i);
+    expect(cmd).not.toBe("rundll32");
   });
 });
 

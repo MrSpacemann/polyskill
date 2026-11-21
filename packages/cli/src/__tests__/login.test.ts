@@ -249,6 +249,8 @@ describe("login in the browser (default)", () => {
     expect(vi.mocked(fetch).mock.calls[1][0]).toBe("http://localhost:3000/api/agents/me");
     expect(setToken).toHaveBeenCalledWith("psk_agent_new");
     expect(setToken).toHaveBeenCalledTimes(1);
+    // A pause before every check: without it the CLI would poll back-to-back into the rate limit
+    expect(vi.mocked(sleep).mock.calls).toEqual([[5000], [5000]]);
     expect(logged().some((c) => c.includes("Signed in as @Alice"))).toBe(true);
     // The key itself is never printed
     expect(logged().some((c) => c.includes("psk_agent_new"))).toBe(false);
