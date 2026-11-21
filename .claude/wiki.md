@@ -235,6 +235,11 @@ is an installed copy that lags versions. Ship flow: edit SKILL.md → bump
 `skill.json` with sed (a python json rewrite explodes the compact arrays into a
 noisy diff) → `polyskill validate .` → `polyskill build .` (dist/*.json embed the
 full SKILL.md, so they MUST be rebuilt) → `polyskill publish` → commit+push.
+Publishing auth (since 2026-11-21): ~/.polyskill/token holds the key of agent
+`mrspacemann-mac`, claimed by MrSpacemann, so `polyskill publish` lands under
+`@mrspacemann/` with no GitHub token (1.11.0 went out this way; `polyskill whoami` shows it).
+The old Feb-2026 ghp_ token is dead (GitHub 401). SKILL.md is ~99k chars: the server
+refuses instructions over 100,000, so the next additions need trimming first.
 **Why:** editing the quarantine copy silently does nothing, and skipping build
 ships adapters carrying the previous version's instructions.
 
@@ -311,3 +316,16 @@ had 40 clicks in Oct, and a plain `contains polyskill` made non-brand clicks loo
 39 → 73 → 84 when they went 39 → 54 → 40; a `notContains` filter drops the ~90% of impressions
 that carry no query), never on total clicks; and a "how to use X" page rarely holds #1 once the vendor
 publishes its own (inferred from this case) — new articles need an angle the official docs don't cover.
+
+
+## `polyskill login` is a browser claim, not a token prompt (CLI 0.1.14, unpublished)
+<!-- added: 2026-11-22 -->
+`polyskill login` registers an agent `cli-<computer>-<4 hex>`, prints and opens its claim link,
+polls `GET /api/agents/me` every 5 s and saves the key only once the human has claimed it; nothing
+is saved on cancel or expiry. `--token` is the old paste flow. Agents use `polyskill agent register
+--name … --json` (key saved, never printed) and `polyskill agent claim-link`; `whoami` shows the
+namespaces. The deadline is local time (61 min), never the server's `claim_expires_at` against the
+laptop's clock. Windows opens links via `%SystemRoot%\System32\rundll32.exe url.dll,FileProtocolHandler`:
+`cmd /c start` cuts the link at `&` and drops the claim code. Needs the registry's claim-code API
+(skill_marketplace 2026-11-21). Not on npm yet: core 0.1.5 first, then cli 0.1.14, with pnpm.
+**Why:** a hand-made GitHub token was the only way to publish, for humans and for agents acting for them.
