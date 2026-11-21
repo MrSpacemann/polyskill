@@ -168,9 +168,8 @@ post as the template):
   "fix" it per-post; it would desync from the other posts.
 - New posts must be added as cards to `blog/index.html` (match existing card markup).
 
-Publishing = copy files into skill_marketplace + push to `main` + deploy (Railway auto-deploys
-until skill_marketplace `origin/main`'s `deploy/vps/README.md` shows a VPS "Current state"
-(it lands at the switch); then run its `deploy.sh` on the VPS, pass only on
+Publishing = copy files into skill_marketplace + push to `main` + deploy (since the 2026-11-21
+cutover nothing auto-deploys: run its `deploy.sh` on the VPS, pass only on
 `deployed <commit>`, and check each new post returns 200 on the VPS itself, not through DNS —
 see `_HANDOFF_HOW_TO_PUBLISH.md` step 4); the agent
 stages drafts in `polyskill/docs/seo/articles/` (see that folder's
@@ -277,10 +276,10 @@ indexed" within ~12 minutes of request (2026-08-09).
 first) and make the day's single sitemap submission AFTER the day's last deploy
 — burning it early wastes it.
 
-## The registry is moving off Railway onto the command-deck VPS behind Cloudflare
+## The registry moved off Railway onto the command-deck VPS behind Cloudflare (2026-11-21)
 <!-- added: 2026-10-25 -->
 Runbook, cutover state machine and current state: skill_marketplace `deploy/vps/README.md`
-(on the `vps-migration` branch until the cutover merges it into `main`).
+(in `main` since the 2026-11-21 cutover; polyskill.ai → Cloudflare tunnel → VPS 127.0.0.1:3210).
 Two traps for this repo: (1) a Cloudflare bot challenge is an HTTP 403, and `install` treats 403
 as "egress-blocked sandbox" and falls back to the npm mirror, announced only by a yellow
 "— trying npm mirror..." line, so Bot Fight Mode must stay OFF for the whole zone (it can't be
