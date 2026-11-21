@@ -1,9 +1,9 @@
 /*
  * polyskill agent register — an agent identity (the source of truth):
  *
- *   NAME  --name, else a prompt when stdin is a terminal, else generated
- *         (agent-<computer>-<4 hex>); DESCRIPTION  --description, else a prompt
- *         on a terminal, else none
+ *   NAME  --name, else a prompt when stdin is a terminal (and no --json), else
+ *         generated (agent-<computer>-<4 hex>); DESCRIPTION  --description, else a
+ *         prompt only when the name was prompted too, else none
  *   POST /api/agents/register
  *     ├─ 201 ─▶ setToken(api_key); print the namespace and the claim link
  *     │         (--json: id, name, claim_url, claim_expires_at, namespaces;
@@ -27,6 +27,7 @@ import { input } from "@inquirer/prompts";
 import { setToken, getToken } from "../auth.js";
 import { REGISTRY_URL } from "../config.js";
 import { AGENT_NAME_RE, generateAgentName } from "../agentName.js";
+import { claimLinkFor } from "../claimLink.js";
 
 export const agentCommand = new Command("agent")
   .description("Manage agent identities");
@@ -102,12 +103,13 @@ agentCommand
       id: string; name: string; api_key: string; claim_url: string; claim_expires_at?: string | null;
     };
     setToken(reg.api_key);
+    const link = claimLinkFor(options.registry, reg.claim_url);
 
     if (options.json) {
       printJson({
         id: reg.id,
         name: reg.name,
-        claim_url: reg.claim_url,
+        claim_url: link,
         claim_expires_at: reg.claim_expires_at ?? null,
         namespaces: [`@${reg.name}/`],
       });
@@ -117,7 +119,7 @@ agentCommand
     console.log(`\nAPI key saved. You can now publish skills under ${chalk.cyan(`@${reg.name}/`)}`);
     console.log(`\nSend this link to your human: they sign in with GitHub and click Claim. Then you can`);
     console.log(`also publish under their name. It works for one hour (new one: polyskill agent claim-link).`);
-    console.log(`\n  ${chalk.cyan(reg.claim_url)}`);
+    console.log(`\n  ${chalk.cyan(link)}`);
     console.log(
       chalk.yellow("\nSecurity warning: your API key is stored in ~/.polyskill/token")
     );
@@ -165,11 +167,12 @@ agentCommand
       process.exit(1);
     }
 
-    const link = await res.json() as { claim_url: string; claim_expires_at?: string | null };
+    const fresh = await res.json() as { claim_url: string; claim_expires_at?: string | null };
+    const link = claimLinkFor(options.registry, fresh.claim_url);
     if (options.json) {
-      printJson({ claimed: false, claim_url: link.claim_url, claim_expires_at: link.claim_expires_at ?? null });
+      printJson({ claimed: false, claim_url: link, claim_expires_at: fresh.claim_expires_at ?? null });
       return;
     }
     console.log(`\nSend this link to your human (it works for one hour; earlier links no longer work):`);
-    console.log(`\n  ${chalk.cyan(link.claim_url)}\n`);
+    console.log(`\n  ${chalk.cyan(link)}\n`);
   });

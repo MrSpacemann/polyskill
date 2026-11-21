@@ -11,9 +11,10 @@
  *             when stdout isn't a terminal)
  *   WAIT      every POLL_MS GET /api/agents/me with the new key
  *     ├─ claimed ─────────────▶ setToken(key) ─▶ "Signed in as @<owner>" (DONE)
- *     ├─ not claimable ───────▶ EXIT 1 (link expired: run polyskill login again)
- *     ├─ deadline passed ─────▶ EXIT 1 (same)
- *     ├─ 429 ─────────────────▶ wait Retry-After (or RATE_WAIT_MS), keep waiting
+ *     ├─ not claimable ───────▶ EXIT 1 (the server says the link expired: run polyskill login again)
+ *     ├─ LOGIN_WAIT_MS of local time passed ─▶ one last poll, then EXIT 1 (same)
+ *     │    (local time only: the server's expiry vs a wrong laptop clock proves nothing)
+ *     ├─ 429 ─────────────────▶ wait Retry-After (or RATE_WAIT_MS, never past the deadline), keep waiting
  *     ├─ 401 ─────────────────▶ EXIT 1 (the key was revoked)
  *     └─ network / 5xx ───────▶ keep waiting; MAX_POLL_FAILURES in a row ─▶ EXIT 1
  *   Ctrl-C anywhere: nothing is saved.
@@ -31,12 +32,14 @@ import { REGISTRY_URL } from "../config.js";
 import { generateAgentName } from "../agentName.js";
 import { openInBrowser } from "../browser.js";
 import { sleep } from "../sleep.js";
+import { claimLinkFor } from "../claimLink.js";
 
 export const POLL_MS = 5_000;
 export const RATE_WAIT_MS = 30_000;
 export const MAX_POLL_FAILURES = 12;
 export const MAX_NAME_TRIES = 3;
-const DEFAULT_WINDOW_MS = 60 * 60_000;
+/** The server's claim window is 60 min; wait a little past it before giving up. */
+export const LOGIN_WAIT_MS = 61 * 60_000;
 
 interface Registered { id: string; name: string; api_key: string; claim_url: string; claim_expires_at?: string | null }
 
@@ -71,11 +74,12 @@ async function registerForLogin(registry: string): Promise<Registered> {
 
 /** Waits until the claim lands. Returns the owner's login; exits on every dead end. */
 async function waitForClaim(registry: string, reg: Registered): Promise<string> {
-  const expires = reg.claim_expires_at ? Date.parse(reg.claim_expires_at) : NaN;
-  const deadline = (Number.isFinite(expires) ? expires : Date.now() + DEFAULT_WINDOW_MS) + 30_000;
+  const deadline = Date.now() + LOGIN_WAIT_MS;
+  const left = () => Math.max(0, deadline - Date.now());
   let failures = 0;
-  while (Date.now() < deadline) {
-    await sleep(POLL_MS);
+  for (let last = false; !last; ) {
+    last = left() <= POLL_MS; // this poll is the last one
+    await sleep(Math.min(POLL_MS, left()));
     let res: Response;
     try {
       res = await fetch(`${registry}/api/agents/me`, {
@@ -91,7 +95,7 @@ async function waitForClaim(registry: string, reg: Registered): Promise<string> 
     }
     if (res.status === 429) {
       const after = Number(res.headers?.get?.("retry-after"));
-      await sleep(Number.isFinite(after) && after > 0 ? after * 1000 : RATE_WAIT_MS);
+      await sleep(Math.min(Number.isFinite(after) && after > 0 ? after * 1000 : RATE_WAIT_MS, left()));
       continue;
     }
     if (res.status === 401) {
@@ -117,10 +121,7 @@ async function waitForClaim(registry: string, reg: Registered): Promise<string> 
 async function loginWithBrowser(registry: string, openBrowser: boolean): Promise<void> {
   console.log(chalk.bold("\nPolySkill Login\n"));
   const reg = await registerForLogin(registry);
-  // Build the link from the registry we talk to (a local or staging registry
-  // returns links to polyskill.ai); keep the server's one-time code.
-  const code = new URL(reg.claim_url).searchParams.get("code") ?? "";
-  const link = `${registry}/claim?id=${encodeURIComponent(reg.id)}&code=${encodeURIComponent(code)}`;
+  const link = claimLinkFor(registry, reg.claim_url);
   console.log("Open this link, sign in with GitHub and click Claim:\n");
   console.log(`  ${chalk.cyan(link)}\n`);
   if (openBrowser && process.stdout.isTTY) openInBrowser(link);

@@ -294,11 +294,62 @@ describe("login in the browser (default)", () => {
     expect(logged().some((c) => c.includes("expired"))).toBe(true);
   });
 
-  it("past the claim deadline it stops waiting, exits 1 and saves nothing", async () => {
-    vi.mocked(fetch).mockResolvedValueOnce(reply(201, { ...REGISTERED, claim_expires_at: "2000-01-01T00:00:00Z" }));
-    await expect(loginCommand.parseAsync([], { from: "user" })).rejects.toThrow(ExitError);
-    expect(vi.mocked(fetch)).toHaveBeenCalledTimes(1); // never polled
-    expect(setToken).not.toHaveBeenCalled();
+  it("the server's expiry time doesn't decide (a wrong laptop clock): it still waits for the claim", async () => {
+    vi.mocked(fetch)
+      .mockResolvedValueOnce(reply(201, { ...REGISTERED, claim_expires_at: "2000-01-01T00:00:00Z" }))
+      .mockResolvedValueOnce(reply(200, { claimed: false, claimable: true }))
+      .mockResolvedValueOnce(reply(200, { claimed: true, owner_login: "Alice" }));
+    await loginCommand.parseAsync([], { from: "user" });
+    expect(setToken).toHaveBeenCalledWith("psk_agent_new");
+  });
+
+  it("past its own deadline it makes one last check, then exits 1 saving nothing", async () => {
+    const start = Date.now();
+    const now = vi.spyOn(Date, "now");
+    now.mockReturnValueOnce(start); // the deadline is set from this
+    now.mockReturnValue(start + 62 * 60_000); // every later look: past it
+    try {
+      vi.mocked(fetch)
+        .mockResolvedValueOnce(reply(201, REGISTERED))
+        .mockResolvedValueOnce(reply(200, { claimed: false, claimable: true }));
+      await expect(loginCommand.parseAsync([], { from: "user" })).rejects.toThrow(ExitError);
+      expect(vi.mocked(fetch)).toHaveBeenCalledTimes(2); // register + the one last check
+      expect(setToken).not.toHaveBeenCalled();
+    } finally {
+      now.mockRestore();
+    }
+  });
+
+  it("a claim that lands on that last check is still saved", async () => {
+    const start = Date.now();
+    const now = vi.spyOn(Date, "now");
+    now.mockReturnValueOnce(start);
+    now.mockReturnValue(start + 62 * 60_000);
+    try {
+      vi.mocked(fetch)
+        .mockResolvedValueOnce(reply(201, REGISTERED))
+        .mockResolvedValueOnce(reply(200, { claimed: true, owner_login: "Alice" }));
+      await loginCommand.parseAsync([], { from: "user" });
+      expect(setToken).toHaveBeenCalledWith("psk_agent_new");
+    } finally {
+      now.mockRestore();
+    }
+  });
+
+  it("a long Retry-After never sleeps past the deadline", async () => {
+    const start = Date.now();
+    const now = vi.spyOn(Date, "now");
+    now.mockReturnValueOnce(start);
+    now.mockReturnValue(start + 61 * 60_000 - 2_000); // 2 s left
+    try {
+      vi.mocked(fetch)
+        .mockResolvedValueOnce(reply(201, REGISTERED))
+        .mockResolvedValueOnce(reply(429, {}, { "retry-after": "900" }));
+      await expect(loginCommand.parseAsync([], { from: "user" })).rejects.toThrow(ExitError);
+      for (const [ms] of vi.mocked(sleep).mock.calls) expect(ms).toBeLessThanOrEqual(2_000);
+    } finally {
+      now.mockRestore();
+    }
   });
 
   it("a name clash (409) retries with a new name, then gives up after 3", async () => {
@@ -308,6 +359,8 @@ describe("login in the browser (default)", () => {
       .mockResolvedValueOnce(reply(200, { claimed: true, owner_login: "Alice" }));
     await loginCommand.parseAsync([], { from: "user" });
     expect(setToken).toHaveBeenCalledWith("psk_agent_new");
+    const tried = vi.mocked(fetch).mock.calls.slice(0, 2).map((c) => JSON.parse(String(c[1]!.body)).name);
+    expect(tried[0]).not.toBe(tried[1]); // the retry used a new name
 
     vi.mocked(fetch).mockReset();
     vi.mocked(setToken).mockClear();

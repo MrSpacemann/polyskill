@@ -204,6 +204,7 @@ const REG = {
   claim_url: "https://polyskill.ai/claim?id=uuid-1&code=abcdefghijklmnop1234",
   claim_expires_at: "2099-01-01T00:00:00Z",
 };
+const LOCAL_LINK = "http://localhost:3000/claim?id=uuid-1&code=abcdefghijklmnop1234";
 
 describe("agent register for agents (no prompts)", () => {
   it("--name and --description need no terminal and ask nothing", async () => {
@@ -213,7 +214,8 @@ describe("agent register for agents (no prompts)", () => {
     expect(input).not.toHaveBeenCalled();
     expect(JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]!.body))).toEqual({ name: "builder-bot", description: "Builds things" });
     expect(setToken).toHaveBeenCalledWith("psk_agent_secretkey");
-    expect(logged().some((c) => c.includes(REG.claim_url))).toBe(true);
+    // The link is on the registry the CLI talks to, with the server's code
+    expect(logged().some((c) => c.includes(LOCAL_LINK))).toBe(true);
   });
 
   it("without --name and without a terminal it picks a valid name itself", async () => {
@@ -224,6 +226,13 @@ describe("agent register for agents (no prompts)", () => {
     expect(JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]!.body)).name).toMatch(/^agent-[a-z0-9-]+$/);
   });
 
+  it("--json without --name never prompts, even on a terminal", async () => {
+    mockFetchResponse(201, REG);
+    await agentCommand.parseAsync(["register", "--json"], { from: "user" });
+    expect(input).not.toHaveBeenCalled();
+    expect(JSON.parse(String(vi.mocked(fetch).mock.calls[0][1]!.body)).name).toMatch(/^agent-/);
+  });
+
   it("--json prints id, name, claim link and namespaces, never the key", async () => {
     mockFetchResponse(201, REG);
     await agentCommand.parseAsync(["register", "--name", "builder-bot", "--json"], { from: "user" });
@@ -232,7 +241,7 @@ describe("agent register for agents (no prompts)", () => {
     expect(out).toEqual({
       id: "uuid-1",
       name: "builder-bot",
-      claim_url: REG.claim_url,
+      claim_url: LOCAL_LINK,
       claim_expires_at: "2099-01-01T00:00:00Z",
       namespaces: ["@builder-bot/"],
     });
@@ -261,14 +270,14 @@ describe("agent claim-link", () => {
       "http://localhost:3000/api/agents/me/claim-link",
       expect.objectContaining({ method: "POST", headers: expect.objectContaining({ Authorization: "Bearer psk_agent_saved" }) }),
     );
-    expect(logged().some((c) => c.includes(REG.claim_url))).toBe(true);
+    expect(logged().some((c) => c.includes(LOCAL_LINK))).toBe(true);
   });
 
   it("--json prints the link as JSON", async () => {
     vi.mocked(getToken).mockReturnValue("psk_agent_saved");
     mockFetchResponse(200, { claim_url: REG.claim_url, claim_expires_at: "2099-01-01T00:00:00Z" });
     await agentCommand.parseAsync(["claim-link", "--json"], { from: "user" });
-    expect(JSON.parse(logged().join(""))).toEqual({ claimed: false, claim_url: REG.claim_url, claim_expires_at: "2099-01-01T00:00:00Z" });
+    expect(JSON.parse(logged().join(""))).toEqual({ claimed: false, claim_url: LOCAL_LINK, claim_expires_at: "2099-01-01T00:00:00Z" });
   });
 
   it("an already claimed agent is not an error", async () => {
