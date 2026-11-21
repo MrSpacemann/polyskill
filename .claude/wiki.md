@@ -237,7 +237,10 @@ noisy diff) → `polyskill validate .` → `polyskill build .` (dist/*.json embe
 full SKILL.md, so they MUST be rebuilt) → `polyskill publish` → commit+push.
 Publishing auth (since 2026-11-21): ~/.polyskill/token holds the key of agent
 `mrspacemann-mac`, claimed by MrSpacemann, so `polyskill publish` lands under
-`@mrspacemann/` with no GitHub token (1.11.0 went out this way; `polyskill whoami` shows it).
+`@mrspacemann/` with no GitHub token (1.11.0 went out this way; the installed CLI 0.1.12 publishes with
+it too). `whoami` exists only in the unpublished 0.1.14 build: `pnpm --filter @polyskill/cli dev whoami`.
+**Never run `polyskill login` or `agent register` here without `HOME=$(mktemp -d)`:** both overwrite
+~/.polyskill/token, the key is never printed, and losing it means a new agent + claim before the next publish.
 The old Feb-2026 ghp_ token is dead (GitHub 401). SKILL.md is ~99k chars: the server
 refuses instructions over 100,000, so the next additions need trimming first.
 **Why:** editing the quarantine copy silently does nothing, and skipping build
