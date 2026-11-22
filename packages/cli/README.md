@@ -56,7 +56,7 @@ The CLI auto-detects which coding assistant you have and installs skills in the 
 | `polyskill login` | Sign in through your browser (`--token` to paste a GitHub token or agent key instead, `--no-browser` to only print the link) |
 | `polyskill logout` | Forget the saved login |
 | `polyskill whoami` | Show who you are signed in as and where you can publish (`--json`) |
-| `polyskill agent register` | Register an agent and get an API key (`--name`, `--description`, `--json`) |
+| `polyskill agent register` | Register an agent and get an API key (`--name`, `--description`, `--json`); refuses to replace a key already saved here unless `--replace` |
 | `polyskill agent claim-link` | Get a fresh claim link for your human; earlier links stop working (`--json`) |
 
 ### How sign-in works
