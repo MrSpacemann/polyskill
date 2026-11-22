@@ -49,8 +49,11 @@ agentCommand
   .action(async (options: { registry: string; name?: string; description?: string; json?: boolean; replace?: boolean }) => {
     if (getToken() && !options.replace) {
       console.log(chalk.red(
-        "\nThis computer is already signed in (polyskill whoami shows as whom). Registering would replace that key." +
-          "\nTo do it anyway: polyskill agent register --replace\n"
+        process.env.POLYSKILL_TOKEN
+          ? "\nPOLYSKILL_TOKEN is set, so the CLI uses that key. Unset it to use a newly registered agent," +
+              "\nor register anyway with --replace (the new key is saved, but POLYSKILL_TOKEN still wins).\n"
+          : "\nThis computer is already signed in (polyskill whoami shows as whom). Registering would replace that key." +
+              "\nTo do it anyway: polyskill agent register --replace\n"
       ));
       process.exit(1);
     }

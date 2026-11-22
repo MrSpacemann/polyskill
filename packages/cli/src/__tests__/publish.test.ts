@@ -294,6 +294,37 @@ describe("automatic version bump", () => {
     expect(vi.mocked(console.log).mock.calls.map((c) => String(c[0])).join("\n")).toContain("Nothing to publish");
   });
 
+  function liveCopy(over: { manifest?: Record<string, unknown>; tools?: unknown; instructions?: unknown } = {}) {
+    return {
+      version: "1.0.0",
+      manifest: over.manifest ?? { ...mockSkill.manifest, version: "1.0.0", author: { ...(mockSkill.manifest as any).author, name: "rewritten" } },
+      instructions: over.instructions ?? mockSkill.instructions,
+      tools: over.tools !== undefined ? over.tools : (mockSkill.tools?.length ? { tools: mockSkill.tools } : null),
+    };
+  }
+
+  it("a tools-only change or a manifest-only change is a change (bumps)", async () => {
+    setup("1.0.0");
+    respond({ status: 200, body: liveCopy({ tools: { tools: [{ name: "other", description: "x", parameters: { type: "object" } }] } }) }, { status: 201, body: { id: "x" } });
+    await publishCommand.parseAsync([skillDir("1.0.0")], { from: "user" });
+    expect(posted()).toBe("1.0.1");
+
+    vi.mocked(fetch).mockReset();
+    setup("1.0.0");
+    respond({ status: 200, body: liveCopy({ manifest: { ...mockSkill.manifest, version: "1.0.0", description: "older text" } }) }, { status: 201, body: { id: "x" } });
+    await publishCommand.parseAsync([skillDir("1.0.0")], { from: "user" });
+    expect(posted()).toBe("1.0.1");
+  });
+
+  it("a timed-out publish that landed: live one patch ahead with the same content is reported, not refused", async () => {
+    setup("1.0.0");
+    const dir = skillDir("1.0.0");
+    respond({ status: 200, body: { ...liveCopy(), version: "1.0.1" } });
+    await publishCommand.parseAsync([dir], { from: "user" });
+    expect(vi.mocked(fetch)).toHaveBeenCalledTimes(1);
+    expect(fs.readFileSync(path.join(dir, "skill.json"), "utf-8")).toContain('"version": "1.0.1"');
+  });
+
   it("a 409 after a bump (two publishes racing) says to run publish again", async () => {
     setup("1.0.0");
     respond({ status: 200, body: { version: "1.0.0" } }, { status: 409, body: { error: "Conflict", message: "This skill name + version already exists" } });

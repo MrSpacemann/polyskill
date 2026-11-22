@@ -8,7 +8,8 @@
  *                                   │   same content ─▶ ALREADY_LIVE    ├──→ HTTP_ERR (409 / 400 / 5xx)
  *                                   │   (nothing published, exit 0)     ▼
  *                                   │   changed ─▶ publish live+1 patch NETWORK_ERR
- *                                   │ live > local ─▶ EXIT 1 (behind: someone published newer work)
+ *                                   │ live > local: same content ─▶ ALREADY_LIVE (+ skill.json := live);
+ *                                   │   else ─▶ EXIT 1 (behind: someone published newer work)
  *                                   │ anything else (404 new skill, local newer, error, prerelease)
  *                                   │   ──▶ publish the local version as is
  *  SUCCESS after a bump ──▶ write the new version into skill.json (only then: a failed
@@ -53,7 +54,7 @@ function sameJson(a: unknown, b: unknown): boolean {
   return JSON.stringify(norm(a)) === JSON.stringify(norm(b));
 }
 
-type VersionPlan = { kind: "publish"; version: string } | { kind: "already-live" } | { kind: "behind"; live: string };
+type VersionPlan = { kind: "publish"; version: string } | { kind: "already-live"; live: string } | { kind: "behind"; live: string };
 interface PlannedSkill { manifest: { name: string; version: string }; instructions?: string | null; tools?: unknown[] }
 
 /** What to do given the live skill: publish the local version, publish live + 1 patch, nothing, or refuse. */
@@ -70,17 +71,21 @@ async function planVersion(registryUrl: string, skill: PlannedSkill): Promise<Ve
     if (typeof live.version !== "string") return { kind: "publish", version: local };
     const cmp = compareVersions(local, live.version);
     if (cmp === null || cmp > 0) return { kind: "publish", version: local };
-    if (cmp < 0) return { kind: "behind", live: live.version };
-    // Same version. Unchanged content (a re-run, or a retry after a timeout that landed) is already live.
+    // Unchanged content is already live: a re-run, or a retry after a publish that timed out on our
+    // side but landed (then live may be one patch ahead of skill.json). The server rewrites only
+    // author.name, so only that is ignored.
     const strip = (m: Record<string, unknown> | undefined) => {
-      const { version: _v, author: _a, ...rest } = m ?? {};
-      return rest;
+      const { version: _v, author, ...rest } = m ?? {};
+      const { name: _n, ...authorRest } = (author ?? {}) as Record<string, unknown>;
+      return { ...rest, author: authorRest };
     };
     const unchanged =
       (live.instructions ?? null) === (skill.instructions ?? null) &&
       sameJson(live.tools?.tools ?? [], skill.tools ?? []) &&
       sameJson(strip(live.manifest), strip(skill.manifest as unknown as Record<string, unknown>));
-    return unchanged ? { kind: "already-live" } : { kind: "publish", version: bumpPatch(live.version) };
+    if (unchanged) return { kind: "already-live", live: live.version };
+    if (cmp < 0) return { kind: "behind", live: live.version };
+    return { kind: "publish", version: bumpPatch(live.version) };
   } catch {
     return { kind: "publish", version: local }; // the registry decides; a taken version comes back as 409
   }
@@ -140,7 +145,13 @@ export const publishCommand = new Command("publish")
     if (options.bump) {
       const plan = await planVersion(registryUrl, skill);
       if (plan.kind === "already-live") {
-        console.log(chalk.green(`\n${skill.manifest.name}@${localVersion} is already live with exactly this content. Nothing to publish.\n`));
+        console.log(chalk.green(`\n${skill.manifest.name}@${plan.live} is already live with exactly this content. Nothing to publish.`));
+        if (plan.live !== localVersion) {
+          console.log(chalk.dim(writeVersion(skillDir, localVersion, plan.live)
+            ? `  skill.json now says ${plan.live}`
+            : `  Set "version" in skill.json to ${plan.live} by hand`));
+        }
+        console.log();
         return;
       }
       if (plan.kind === "behind") {
