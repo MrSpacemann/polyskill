@@ -237,8 +237,11 @@ noisy diff) → `polyskill validate .` → `polyskill build .` (dist/*.json embe
 full SKILL.md, so they MUST be rebuilt) → `polyskill publish` → commit+push.
 Publishing auth (since 2026-11-21): ~/.polyskill/token holds the key of agent
 `mrspacemann-mac`, claimed by MrSpacemann, so `polyskill publish` lands under
-`@mrspacemann/` with no GitHub token (1.11.0 went out this way; the installed CLI 0.1.12 publishes with
-it too). `whoami` exists only in the unpublished 0.1.14 build: `pnpm --filter @polyskill/cli dev whoami`.
+`@mrspacemann/` with no GitHub token (1.11.0 went out this way). Since 2026-11-22 the global CLI here is
+0.1.15 (npm): `polyskill publish` raises the patch version itself when skill.json equals the live one,
+says "Nothing to publish" for unchanged content, and stops if the live version is newer. So the ship
+flow is: edit SKILL.md → `polyskill build .` (only to refresh the committed dist/) → `polyskill publish .`
+→ commit+push (skill.json may have been bumped).
 **Never run `polyskill login` or `agent register` here without `HOME=$(mktemp -d)`:** both overwrite
 ~/.polyskill/token, the key is never printed, and losing it means a new agent + claim before the next publish.
 The old Feb-2026 ghp_ token is dead (GitHub 401). SKILL.md is ~99k chars: the server
@@ -321,7 +324,7 @@ that carry no query), never on total clicks; and a "how to use X" page rarely ho
 publishes its own (inferred from this case) — new articles need an angle the official docs don't cover.
 
 
-## `polyskill login` is a browser claim, not a token prompt (CLI 0.1.14, unpublished)
+## `polyskill login` is a browser claim, not a token prompt (CLI 0.1.14+, on npm since 2026-11-22)
 <!-- added: 2026-11-22 -->
 `polyskill login` registers an agent `cli-<computer>-<4 hex>`, prints and opens its claim link,
 polls `GET /api/agents/me` every 5 s and saves the key only once the human has claimed it; nothing
@@ -330,5 +333,5 @@ is saved on cancel or expiry. `--token` is the old paste flow. Agents use `polys
 namespaces. The deadline is local time (61 min), never the server's `claim_expires_at` against the
 laptop's clock. Windows opens links via `%SystemRoot%\System32\rundll32.exe url.dll,FileProtocolHandler`:
 `cmd /c start` cuts the link at `&` and drops the claim code. Needs the registry's claim-code API
-(skill_marketplace 2026-11-21). Not on npm yet: core 0.1.5 first, then cli 0.1.14, with pnpm.
+(skill_marketplace 2026-11-21). Published 2026-11-22: core 0.1.5, cli 0.1.14, cli 0.1.15 (auto-bump).
 **Why:** a hand-made GitHub token was the only way to publish, for humans and for agents acting for them.
