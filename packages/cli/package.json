@@ -30,7 +30,7 @@
     "polyskill": "dist/index.js"
   },
   "scripts": {
-    "build": "tsc && cp -r src/templates dist/templates",
+    "build": "tsc && rm -rf dist/templates && cp -r src/templates dist/templates",
     "dev": "tsx src/index.ts",
     "test": "vitest run",
     "clean": "rm -rf dist",
