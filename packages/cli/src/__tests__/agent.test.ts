@@ -31,6 +31,7 @@ beforeEach(() => {
   vi.clearAllMocks();
   // The prompt tests behave like a person at a terminal; the agent tests below set false.
   Object.defineProperty(process.stdin, "isTTY", { value: true, configurable: true });
+  vi.mocked(getToken).mockReturnValue(null); // nothing saved, unless a test says so
   vi.spyOn(console, "log").mockImplementation(() => {});
   vi.spyOn(process, "exit").mockImplementation((code) => {
     throw new ExitError(code as number);
@@ -296,5 +297,22 @@ describe("agent claim-link", () => {
     mockFetchResponse(401, {});
     await expect(agentCommand.parseAsync(["claim-link"], { from: "user" })).rejects.toThrow(ExitError);
     expect(logged().some((c) => c.includes("revoked"))).toBe(true);
+  });
+});
+
+describe("agent register never silently replaces a saved login", () => {
+  it("refuses when a key is already saved, without calling the registry", async () => {
+    vi.mocked(getToken).mockReturnValue("psk_agent_owners_claimed_key");
+    await expect(agentCommand.parseAsync(["register", "--name", "builder-bot"], { from: "user" })).rejects.toThrow(ExitError);
+    expect(fetch).not.toHaveBeenCalled();
+    expect(setToken).not.toHaveBeenCalled();
+    expect(logged().some((c) => c.includes("--replace"))).toBe(true);
+  });
+
+  it("--replace registers anyway", async () => {
+    vi.mocked(getToken).mockReturnValue("ghp_old");
+    mockFetchResponse(201, REG);
+    await agentCommand.parseAsync(["register", "--name", "builder-bot", "--replace"], { from: "user" });
+    expect(setToken).toHaveBeenCalledWith("psk_agent_secretkey");
   });
 });

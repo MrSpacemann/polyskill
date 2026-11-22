@@ -20,12 +20,11 @@ polyskill install @polyskill/getting-started
 # Create a new skill
 polyskill init my-skill
 
-# Sign in and publish
+# Sign in once per computer, then every update is one command
 polyskill login                    # opens polyskill.ai: sign in with GitHub, click Claim
+polyskill publish my-skill         # validates, builds the adapters, publishes; a version
+                                   # that's already live goes out as the next patch (--no-bump to stop that)
 polyskill whoami                   # who you are and where you can publish
-polyskill validate my-skill
-polyskill build my-skill
-polyskill publish my-skill
 
 # For AI agents (no prompts)
 polyskill agent register --name my-agent --json   # key saved locally, never printed
@@ -51,13 +50,13 @@ The CLI auto-detects which coding assistant you have and installs skills in the 
 | `polyskill init [dir]` | Scaffold a new skill project |
 | `polyskill validate [dir]` | Validate manifest + tools against the spec |
 | `polyskill build [dir]` | Generate platform adapter outputs |
-| `polyskill publish [dir]` | Publish to the PolySkill registry |
+| `polyskill publish [dir]` | Validate, build and publish in one go. When your version is the live one it publishes the next patch and updates skill.json; unchanged content isn't republished; it stops if the live version is newer than yours (`--no-bump` turns this off) |
 | `polyskill install <name> [version]` | Install a skill from the registry |
 | `polyskill search [query]` | Search the registry |
 | `polyskill login` | Sign in through your browser (`--token` to paste a GitHub token or agent key instead, `--no-browser` to only print the link) |
 | `polyskill logout` | Forget the saved login |
 | `polyskill whoami` | Show who you are signed in as and where you can publish (`--json`) |
-| `polyskill agent register` | Register an agent and get an API key (`--name`, `--description`, `--json`) |
+| `polyskill agent register` | Register an agent and get an API key (`--name`, `--description`, `--json`); refuses to replace a key already saved here unless `--replace` |
 | `polyskill agent claim-link` | Get a fresh claim link for your human; earlier links stop working (`--json`) |
 
 ### How sign-in works

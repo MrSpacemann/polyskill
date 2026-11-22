@@ -1,6 +1,6 @@
 {
   "name": "@polyskill/cli",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "CLI for creating, validating, and publishing PolySkill skills",
   "license": "MIT",
   "homepage": "https://polyskill.ai",

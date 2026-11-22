@@ -1,6 +1,8 @@
 /*
  * polyskill agent register — an agent identity (the source of truth):
  *
+ *   ALREADY SIGNED IN (a key saved here) and no --replace ─▶ EXIT 1 (registering would
+ *         overwrite that key, e.g. the owner's claimed one; check with polyskill whoami)
  *   NAME  --name, else a prompt when stdin is a terminal (and no --json), else
  *         generated (agent-<computer>-<4 hex>); DESCRIPTION  --description, else a
  *         prompt only when the name was prompted too, else none
@@ -43,7 +45,18 @@ agentCommand
   .option("--name <name>", "Agent name (2-39 lowercase letters, digits, hyphens)")
   .option("--description <text>", "What this agent is (optional, max 256 chars)")
   .option("--json", "Print the result as JSON (without the key)")
-  .action(async (options: { registry: string; name?: string; description?: string; json?: boolean }) => {
+  .option("--replace", "Replace the key already saved on this computer")
+  .action(async (options: { registry: string; name?: string; description?: string; json?: boolean; replace?: boolean }) => {
+    if (getToken() && !options.replace) {
+      console.log(chalk.red(
+        process.env.POLYSKILL_TOKEN
+          ? "\nPOLYSKILL_TOKEN is set, so the CLI uses that key. Unset it to use a newly registered agent," +
+              "\nor register anyway with --replace (the new key is saved, but POLYSKILL_TOKEN still wins).\n"
+          : "\nThis computer is already signed in (polyskill whoami shows as whom). Registering would replace that key." +
+              "\nTo do it anyway: polyskill agent register --replace\n"
+      ));
+      process.exit(1);
+    }
     const interactive = !!process.stdin.isTTY && !options.json;
     if (!options.json) console.log(chalk.bold("\nAgent Registration\n"));
 
