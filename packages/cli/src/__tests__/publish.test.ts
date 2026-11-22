@@ -255,11 +255,50 @@ describe("automatic version bump", () => {
     expect(text).toContain('"adapters": ["openai", "anthropic"]'); // formatting kept
   });
 
-  it("bumps past the live version when the local one is behind it", async () => {
+  it("a local version behind the live one stops instead of bumping (someone published newer work)", async () => {
     setup("1.0.3");
-    respond({ status: 200, body: { version: "1.0.5" } }, { status: 201, body: { id: "x" } });
-    await publishCommand.parseAsync([skillDir("1.0.3")], { from: "user" });
-    expect(posted()).toBe("1.0.6");
+    respond({ status: 200, body: { version: "1.0.5" } });
+    await expect(publishCommand.parseAsync([skillDir("1.0.3")], { from: "user" })).rejects.toThrow(ExitError);
+    expect(vi.mocked(fetch)).toHaveBeenCalledTimes(1); // nothing published
+    expect(vi.mocked(console.log).mock.calls.map((c) => String(c[0])).join("\n")).toContain("newer work");
+  });
+
+  it("compares versions as numbers: 1.10.0 is newer than 1.9.5, and 1.9.5 is behind 1.10.0", async () => {
+    setup("1.10.0");
+    respond({ status: 200, body: { version: "1.9.5" } }, { status: 201, body: { id: "x" } });
+    await publishCommand.parseAsync([skillDir("1.10.0")], { from: "user" });
+    expect(posted()).toBe("1.10.0");
+
+    vi.mocked(fetch).mockReset();
+    setup("1.9.5");
+    respond({ status: 200, body: { version: "1.10.0" } });
+    await expect(publishCommand.parseAsync([skillDir("1.9.5")], { from: "user" })).rejects.toThrow(ExitError);
+  });
+
+  it("unchanged content at the live version publishes nothing (a re-run, or a retry after a timeout that landed)", async () => {
+    setup("1.0.0");
+    const dir = skillDir("1.0.0");
+    respond({
+      status: 200,
+      body: {
+        version: "1.0.0",
+        // the registry rewrites author and reorders keys; neither counts as a change
+        manifest: { ...Object.fromEntries(Object.entries(mockSkill.manifest).reverse()), version: "1.0.0", author: { name: "someone" } },
+        instructions: mockSkill.instructions,
+        tools: mockSkill.tools?.length ? { tools: mockSkill.tools } : null,
+      },
+    });
+    await publishCommand.parseAsync([dir], { from: "user" });
+    expect(vi.mocked(fetch)).toHaveBeenCalledTimes(1); // no POST
+    expect(fs.readFileSync(path.join(dir, "skill.json"), "utf-8")).toContain('"version": "1.0.0"');
+    expect(vi.mocked(console.log).mock.calls.map((c) => String(c[0])).join("\n")).toContain("Nothing to publish");
+  });
+
+  it("a 409 after a bump (two publishes racing) says to run publish again", async () => {
+    setup("1.0.0");
+    respond({ status: 200, body: { version: "1.0.0" } }, { status: 409, body: { error: "Conflict", message: "This skill name + version already exists" } });
+    await expect(publishCommand.parseAsync([skillDir("1.0.0")], { from: "user" })).rejects.toThrow(ExitError);
+    expect(vi.mocked(console.log).mock.calls.map((c) => String(c[0])).join("\n")).toContain("Run polyskill publish again");
   });
 
   it("a newer local version, a new skill (404), a lookup error or a prerelease publish as is", async () => {

@@ -3,12 +3,13 @@
  *
  * CHECK_AUTH ──→ LOAD_SKILL ──→ VERSION_CHECK ──→ BUILD_ADAPTERS ──→ POST_REGISTRY ──→ SUCCESS
  *     │              │              │                                   │
- *     ▼              ▼              │ GET the live version:             ├──→ 401 (bad token)
- *  NO_TOKEN       LOAD_ERR          │ 200 and live >= local (both plain ├──→ 403 (namespace/ownership)
- *                                   │   x.y.z), no --no-bump ──▶ publish├──→ HTTP_ERR (409 / 400 / 5xx)
- *                                   │   live + 1 patch (in memory)      ▼
- *                                   │ anything else (404 new skill,  NETWORK_ERR
- *                                   │   local newer, error, prerelease)
+ *     ▼              ▼              │ GET the live skill (no --no-bump):├──→ 401 (bad token)
+ *  NO_TOKEN       LOAD_ERR          │ live == local (plain x.y.z):      ├──→ 403 (namespace/ownership)
+ *                                   │   same content ─▶ ALREADY_LIVE    ├──→ HTTP_ERR (409 / 400 / 5xx)
+ *                                   │   (nothing published, exit 0)     ▼
+ *                                   │   changed ─▶ publish live+1 patch NETWORK_ERR
+ *                                   │ live > local ─▶ EXIT 1 (behind: someone published newer work)
+ *                                   │ anything else (404 new skill, local newer, error, prerelease)
  *                                   │   ──▶ publish the local version as is
  *  SUCCESS after a bump ──▶ write the new version into skill.json (only then: a failed
  *  publish leaves the file alone; a skill.json without exactly one "version" field is
@@ -42,19 +43,46 @@ export function bumpPatch(version: string): string {
   return `${m[1]}.${m[2]}.${Number(m[3]) + 1}`;
 }
 
-/** The version to publish: the local one, or live + 1 patch when the local one is already taken. */
-async function versionToPublish(registryUrl: string, name: string, local: string): Promise<string> {
+/** JSON equality that ignores key order (the registry stores manifests as jsonb, which reorders keys). */
+function sameJson(a: unknown, b: unknown): boolean {
+  const norm = (v: unknown): unknown =>
+    Array.isArray(v) ? v.map(norm)
+    : v && typeof v === "object"
+      ? Object.fromEntries(Object.keys(v as object).sort().map((k) => [k, norm((v as Record<string, unknown>)[k])]))
+      : v;
+  return JSON.stringify(norm(a)) === JSON.stringify(norm(b));
+}
+
+type VersionPlan = { kind: "publish"; version: string } | { kind: "already-live" } | { kind: "behind"; live: string };
+interface PlannedSkill { manifest: { name: string; version: string }; instructions?: string | null; tools?: unknown[] }
+
+/** What to do given the live skill: publish the local version, publish live + 1 patch, nothing, or refuse. */
+async function planVersion(registryUrl: string, skill: PlannedSkill): Promise<VersionPlan> {
+  const local = skill.manifest.version;
   try {
-    const res = await fetch(`${registryUrl}/api/skills/${encodeURIComponent(name)}`, {
+    const res = await fetch(`${registryUrl}/api/skills/${encodeURIComponent(skill.manifest.name)}`, {
       signal: AbortSignal.timeout(10_000),
     });
-    if (res.status !== 200) return local;
-    const live = ((await res.json()) as { version?: unknown }).version;
-    if (typeof live !== "string") return local;
-    const cmp = compareVersions(local, live);
-    return cmp !== null && cmp <= 0 ? bumpPatch(live) : local;
+    if (res.status !== 200) return { kind: "publish", version: local };
+    const live = (await res.json()) as {
+      version?: unknown; manifest?: Record<string, unknown>; instructions?: unknown; tools?: { tools?: unknown[] } | null;
+    };
+    if (typeof live.version !== "string") return { kind: "publish", version: local };
+    const cmp = compareVersions(local, live.version);
+    if (cmp === null || cmp > 0) return { kind: "publish", version: local };
+    if (cmp < 0) return { kind: "behind", live: live.version };
+    // Same version. Unchanged content (a re-run, or a retry after a timeout that landed) is already live.
+    const strip = (m: Record<string, unknown> | undefined) => {
+      const { version: _v, author: _a, ...rest } = m ?? {};
+      return rest;
+    };
+    const unchanged =
+      (live.instructions ?? null) === (skill.instructions ?? null) &&
+      sameJson(live.tools?.tools ?? [], skill.tools ?? []) &&
+      sameJson(strip(live.manifest), strip(skill.manifest as unknown as Record<string, unknown>));
+    return unchanged ? { kind: "already-live" } : { kind: "publish", version: bumpPatch(live.version) };
   } catch {
-    return local; // the registry decides; a taken version comes back as 409
+    return { kind: "publish", version: local }; // the registry decides; a taken version comes back as 409
   }
 }
 
@@ -110,10 +138,21 @@ export const publishCommand = new Command("publish")
     // just "edit, then publish" (no hand-editing skill.json each time).
     const localVersion = skill.manifest.version;
     if (options.bump) {
-      const version = await versionToPublish(registryUrl, skill.manifest.name, localVersion);
-      if (version !== localVersion) {
-        console.log(chalk.dim(`  ${localVersion} is already published: publishing ${version}`));
-        skill.manifest.version = version;
+      const plan = await planVersion(registryUrl, skill);
+      if (plan.kind === "already-live") {
+        console.log(chalk.green(`\n${skill.manifest.name}@${localVersion} is already live with exactly this content. Nothing to publish.\n`));
+        return;
+      }
+      if (plan.kind === "behind") {
+        console.log(chalk.red(
+          `\n${plan.live} is live, but skill.json says ${localVersion}: someone published newer work.` +
+            `\nGet their changes first, or set "version" above ${plan.live} if yours should replace it.\n`
+        ));
+        process.exit(1);
+      }
+      if (plan.version !== localVersion) {
+        console.log(chalk.dim(`  ${localVersion} is already published: publishing ${plan.version}`));
+        skill.manifest.version = plan.version;
       }
     }
 
@@ -174,8 +213,10 @@ export const publishCommand = new Command("publish")
         }
         if (res.status === 409 && /version already exists/i.test(error.message ?? "")) {
           console.log(chalk.dim(
-            `Version ${skill.manifest.version} is already published. Raise "version" in skill.json` +
-              (options.bump ? "." : ", or publish without --no-bump.")
+            skill.manifest.version !== localVersion
+              ? `Someone published ${skill.manifest.version} at the same moment. Run polyskill publish again.`
+              : `Version ${localVersion} is already published. Raise "version" in skill.json` +
+                  (options.bump ? "." : ", or publish without --no-bump.")
           ));
         }
       }

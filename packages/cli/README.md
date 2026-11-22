@@ -50,7 +50,7 @@ The CLI auto-detects which coding assistant you have and installs skills in the 
 | `polyskill init [dir]` | Scaffold a new skill project |
 | `polyskill validate [dir]` | Validate manifest + tools against the spec |
 | `polyskill build [dir]` | Generate platform adapter outputs |
-| `polyskill publish [dir]` | Validate, build and publish in one go; raises the patch version (and skill.json) when the version is already live (`--no-bump` to turn off) |
+| `polyskill publish [dir]` | Validate, build and publish in one go. When your version is the live one it publishes the next patch and updates skill.json; unchanged content isn't republished; it stops if the live version is newer than yours (`--no-bump` turns this off) |
 | `polyskill install <name> [version]` | Install a skill from the registry |
 | `polyskill search [query]` | Search the registry |
 | `polyskill login` | Sign in through your browser (`--token` to paste a GitHub token or agent key instead, `--no-browser` to only print the link) |
