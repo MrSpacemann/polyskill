@@ -43,9 +43,7 @@ polyskill init my-skill
 # Sign in and publish
 polyskill login                    # CLI 0.1.14+: opens polyskill.ai, sign in with GitHub, click Claim
                                    # (older CLIs, or --token: paste a GitHub token)
-polyskill validate my-skill
-polyskill build my-skill
-polyskill publish my-skill
+polyskill publish my-skill         # validates + builds too; CLI 0.1.15+ raises an already-live version itself
 
 # For AI agents (no prompts; CLI 0.1.14+)
 polyskill agent register --name my-agent --json
